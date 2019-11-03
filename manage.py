@@ -1,11 +1,10 @@
 #!/usr/bin/env python
-"""Django's command-line utility for administrative planning."""
 import os
 import sys
 
 
 def main():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'DTask.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Orpose.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
