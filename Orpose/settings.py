@@ -19,7 +19,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "knox",
     "users",
-    "planning"
 ]
 
 MIDDLEWARE = [
@@ -38,10 +37,15 @@ CORS_ORIGIN_WHITELIST = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'knox.auth.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 
-ROOT_URLCONF = 'DTask.urls'
+ROOT_URLCONF = 'Orpose.urls'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
@@ -62,7 +66,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'DTask.wsgi.application'
+WSGI_APPLICATION = 'Orpose.wsgi.application'
 
 DATABASES = {
     'default': {
@@ -71,9 +75,13 @@ DATABASES = {
         "USER": os.environ.get("RDS_DB_USERNAME"),
         "PASSWORD": os.environ.get("RDS_DB_PASSWORD"),
         "HOST": "dtask-dev-db.cmrx3tyslvo1.eu-north-1.rds.amazonaws.com",
-        "PORT": "3306"
+        "PORT": "3306",
+        'OPTIONS': {"init_command": "SET foreign_key_checks = 0;"}
     }
 }
+
+AUTH_USER_MODEL = "users.User"
+AUTHENTICATION_BACKENDS = ('users.backends.MyAuthBackend', 'django.contrib.auth.backends.ModelBackend',)
 
 AUTH_PASSWORD_VALIDATORS = [
     {
