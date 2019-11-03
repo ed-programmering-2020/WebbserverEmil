@@ -8,6 +8,8 @@ urlpatterns = [
     path("", Index.as_view()),
     path("admin/", admin.site.urls),
     path("api/", include("products.urls")),
-    path("api/", include("scraping.urls")),
+    path("api/scraping/", include("scraping.urls")),
+    path("api/localization/", include("localization.urls")),
+    path("api/content/", include("content.urls")),
     path("api/auth/", include("users.urls")),
 ]

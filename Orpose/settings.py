@@ -19,6 +19,10 @@ INSTALLED_APPS = [
     "rest_framework",
     "knox",
     "users",
+    "products",
+    "scraping",
+    "content",
+    "localization"
 ]
 
 MIDDLEWARE = [
