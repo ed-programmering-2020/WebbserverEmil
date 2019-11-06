@@ -31,6 +31,7 @@ class ProductsAPI(generics.GenericAPIView):
         specs = data.get("specs")
         category = data.get("category")
 
+        # Meta product
         try:
             meta_product = MetaProduct.objects.get(url=website)
             meta_product.price = price
@@ -43,6 +44,7 @@ class ProductsAPI(generics.GenericAPIView):
                 category=category
             )
 
+        # Parent product
         if meta_product.product is None:
             try:
                 other_meta_product = MetaProduct.objects.exclude(url=website).get(name=name)
