@@ -3,7 +3,6 @@ from .models import InfoPanel
 
 
 class InfoPanelAdmin(admin.ModelAdmin):
-    model = InfoPanel
     list_display = ["name", "is_first"]
     list_filter = ["is_first"]
     search_fields = ["name"]

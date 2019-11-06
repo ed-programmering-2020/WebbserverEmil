@@ -3,31 +3,29 @@ from .models import Product, MetaProduct, Group, Manufacturer, ProductLine, Cate
 
 
 class ProductAdmin(admin.ModelAdmin):
-    model = Product
     list_display = ["name"]
     search_fields = ["name"]
 
 
 class MetaProductAdmin(admin.ModelAdmin):
-    model = MetaProduct
     list_display = ["name", "product"]
     search_fields = ["name"]
 
 
 class GroupAdmin(admin.ModelAdmin):
-    model = Group
+    pass
 
 
 class ManufacturerAdmin(admin.ModelAdmin):
-    model = Manufacturer
+    pass
 
 
 class ProductLineAdmin(admin.ModelAdmin):
-    model = ProductLine
+    pass
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    model = Category
+    pass
 
 
 admin.site.register(Product, ProductAdmin)

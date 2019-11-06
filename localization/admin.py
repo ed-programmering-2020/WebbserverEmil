@@ -3,7 +3,6 @@ from .models import Country
 
 
 class CountryAdmin(admin.ModelAdmin):
-    model = Country
     list_display = ["name", "currency", "currency_short"]
     list_filter = ["is_active"]
     search_fields = ["name"]
