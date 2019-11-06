@@ -2,6 +2,10 @@ from .base import *
 import os
 
 
+ALLOWED_HOSTS = [
+    "orpose.pythonanywhere.com"
+]
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
