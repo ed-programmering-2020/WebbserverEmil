@@ -59,10 +59,24 @@ class Product(models.Model):
         first_names = [name.split(' ', 1)[0] for name in names]
 
         self.name = mode(names)
-        self.category = mode(categories)
-        self.manufacturer = mode(first_names)
         self.price = min(prices)
         self.update_specs(specs_list)
+
+        # Update Category
+        category_name = mode(categories)
+        try:
+            category = Category.objects.get(name=category_name)
+        except:
+            category = Category.objects.create(name=category_name)
+        self.category = category
+
+        # Update Manufacturer
+        manufacturer_name = mode(first_names)
+        try:
+            manufacturer = Manufacturer.objects.get(name=manufacturer_name)
+        except:
+            manufacturer = Manufacturer.objects.create(name=manufacturer_name)
+        self.manufacturer = manufacturer
 
     def __str__(self):
         return "<Product %s>" % self.name
