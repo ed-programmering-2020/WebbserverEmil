@@ -7,6 +7,7 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 REACT_APP_DIR = os.path.join(os.path.dirname(BASE_DIR), 'Orpose-Frontend')
+print(REACT_APP_DIR)
 
 STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
