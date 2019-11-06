@@ -1,11 +1,11 @@
 from django.contrib import admin
 from django.urls import path, include
 
-from .views import Index
+from .views import FrontendAppView
 
 
 urlpatterns = [
-    path("", Index.as_view()),
+    path("", FrontendAppView.as_view()),
     path("admin/", admin.site.urls),
     path("api/", include("products.urls")),
     path("api/scraping/", include("scraping.urls")),
