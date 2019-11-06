@@ -3,7 +3,10 @@ import os
 
 
 ALLOWED_HOSTS = [
-    "orpose.pythonanywhere.com"
+    "orpose.pythonanywhere.com",
+    "orpose.se",
+    "orpose.com",
+    "orpose.co.uk"
 ]
 
 DATABASES = {
