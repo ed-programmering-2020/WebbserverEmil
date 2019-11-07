@@ -6,15 +6,6 @@ SECRET_KEY = 'u2v4es^aj+c4d5g_@eh!!st@d8w6kpfz0^^evta15n@**lmc0r'
 DEBUG = True
 TEMPLATE_DEBUG = True
 
-REACT_APP_DIR = os.path.join(BASE_DIR, "..", 'Orpose-Frontend')
-print(REACT_APP_DIR)
-
-STATIC_URL = '/static/'
-STATIC_ROOT = 'static'
-STATICFILES_DIRS = [
-    os.path.join(REACT_APP_DIR, 'build', 'static')
-]
-
 
 INSTALLED_APPS = [
     'django.contrib.admin',
