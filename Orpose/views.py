@@ -7,6 +7,7 @@ import os, Orpose.settings.base
 class FrontendAppView(View):
     def get(self, request):
         try:
+            print(os.path.join(Orpose.settings.base.REACT_APP_DIR, 'build', 'index.html'))
             with open(os.path.join(Orpose.settings.base.REACT_APP_DIR, 'build', 'index.html')) as f:
                 return HttpResponse(f.read())
         except FileNotFoundError:
