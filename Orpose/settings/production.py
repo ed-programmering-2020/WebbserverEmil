@@ -21,11 +21,10 @@ ALLOWED_HOSTS = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': "DtaskDevDb",
-        "USER": os.environ.get("RDS_DB_USERNAME"),
-        "PASSWORD": os.environ.get("RDS_DB_PASSWORD"),
-        "HOST": "dtask-dev-db.cmrx3tyslvo1.eu-north-1.rds.amazonaws.com",
-        "PORT": "3306",
+        'NAME': "Orpose.Default",
+        "USER": os.environ.get("DB_USERNAME"),
+        "PASSWORD": os.environ.get("DB_PASSWORD"),
+        "HOST": "Orpose.mysql.pythonanywhere-services.com",
         'OPTIONS': {"init_command": "SET foreign_key_checks = 0;"}
     }
 }
