@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     "products",
     "scraping",
     "content",
-    "localization"
+    "localization",
+    "core"
 ]
 
 MIDDLEWARE = [
