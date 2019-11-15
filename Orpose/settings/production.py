@@ -12,7 +12,7 @@ ALLOWED_HOSTS = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': "{}$default".format(os.getenv("DB_USERNAME")),
+        'NAME': os.getenv("DB_USERNAME") + "$default",
         "USER": os.getenv("DB_USERNAME"),
         "PASSWORD": os.getenv("DB_PASSWORD"),
         "HOST": "Orpose.mysql.pythonanywhere-services.com",
