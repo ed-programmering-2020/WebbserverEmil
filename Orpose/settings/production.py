@@ -1,6 +1,9 @@
 from .base import *
 import os
+from dotenv import load_dotenv
 
+
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 ALLOWED_HOSTS = [
     "www.orpose.pythonanywhere.com",
@@ -8,6 +11,7 @@ ALLOWED_HOSTS = [
     "www.orpose.com",
     "www.orpose.co.uk"
 ]
+
 print(os.getenv("DB_PASSWORD"))
 DATABASES = {
     'default': {
