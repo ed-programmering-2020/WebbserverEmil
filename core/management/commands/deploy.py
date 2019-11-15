@@ -11,5 +11,5 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Orpose.settings.production')
         load_dotenv(os.path.join(BASE_DIR, ".env"))
-        django.setup()
+        print(os.path.join(BASE_DIR, ".env"))
         call_command("migrate", interactive=False)
