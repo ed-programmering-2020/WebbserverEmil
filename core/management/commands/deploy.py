@@ -12,4 +12,5 @@ class Command(BaseCommand):
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Orpose.settings.production')
         load_dotenv(os.path.join(BASE_DIR, ".env"))
         print(os.path.join(BASE_DIR, ".env"))
+        print(os.getenv("DB_PASSWORD"))
         call_command("migrate", interactive=False)
