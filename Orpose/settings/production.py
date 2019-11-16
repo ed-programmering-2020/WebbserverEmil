@@ -12,7 +12,6 @@ ALLOWED_HOSTS = [
     "www.orpose.co.uk"
 ]
 
-print(os.getenv("DB_PASSWORD"))
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
