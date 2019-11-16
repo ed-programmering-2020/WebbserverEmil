@@ -84,7 +84,7 @@ class Product(models.Model):
 
 class MetaProduct(models.Model):
     id = models.AutoField(primary_key=True, blank=True)
-    name = models.CharField('name', max_length=30, blank=True)
+    name = models.CharField('name', max_length=128, blank=True)
     price = models.IntegerField()
     _specs = models.CharField('specs', max_length=256, default=json.dumps({}))
     url = models.CharField('url', max_length=128, blank=True)
