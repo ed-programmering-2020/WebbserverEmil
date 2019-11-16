@@ -25,8 +25,8 @@ class Product(models.Model):
     name = models.CharField('name', max_length=30, blank=True)
     _specs = models.CharField("specs", max_length=256, default=json.dumps({}))
     prices = models.IntegerField()
-    category = models.ForeignKey(Category, related_name="products", on_delete=models.CASCADE)
-    manufacturer = models.ForeignKey(Manufacturer, related_name="products", on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, related_name="products", on_delete=models.CASCADE, null=True)
+    manufacturer = models.ForeignKey(Manufacturer, related_name="products", on_delete=models.CASCADE, null=True)
 
     @property
     def specs(self):
@@ -89,7 +89,7 @@ class MetaProduct(models.Model):
     _specs = models.CharField('specs', max_length=256, default=json.dumps({}))
     url = models.CharField('url', max_length=128, blank=True)
     category = models.CharField("category", max_length=32, blank=True, null=True)
-    product = models.ForeignKey(Product, related_name="meta_producs", on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name="meta_producs", on_delete=models.CASCADE, null=True)
 
     @property
     def specs(self):
