@@ -88,7 +88,7 @@ class MetaProduct(models.Model):
     price = models.IntegerField()
     _specs = models.CharField('specs', max_length=256, default=json.dumps({}))
     url = models.CharField('url', max_length=128, blank=True)
-    category = models.CharField("category", max_length=32, blank=True)
+    category = models.CharField("category", max_length=32, blank=True, null=True)
     product = models.ForeignKey(Product, related_name="meta_producs", on_delete=models.CASCADE)
 
     @property

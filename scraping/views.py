@@ -41,6 +41,7 @@ class ProductsAPI(generics.GenericAPIView):
                 price=price,
                 url=website,
                 specs=specs,
+                category=category
             )
 
         # Parent product
