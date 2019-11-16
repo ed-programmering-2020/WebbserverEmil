@@ -58,6 +58,7 @@ class ProductsAPI(generics.GenericAPIView):
         else:
             product = meta_product.product
 
-        product.update()
+        if product is not None:
+            product.update()
 
         return Response({})
