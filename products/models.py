@@ -23,9 +23,9 @@ class Category(models.Model):
 
 class Product(models.Model):
     id = models.AutoField(primary_key=True, blank=True)
-    name = models.CharField('name', max_length=128, blank=True)
-    _specs = models.CharField("specs", max_length=256, default=json.dumps({}))
-    prices = models.IntegerField()
+    name = models.CharField('name', max_length=128, blank=True, null=True)
+    _specs = models.CharField("specs", max_length=256, default=json.dumps())
+    prices = models.IntegerField(null=True)
     category = models.ForeignKey(Category, related_name="products", on_delete=models.CASCADE, null=True)
     manufacturer = models.ForeignKey(Manufacturer, related_name="products", on_delete=models.CASCADE, null=True)
 
