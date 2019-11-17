@@ -77,7 +77,7 @@ class Product(models.Model):
 
         self.name = name
 
-    def update(self):
+    def update_info(self):
         categories, names, prices, specs_list, important_words = [], [], [], [], []
         for meta_product in self.meta_producs:
             names.append(meta_product.name)

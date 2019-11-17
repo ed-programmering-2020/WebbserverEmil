@@ -78,7 +78,9 @@ class ProductsAPI(generics.GenericAPIView):
 
         if product is not None:
             print(3)
-            product.update()
+            product.update_info()
             print(4)
+
+        product.save()
 
         return Response({})
