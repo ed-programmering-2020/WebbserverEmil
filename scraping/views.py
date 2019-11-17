@@ -13,7 +13,9 @@ class WebsitesAPI(generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         website = Website.objects.filter(has_run=False).first()
+        print(website)
         if not website:
+            print(1)
             websites = Website.objects.all()
             for site in websites:
                 site.has_run = False
@@ -21,6 +23,7 @@ class WebsitesAPI(generics.GenericAPIView):
             website = Website.objects.filter(has_run=False).first()
 
         website.has_run = True
+        print(website)
 
         return Response({"website": WebsiteSerializer(website).data})
 
