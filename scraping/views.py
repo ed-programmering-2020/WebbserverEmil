@@ -19,7 +19,9 @@ class WebsitesAPI(generics.GenericAPIView):
                 site.has_run = False
 
             website = Website.objects.filter(has_run=False).first()
-        
+
+        website.has_run = True
+
         return Response({"website": WebsiteSerializer(website).data})
 
 
