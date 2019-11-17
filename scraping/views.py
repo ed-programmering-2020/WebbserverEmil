@@ -16,13 +16,11 @@ class WebsitesAPI(generics.GenericAPIView):
         print(website)
         if not website:
             print(1)
-            websites = Website.objects.all()
-            for site in websites:
-                site.has_run = False
-
-            website = Website.objects.filter(has_run=False).first()
+            sites = Website.objects.all().update(has_run=False)
+            website = sites.first()
 
         website.has_run = True
+        website.save()
         print(website)
 
         return Response({"website": WebsiteSerializer(website).data})
