@@ -12,7 +12,7 @@ class Website(models.Model):
     has_run = models.BooleanField(default=False)
     
     def __str__(self):
-        return "<Website %s>" % self.name
+        return "<Website {} {} {}>".format(self.id, self.name, self.country.name)
 
 
 class DataType(models.Model):
@@ -20,7 +20,7 @@ class DataType(models.Model):
     name = models.CharField('name', max_length=128, blank=True)
     
     def __str__(self):
-        return "<DataType %s>" % self.name
+        return "<DataType {} {}>".format(self.id, self.name)
 
 
 class SearchGroup(models.Model):
@@ -29,7 +29,7 @@ class SearchGroup(models.Model):
     website = models.ForeignKey(Website, related_name="search_groups", on_delete=models.CASCADE)
     
     def __str__(self):
-        return "<SearchGroup %s>" % self.id
+        return "<SearchGroup {} {} {}>".format(self.id, self.group_type.name, self.website.name)
 
 
 class SearchList(models.Model):
@@ -37,7 +37,7 @@ class SearchList(models.Model):
     search_group = models.ForeignKey(SearchGroup, related_name="search_lists", on_delete=models.CASCADE)
     
     def __str__(self):
-        return "<SearchList %s>" % self.id
+        return "<SearchList {} {}-{} >".format(self.id, self.search_group.group_type.name, self.search_group.website.name)
 
 
 class FetchInfo(models.Model):
@@ -53,4 +53,4 @@ class FetchInfo(models.Model):
         ordering = ['time']
         
     def __str__(self):
-        return "<FetchInfo %s>" % self.id
+        return "<FetchInfo {} : {}>".format(self.id, self.search_list)
