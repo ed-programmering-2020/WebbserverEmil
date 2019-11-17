@@ -8,7 +8,7 @@ import re
 
 
 class WebsitesAPI(generics.GenericAPIView):
-    permission_classes = IsAdminUser
+    permission_classes = [IsAdminUser]
     serializer_class = WebsiteSerializer
 
     def get(self, request, *args, **kwargs):
@@ -24,7 +24,7 @@ class WebsitesAPI(generics.GenericAPIView):
 
 
 class ProductsAPI(generics.GenericAPIView):
-    permission_classes = IsAdminUser
+    permission_classes = [IsAdminUser]
 
     def post(self, request, *args, **kwargs):
         data = request.data
