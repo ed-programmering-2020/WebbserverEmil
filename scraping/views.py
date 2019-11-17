@@ -16,8 +16,8 @@ class WebsitesAPI(generics.GenericAPIView):
         print(website)
         if not website:
             print(1)
-            sites = Website.objects.all().update(has_run=False)
-            website = sites.first()
+            Website.objects.all().update(has_run=False)
+            website = Website.objects.filter(has_run=False).first()
 
         website.has_run = True
         website.save()
@@ -48,13 +48,14 @@ class ProductsAPI(generics.GenericAPIView):
                 price=price,
                 url=website,
                 specs=specs,
-                category=category
+                category=category,
+                host=Website.objects.get(id=data.get("host"))
             )
 
         # Parent product
         if meta_product.product is None:
             try:
-                other_meta_product = MetaProduct.objects.exclude(url=website).get(name=name)
+                other_meta_product = MetaProduct.objects.exclude(url=website).filter(name=name).first()
 
                 product = Product.objects.create()
 

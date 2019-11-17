@@ -1,5 +1,6 @@
 from django.db import models
 from statistics import mode
+from scraping.models import Website
 import json
 
 
@@ -44,22 +45,48 @@ class Product(models.Model):
 
         self.specs = combined_specs
 
+    def update_name(self, names):
+        words = {}
+        for name in names:
+            split_words = name.split(" ")
+
+            for other_name in names:
+                if name != other_name:
+                    for split_word in split_words:
+                        pos = other_name.find(split_word)
+
+                        if pos >= 0:
+                            if split_word in words:
+                                words[split_word].append(pos)
+                            else:
+                                words[split_word] = [pos]
+
+        calc_words = {}
+        for word, pos_list in words.items():
+            pos = sum(pos_list) / len(pos_list)
+            calc_words[word] = pos
+
+        sorted_words = sorted(calc_words.items(), key=lambda kv: kv[1])
+        name = ""
+
+        for word, pos in sorted_words:
+            if len(name) > 0:
+                name += " " + word
+            else:
+                name = word
+
+        self.name = name
+
     def update(self):
-        categories, names, prices, specs_list = [], [], [], []
+        categories, names, prices, specs_list, important_words = [], [], [], [], []
         for meta_product in self.meta_producs:
             names.append(meta_product.name)
             specs_list.append(meta_product.specs)
+            if meta_product.category: categories.append(meta_product.category)
+            if meta_product.price: prices.append(meta_product.price)
 
-            if meta_product.category:
-                categories.append(meta_product.category)
-
-            if meta_product.price:
-                prices.append(meta_product.price)
-
-        first_names = [name.split(' ', 1)[0] for name in names]
-
-        self.name = mode(names)
         self.price = min(prices)
+        self.update_name(names)
         self.update_specs(specs_list)
 
         # Update Category
@@ -71,6 +98,7 @@ class Product(models.Model):
         self.category = category
 
         # Update Manufacturer
+        first_names = [name.split(' ', 1)[0] for name in names]
         manufacturer_name = mode(first_names)
         try:
             manufacturer = Manufacturer.objects.get(name=manufacturer_name)
@@ -88,8 +116,9 @@ class MetaProduct(models.Model):
     price = models.IntegerField()
     _specs = models.CharField('specs', max_length=256, default=json.dumps({}))
     url = models.CharField('url', max_length=128, blank=True)
+    host = models.ForeignKey(Website, related_name="meta_products", on_delete=models.CASCADE, null=True)
     category = models.CharField("category", max_length=32, blank=True, null=True)
-    product = models.ForeignKey(Product, related_name="meta_producs", on_delete=models.CASCADE, null=True)
+    product = models.ForeignKey(Product, related_name="meta_products", on_delete=models.CASCADE, null=True)
 
     @property
     def specs(self):

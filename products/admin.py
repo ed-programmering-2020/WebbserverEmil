@@ -3,11 +3,13 @@ from .models import Product, MetaProduct, Manufacturer, Category
 
 
 class ProductAdmin(admin.ModelAdmin):
+    ordering = ["name"]
     list_display = ["name"]
     search_fields = ["name"]
 
 
 class MetaProductAdmin(admin.ModelAdmin):
+    ordering = ["name"]
     list_display = ["name", "product"]
     search_fields = ["name"]
 
