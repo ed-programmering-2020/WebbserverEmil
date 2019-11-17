@@ -55,20 +55,30 @@ class ProductsAPI(generics.GenericAPIView):
         # Parent product
         if meta_product.product is None:
             print("finding other meta product")
-            other_meta_product = MetaProduct.objects.exclude(url=website).filter(name=name).first()
+            try:
+                other_meta_product = MetaProduct.objects.exclude(url=website).filter(name=name).first()
+            except:
+                other_meta_product = None
+
             print(other_meta_product)
             
             if other_meta_product != None:
                 product = Product.objects.create()
                 print(product)
                 meta_product.product = product
+                meta_product.save()
+                print(1)
                 other_meta_product.product = product
+                other_meta_product.save()
+                print(2)
             else:
                 product = None
         else:
             product = meta_product.product
 
         if product is not None:
+            print(3)
             product.update()
+            print(4)
 
         return Response({})
