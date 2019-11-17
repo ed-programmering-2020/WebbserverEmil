@@ -1,5 +1,6 @@
 from rest_framework.response import Response
 from rest_framework import generics
+from rest_framework.permissions import IsAdminUser
 from .serializers import WebsiteSerializer
 from .models import Website
 from products.models import Product, MetaProduct
@@ -7,21 +8,24 @@ import re
 
 
 class WebsitesAPI(generics.GenericAPIView):
+    permission_classes = IsAdminUser
     serializer_class = WebsiteSerializer
 
     def get(self, request, *args, **kwargs):
-        website = Website.objects.get(has_run=False)
+        website = Website.objects.filter(has_run=False).first()
         if not website:
             websites = Website.objects.all()
             for site in websites:
                 site.has_run = False
 
-            website = Website.objects.get(has_run=False)
+            website = Website.objects.filter(has_run=False).first()
         
         return Response({"website": WebsiteSerializer(website).data})
 
 
 class ProductsAPI(generics.GenericAPIView):
+    permission_classes = IsAdminUser
+
     def post(self, request, *args, **kwargs):
         data = request.data
         website = data.get("website")

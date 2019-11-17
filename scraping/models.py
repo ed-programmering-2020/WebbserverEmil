@@ -37,7 +37,7 @@ class SearchList(models.Model):
     search_group = models.ForeignKey(SearchGroup, related_name="search_lists", on_delete=models.CASCADE)
     
     def __str__(self):
-        return "<SearchList {} {}-{} >".format(self.id, self.search_group.group_type.name, self.search_group.website.name)
+        return "<SearchList {} {} {} >".format(self.id, self.search_group.group_type.name, self.search_group.website.name)
 
 
 class FetchInfo(models.Model):
@@ -53,4 +53,4 @@ class FetchInfo(models.Model):
         ordering = ['time']
         
     def __str__(self):
-        return "<FetchInfo {} : {}>".format(self.id, self.search_list)
+        return "<FetchInfo {} {}>".format(self.id, self.search_list)
