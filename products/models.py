@@ -78,17 +78,20 @@ class Product(models.Model):
         self.name = name
 
     def update_info(self):
+        print(-1)
         categories, names, prices, specs_list, important_words = [], [], [], [], []
         for meta_product in self.meta_producs:
             names.append(meta_product.name)
             specs_list.append(meta_product.specs)
             if meta_product.category: categories.append(meta_product.category)
             if meta_product.price: prices.append(meta_product.price)
+        print(-2)
 
         self.price = min(prices)
         self.update_name(names)
         self.update_specs(specs_list)
 
+        print(-3)
         # Update Category
         category_name = mode(categories)
         try:
@@ -97,6 +100,7 @@ class Product(models.Model):
             category = Category.objects.create(name=category_name)
         self.category = category
 
+        print(-4)
         # Update Manufacturer
         first_names = [name.split(' ', 1)[0] for name in names]
         manufacturer_name = mode(first_names)
@@ -105,6 +109,8 @@ class Product(models.Model):
         except:
             manufacturer = Manufacturer.objects.create(name=manufacturer_name)
         self.manufacturer = manufacturer
+
+        print(-5)
 
     def __str__(self):
         return "<Product %s>" % self.name
