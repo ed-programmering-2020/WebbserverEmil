@@ -1,7 +1,8 @@
 from django.db import models
 from statistics import mode
 from scraping.models import Website
-import json
+from difflib import SequenceMatcher
+import json, re
 
 
 class Manufacturer(models.Model):
@@ -119,11 +120,10 @@ class Product(models.Model):
 class MetaProduct(models.Model):
     id = models.AutoField(primary_key=True, blank=True)
     name = models.CharField('name', max_length=128, blank=True)
-    price = models.IntegerField()
     _specs = models.CharField('specs', max_length=256, default=json.dumps({}))
+    _category = models.CharField("category", max_length=32, blank=True, null=True)
     url = models.CharField('url', max_length=128, blank=True)
     host = models.ForeignKey(Website, related_name="meta_products", on_delete=models.CASCADE, null=True)
-    category = models.CharField("category", max_length=32, blank=True, null=True)
     product = models.ForeignKey(Product, related_name="meta_products", on_delete=models.CASCADE, null=True)
 
     @property
@@ -132,7 +132,85 @@ class MetaProduct(models.Model):
 
     @specs.setter
     def specs(self, specs):
+        for key, value in specs.items():
+            try:
+                spec = Spec.objects.get(meta_product=self, key=key)
+                spec.value = value
+                spec.save()
+            except:
+                spec = Spec.objects.create(meta_product=self, key=key, value=value)
+                other_spec = Spec.objects.get(key=key)
+                if other_spec != None:
+                    if other_spec.spec_group:
+                        spec.spec_group = other_spec.spec_group
+                        spec.save()
+                    else:
+                        spec_group = SpecGroup.objects.Create(key=spec.key)
+                        spec.spec_group = spec_group
+                        spec.save()
+                        other_spec.spec_group = spec_group
+                        other_spec.save()
+
         self._specs = json.dumps(specs)
+
+    @property
+    def category(self):
+        return self._category
+
+    @category.setter
+    def category(self, categories):
+        list_len = len(categories)
+        last_str = categories[list_len - 1]
+        self._category = categories[list_len - 2] if SequenceMatcher(None, last_str, self.name).ratio() >= 0.7 else last_str
+        self.name.replace(self._category, "")
+
+    def get_price(self):
+        return self.price_history[len(self.price_history) - 1].price
 
     def __str__(self):
         return "<MetaProduct %s>" % self.name
+
+
+class Price(models.Model):
+    meta_product = models.ForeignKey(MetaProduct, related_name="price_history", on_delete=models.CASCADE)
+    _price = models.IntegerField(blank=True, null=True)
+    date_seen = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def price(self):
+        return self._price
+
+    @price.setter
+    def price(self, price):
+        price = int(re.sub("\D", "", str(price)))
+        self._price = None if price >= 10 ** 6 else price
+
+
+class SpecGroupCollection(models.Model):
+    _name = models.CharField('name', max_length=128, blank=True, null=True)
+
+    @property
+    def name(self):
+        if self._name == "" or self._name == None:
+            try:
+                return self.spec_groups[0].key
+            except:
+                return ""
+        else:
+            return self._name
+
+    @name.setter
+    def name(self, name):
+        self._name = name
+
+
+class SpecGroup(models.Model):
+    key = models.CharField('key', max_length=128, blank=True)
+    spec_group_collection = models.ForeignKey(SpecGroupCollection, related_name="spec_groups", on_delete=models.CASCADE, blank=True, null=True)
+
+
+class Spec(models.Model):
+    meta_product = models.ForeignKey(MetaProduct, related_name="specs", on_delete=models.CASCADE)
+    spec_group = models.ForeignKey(SpecGroup, related_name="specs", on_delete=models.CASCADE, blank=True, null=True)
+    key = models.CharField('key', max_length=128, blank=True)
+    value = models.CharField('value', max_length=128, blank=True)
