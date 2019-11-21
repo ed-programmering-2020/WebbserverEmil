@@ -65,7 +65,7 @@ class ProductsAPI(generics.GenericAPIView):
         except:
             meta_product = MetaProduct(name=name, url=website, host=Website.objects.get(id=host_id))
 
-        meta_product.specs = specs
+        meta_product.set_specs(specs)
         meta_product.category = category
         meta_product.save()
 
