@@ -141,7 +141,7 @@ class MetaProduct(models.Model):
                     spec.spec_group = other_spec.spec_group
                     spec.save()
                 else:
-                    spec_group = SpecGroup.objects.Create(key=spec.key)
+                    spec_group = SpecGroup.objects.create(key=spec.key)
                     spec.spec_group = spec_group
                     spec.save()
                     other_spec.spec_group = spec_group
