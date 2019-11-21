@@ -133,21 +133,19 @@ class MetaProduct(models.Model):
                 spec.value = value
                 spec.save()
             except:
-                spec = None
-
-            if spec:
                 spec = Spec.objects.create(meta_product=self, key=key, value=value)
-                other_spec = Spec.objects.get(key=key)
-                if other_spec != None:
-                    if other_spec.spec_group:
-                        spec.spec_group = other_spec.spec_group
-                        spec.save()
-                    else:
-                        spec_group = SpecGroup.objects.Create(key=spec.key)
-                        spec.spec_group = spec_group
-                        spec.save()
-                        other_spec.spec_group = spec_group
-                        other_spec.save()
+
+            other_spec = Spec.objects.get(key=key)
+            if other_spec != None:
+                if other_spec.spec_group:
+                    spec.spec_group = other_spec.spec_group
+                    spec.save()
+                else:
+                    spec_group = SpecGroup.objects.Create(key=spec.key)
+                    spec.spec_group = spec_group
+                    spec.save()
+                    other_spec.spec_group = spec_group
+                    other_spec.save()
 
     @property
     def category(self):
