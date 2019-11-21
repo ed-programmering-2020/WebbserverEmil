@@ -65,13 +65,13 @@ class ProductsAPI(generics.GenericAPIView):
         except:
             meta_product = MetaProduct(name=name, url=website, host=Website.objects.get(id=host_id))
 
-        price_obj = Price(meta_product=meta_product)
-        price_obj.price = price
-        price_obj.save()
-
         meta_product.specs = specs
         meta_product.category = category
         meta_product.save()
+
+        price_obj = Price(meta_product=meta_product)
+        price_obj.price = price
+        price_obj.save()
 
         if meta_product.product is None:
             print("finding other meta products")
