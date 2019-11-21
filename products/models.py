@@ -133,6 +133,9 @@ class MetaProduct(models.Model):
                 spec.value = value
                 spec.save()
             except:
+                spec = None
+
+            if spec:
                 spec = Spec.objects.create(meta_product=self, key=key, value=value)
                 other_spec = Spec.objects.get(key=key)
                 if other_spec != None:
