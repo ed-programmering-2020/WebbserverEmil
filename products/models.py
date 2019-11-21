@@ -126,7 +126,7 @@ class MetaProduct(models.Model):
     product = models.ForeignKey(Product, related_name="meta_products", on_delete=models.CASCADE, null=True)
 
     def set_specs(self, specs):
-        print(123)
+        print(specs)
         for key, value in specs.items():
             try:
                 spec = Spec.objects.get(meta_product=self, key=key)
