@@ -120,18 +120,13 @@ class Product(models.Model):
 class MetaProduct(models.Model):
     id = models.AutoField(primary_key=True, blank=True)
     name = models.CharField('name', max_length=128, blank=True)
-    _specs = models.CharField('specs', max_length=256, default=json.dumps({}))
     _category = models.CharField("category", max_length=32, blank=True, null=True)
     url = models.CharField('url', max_length=128, blank=True)
     host = models.ForeignKey(Website, related_name="meta_products", on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(Product, related_name="meta_products", on_delete=models.CASCADE, null=True)
 
-    @property
-    def specs(self):
-        return json.loads(self._specs)
-
-    @specs.setter
-    def specs(self, specs):
+    def set_specs(self, specs):
+        print(123)
         for key, value in specs.items():
             try:
                 spec = Spec.objects.get(meta_product=self, key=key)
@@ -150,8 +145,6 @@ class MetaProduct(models.Model):
                         spec.save()
                         other_spec.spec_group = spec_group
                         other_spec.save()
-
-        self._specs = json.dumps(specs)
 
     @property
     def category(self):
