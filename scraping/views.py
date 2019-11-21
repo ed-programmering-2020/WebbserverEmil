@@ -66,8 +66,8 @@ class ProductsAPI(generics.GenericAPIView):
             meta_product = MetaProduct(name=name, url=website, host=Website.objects.get(id=host_id))
 
         print(specs)
-        meta_product.set_specs(json.loads(specs))
-        meta_product.category = category
+        if specs: meta_product.set_specs(json.loads(specs))
+        if category: meta_product.category = category
         meta_product.save()
 
         price_obj = Price(meta_product=meta_product)
