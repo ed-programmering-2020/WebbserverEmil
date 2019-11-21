@@ -138,6 +138,9 @@ class MetaProduct(models.Model):
             try:
                 other_spec = Spec.objects.get(key=key)
             except:
+                other_spec = None
+
+            if other_spec:
                 if other_spec.spec_group:
                     spec.spec_group = other_spec.spec_group
                     spec.save()
