@@ -82,6 +82,7 @@ class ProductsAPI(generics.GenericAPIView):
                 for i in range(len(words) - 1):
                     combo = words[i] + " " + words[i + 1]
                     other_meta_products.append(MetaProduct.objects.exclude(url=website).filter(name__icontains=combo).all())
+                    print(other_meta_products)
 
                 numbers = [int(s) for s in meta_product.name.split() if s.isdigit()]
                 checked_meta_products = []
@@ -92,7 +93,7 @@ class ProductsAPI(generics.GenericAPIView):
                 possible_specs = {}
                 for key, value in meta_product.specs.items():
                     try:
-                        spec = Spec.objects.get(key=key)
+                        spec = Spec.objects.get(key__iexact=key)
                         spec_group = spec.spec_group
 
                         if spec_group:

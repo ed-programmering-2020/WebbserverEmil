@@ -129,14 +129,14 @@ class MetaProduct(models.Model):
         print(specs)
         for key, value in specs.items():
             try:
-                spec = Spec.objects.get(meta_product=self, key=key)
+                spec = Spec.objects.get(meta_product=self, key__iexact=key)
                 spec.value = value
                 spec.save()
             except:
                 spec = Spec.objects.create(meta_product=self, key=key, value=value)
 
             try:
-                other_spec = Spec.objects.get(key=key)
+                other_spec = Spec.objects.get(key__iexact=key)
             except:
                 other_spec = None
 
