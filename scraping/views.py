@@ -90,7 +90,7 @@ class ProductsAPI(generics.GenericAPIView):
                 checked_meta_products = []
                 for m_product in other_meta_products:
                     m_product = check_meta_product(numbers, m_product)
-                    if m_product != None: checked_meta_products.append(m_product)
+                    if m_product == True: checked_meta_products.append(m_product)
 
                 possible_specs = {}
                 for key, value in meta_product.specs.items():
@@ -104,6 +104,10 @@ class ProductsAPI(generics.GenericAPIView):
                             possible_keys = [key]
                     except:
                         possible_keys = [key]
+
+                    for i in range(len(possible_keys)):
+                        if len(possible_keys[i]) > 32:
+                            possible_keys.pop(i)
 
                     possible_specs[value] = possible_keys
 
