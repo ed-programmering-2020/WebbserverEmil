@@ -114,7 +114,7 @@ class Product(models.Model):
         print(-5)
 
     def __str__(self):
-        return "<Product %s>" % self.name
+        return "<Product {}>".format(self.name)
 
 
 class MetaProduct(models.Model):
@@ -166,7 +166,7 @@ class MetaProduct(models.Model):
         return self.price_history[len(self.price_history) - 1].price
 
     def __str__(self):
-        return "<MetaProduct %s>" % self.name
+        return "<MetaProduct {} {} {}>".format(self.name, self.category, self.get_price())
 
 
 class Price(models.Model):
@@ -182,6 +182,9 @@ class Price(models.Model):
     def price(self, price):
         price = int(re.sub("\D", "", str(price)))
         self._price = None if price >= 10 ** 6 else price
+
+    def __str__(self):
+        return "<Price {} {} {}>".format(self.id, self.price, self.date_seen)
 
 
 class SpecGroupCollection(models.Model):
@@ -202,9 +205,16 @@ class SpecGroupCollection(models.Model):
         self._name = name
 
 
+    def __str__(self):
+        return "<SpecGroupCollection {} {}>".format(self.id, self.name)
+
+
 class SpecGroup(models.Model):
     key = models.CharField('key', max_length=128, blank=True)
     spec_group_collection = models.ForeignKey(SpecGroupCollection, related_name="spec_groups", on_delete=models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        return "<SpecGroup {} {}>".format(self.id, self.key)
 
 
 class Spec(models.Model):
@@ -212,3 +222,7 @@ class Spec(models.Model):
     spec_group = models.ForeignKey(SpecGroup, related_name="specs", on_delete=models.CASCADE, blank=True, null=True)
     key = models.CharField('key', max_length=128, blank=True)
     value = models.CharField('value', max_length=128, blank=True)
+
+    def __str__(self):
+        return "<Spec {} {} {}>".format(self.id, self.key, self.value)
+

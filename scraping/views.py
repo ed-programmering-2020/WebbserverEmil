@@ -35,8 +35,20 @@ class ProductsAPI(generics.GenericAPIView):
         def match_specs(possible_specs, other_meta_product):
             for other_key, other_value in other_meta_product.specs.items():
                 for value, keys in possible_specs.items():
+
+                    other_key = other_key.rstrip()
                     if other_key in keys:
-                        if other_value == value:
+                        other_value = other_value.rstrip()
+                        value = value.rstrip()
+
+                        if bool(re.search(r'\d', value)):
+                            test_other_value = re.sub(r'\D', "", other_value)
+                            test_value = re.sub(r'\D', "", other_value)
+                        else:
+                            test_other_value = other_value
+                            test_value = value
+
+                        if test_other_value == test_value:
                             print("value break: " + str(other_value) + " : " + str(value))
                             break
                         else:
@@ -114,7 +126,8 @@ class ProductsAPI(generics.GenericAPIView):
                 other_meta_product = None
                 for other in checked_meta_products:
                     result = match_specs(possible_specs, other)
-                    if result == True: other_meta_product = other
+                    if result == True:
+                        other_meta_product = other
             except:
                 other_meta_product = None
 
