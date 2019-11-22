@@ -122,7 +122,7 @@ class ProductsAPI(generics.GenericAPIView):
                         spec = Spec.objects.get(key__iexact=key)
                         spec_group = spec.spec_group
 
-                        if spec_group:
+                        if spec_group and spec_group.is_active:
                             possible_keys = [spec.key for spec in spec_group.specs]
                         else:
                             possible_keys = [key]
