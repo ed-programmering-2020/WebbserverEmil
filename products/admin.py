@@ -26,7 +26,7 @@ class SpecAdmin(admin.ModelAdmin):
 
 
 class SpecGroupAdmin(admin.ModelAdmin):
-    list_display = ["key", "spec_collection"]
+    list_display = ["key", "spec_group_collection"]
     search_fields = ["key"]
 
 
