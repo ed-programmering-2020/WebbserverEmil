@@ -37,8 +37,10 @@ class ProductsAPI(generics.GenericAPIView):
                 for value, keys in possible_specs.items():
                     if other_key in keys:
                         if other_value == value:
+                            print("value break: " + str(other_value) + " : " + str(value))
                             break
                         else:
+                            print("value not match: " + str(other_value) + " : " + str(value))
                             return False
             return True
 
