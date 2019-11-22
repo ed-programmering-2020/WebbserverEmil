@@ -34,37 +34,38 @@ class ProductsAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         def match_specs(possible_specs, other_meta_product):
             for other_key, other_value in other_meta_product.specs.items():
-                for value, keys in possible_specs.items():
+                if "artikelnr" not in other_key:
+                    for value, keys in possible_specs.items():
 
-                    other_key = other_key.rstrip()
-                    if other_key in keys:
-                        other_value = other_value.rstrip()
-                        value = value.rstrip()
+                        other_key = other_key.rstrip()
+                        if other_key in keys:
+                            other_value = other_value.rstrip()
+                            value = value.rstrip()
 
-                        if bool(re.search(r'\d', value)):
-                            test_other_value = re.sub(r'\D', "", other_value)
-                            test_value = re.sub(r'\D', "", other_value)
+                            if bool(re.search(r'\d', value)):
+                                test_other_value = re.sub(r'\D', "", other_value)
+                                test_value = re.sub(r'\D', "", other_value)
 
-                            if test_other_value == test_value:
-                                print("value break: " + str(other_value) + " : " + str(value))
-                                break
+                                if test_other_value == test_value:
+                                    print("value break: " + str(other_value) + " : " + str(value))
+                                    break
+                                else:
+                                    print("value not match: " + str(other_value) + " : " + str(value))
+                                    return False
                             else:
-                                print("value not match: " + str(other_value) + " : " + str(value))
-                                return False
-                        else:
-                            test_other_values = other_value.strip(" ")
+                                test_other_values = other_value.strip(" ")
 
-                            match = False
+                                match = False
 
-                            if SequenceMatcher(None, other_value, value).ratio() >= 0.9:
-                                match = True
-                            else:
-                                for test_other_value in test_other_values:
-                                    if test_other_value in value:
-                                        match = True
-                                        break
+                                if SequenceMatcher(None, other_value, value).ratio() >= 0.9:
+                                    match = True
+                                else:
+                                    for test_other_value in test_other_values:
+                                        if test_other_value in value:
+                                            match = True
+                                            break
 
-                            return match
+                                return match
             return True
 
         def check_meta_product(numbers, meta_product):
