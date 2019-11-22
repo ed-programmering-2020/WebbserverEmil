@@ -212,6 +212,7 @@ class SpecGroupCollection(models.Model):
 class SpecGroup(models.Model):
     key = models.CharField('key', max_length=128, blank=True)
     spec_group_collection = models.ForeignKey(SpecGroupCollection, related_name="spec_groups", on_delete=models.CASCADE, blank=True, null=True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return "<SpecGroup {} {}>".format(self.id, self.key)
