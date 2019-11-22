@@ -21,15 +21,18 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class SpecAdmin(admin.ModelAdmin):
-    list_display = ["key", "value"]
+    list_display = ["key", "value", "spec_group"]
+    search_fields = ["key", "value"]
 
 
 class SpecGroupAdmin(admin.ModelAdmin):
-    list_display = ["key"]
+    list_display = ["key", "spec_collection"]
+    search_fields = ["key"]
 
 
 class SpecGroupCollectionAdmin(admin.ModelAdmin):
     list_display = ["name"]
+    search_fields = ["name"]
 
 
 admin.site.register(Product, ProductAdmin)
