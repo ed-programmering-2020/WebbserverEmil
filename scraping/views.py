@@ -33,18 +33,24 @@ class ProductsAPI(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         def match_specs(possible_specs, other_meta_product):
+            print("------ matcher --------")
             for other_key, other_value in other_meta_product.specs.items():
                 if "artikelnr" not in other_key:
-                    for value, keys in possible_specs.items():
+                    print("other {} : {}".format(other_key, other_value))
 
-                        other_key = other_key.rstrip()
+                    other_key = other_key.rstrip()
+                    for value, keys in possible_specs.items():
+                        print("{} : {}".format(keys, value))
+
                         if other_key in keys:
                             other_value = other_value.rstrip()
                             value = value.rstrip()
+                            print("value {} : {}".format(other_value, value))
 
                             if bool(re.search(r'\d', value)):
                                 test_other_value = re.sub(r'\D', "", other_value)
                                 test_value = re.sub(r'\D', "", other_value)
+                                print("digit_value {} : {}".format(test_other_value, test_value))
 
                                 if test_other_value == test_value:
                                     print("value break: " + str(other_value) + " : " + str(value))
@@ -54,14 +60,15 @@ class ProductsAPI(generics.GenericAPIView):
                                     return False
                             else:
                                 test_other_values = other_value.strip(" ")
-
                                 match = False
 
                                 if SequenceMatcher(None, other_value, value).ratio() >= 0.9:
+                                    print("value similar {} : {}".format(other_value, value))
                                     match = True
                                 else:
                                     for test_other_value in test_other_values:
                                         if test_other_value in value:
+                                            print("value in {} : {}".format(other_value, value))
                                             match = True
                                             break
 
