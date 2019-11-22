@@ -44,16 +44,27 @@ class ProductsAPI(generics.GenericAPIView):
                         if bool(re.search(r'\d', value)):
                             test_other_value = re.sub(r'\D', "", other_value)
                             test_value = re.sub(r'\D', "", other_value)
-                        else:
-                            test_other_value = other_value
-                            test_value = value
 
-                        if test_other_value == test_value:
-                            print("value break: " + str(other_value) + " : " + str(value))
-                            break
+                            if test_other_value == test_value:
+                                print("value break: " + str(other_value) + " : " + str(value))
+                                break
+                            else:
+                                print("value not match: " + str(other_value) + " : " + str(value))
+                                return False
                         else:
-                            print("value not match: " + str(other_value) + " : " + str(value))
-                            return False
+                            test_other_values = other_value.strip(" ")
+
+                            match = False
+
+                            if SequenceMatcher(None, other_value, value).ratio() >= 0.9:
+                                match = True
+                            else:
+                                for test_other_value in test_other_values:
+                                    if test_other_value in value:
+                                        match = True
+                                        break
+
+                            return match
             return True
 
         def check_meta_product(numbers, meta_product):
