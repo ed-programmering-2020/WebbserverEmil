@@ -154,7 +154,7 @@ class ProductsAPI(generics.GenericAPIView):
             except:
                 other_meta_products = find_similar_meta_products(meta_product)
 
-            possible_specs = find_specs(meta_product.specs)
+            possible_specs = find_specs(meta_product.specs.all())
             other_meta_product = None
             for other in other_meta_products:
                 result = match_specs(possible_specs, other)
