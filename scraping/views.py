@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework import generics
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
 from django.http import HttpResponseBadRequest
 from .serializers import WebsiteSerializer
 from .models import Website
@@ -10,7 +10,8 @@ import re, json
 
 
 class WebsitesAPI(generics.GenericAPIView):
-    permission_classes = [IsAdminUser]
+    # permission_classes = [IsAdminUser]
+    permission_classes = [AllowAny]
     serializer_class = WebsiteSerializer
 
     def get(self, request, *args, **kwargs):
@@ -26,7 +27,8 @@ class WebsitesAPI(generics.GenericAPIView):
 
 
 class ProductsAPI(generics.GenericAPIView):
-    permission_classes = [IsAdminUser]
+    # permission_classes = [IsAdminUser]
+    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
         def match_specs(possible_specs, other_meta_product):
