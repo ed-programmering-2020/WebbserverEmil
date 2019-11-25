@@ -27,8 +27,8 @@ class Product(models.Model):
     name = models.CharField('name', max_length=128, blank=True, null=True)
     _specs = models.CharField("specs", max_length=256, default=json.dumps({}))
     prices = models.IntegerField(blank=True, null=True)
-    category = models.ForeignKey(Category, related_name="products", on_delete=models.CASCADE, null=True)
-    manufacturer = models.ForeignKey(Manufacturer, related_name="products", on_delete=models.CASCADE, null=True)
+    category = models.ForeignKey(Category, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
+    manufacturer = models.ForeignKey(Manufacturer, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
 
     @property
     def specs(self):
