@@ -15,15 +15,12 @@ class WebsitesAPI(generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         website = Website.objects.filter(has_run=False).first()
-        print(website)
         if not website:
-            print(1)
             Website.objects.all().update(has_run=False)
             website = Website.objects.filter(has_run=False).first()
 
         website.has_run = True
         website.save()
-        print(website)
 
         return Response({"website": WebsiteSerializer(website).data})
 
@@ -33,45 +30,34 @@ class ProductsAPI(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         def match_specs(possible_specs, other_meta_product):
-            print("------ matcher --------")
             for spec in other_meta_product.specs:
                 other_key = spec.key
                 other_value = spec.value
-                
-                if "artikelnr" not in other_key:
-                    print("other {} : {}".format(other_key, other_value))
 
+                if "artikelnr" not in other_key:
                     other_key = other_key.rstrip()
                     for value, keys in possible_specs.items():
-                        print("{} : {}".format(keys, value))
-
                         if other_key in keys:
                             other_value = other_value.rstrip()
                             value = value.rstrip()
-                            print("value {} : {}".format(other_value, value))
 
                             if bool(re.search(r'\d', value)):
                                 test_other_value = re.sub(r'\D', "", other_value)
                                 test_value = re.sub(r'\D', "", other_value)
-                                print("digit_value {} : {}".format(test_other_value, test_value))
 
                                 if test_other_value == test_value:
-                                    print("value break: " + str(other_value) + " : " + str(value))
                                     break
                                 else:
-                                    print("value not match: " + str(other_value) + " : " + str(value))
                                     return False
                             else:
                                 test_other_values = other_value.strip(" ")
                                 match = False
 
                                 if SequenceMatcher(None, other_value, value).ratio() >= 0.9:
-                                    print("value similar {} : {}".format(other_value, value))
                                     match = True
                                 else:
                                     for test_other_value in test_other_values:
                                         if test_other_value in value:
-                                            print("value in {} : {}".format(other_value, value))
                                             match = True
                                             break
 
@@ -94,7 +80,6 @@ class ProductsAPI(generics.GenericAPIView):
             for i in range(len(words) - 1):
                 combo = words[i] + " " + words[i + 1]
                 other_meta_products += MetaProduct.objects.exclude(url=website).filter(name__icontains=combo).all()
-                print(other_meta_products)
 
             for m_product in other_meta_products:
                 m_product = check_meta_product(numbers, m_product)
@@ -141,7 +126,6 @@ class ProductsAPI(generics.GenericAPIView):
         except:
             meta_product = MetaProduct(name=name, url=website, host=Website.objects.get(id=host_id))
 
-        print(specs)
         if category: meta_product.category = category
         meta_product.save()
         if specs: meta_product.set_specs(json.loads(specs))
@@ -151,7 +135,6 @@ class ProductsAPI(generics.GenericAPIView):
         price_obj.save()
 
         if meta_product.product is None:
-            print("finding other meta products")
             try:
                 other_meta_products = [MetaProduct.objects.exclude(url=website).get(name=name)]
             except:
@@ -164,7 +147,6 @@ class ProductsAPI(generics.GenericAPIView):
                 if result == True:
                     other_meta_product = other
 
-            print(other_meta_product)
             if other_meta_product != None:
                 product = Product.objects.create()
                 meta_product.product = product
