@@ -34,7 +34,10 @@ class ProductsAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         def match_specs(possible_specs, other_meta_product):
             print("------ matcher --------")
-            for other_key, other_value in other_meta_product.specs.items():
+            for spec in other_meta_product.specs:
+                other_key = spec.key
+                other_value = spec.value
+                
                 if "artikelnr" not in other_key:
                     print("other {} : {}".format(other_key, other_value))
 
