@@ -76,15 +76,52 @@ class ProductsAPI(generics.GenericAPIView):
             return True
 
         def check_meta_product(numbers, meta_product):
-            if SequenceMatcher(None, m_product.name, meta_product.name).ratio() <= 0.7:
-                other_numbers = [int(s) for s in m_product.name.split() if s.isdigit()]
+            if SequenceMatcher(None, meta_product.name, meta_product.name).ratio() <= 0.7:
+                other_numbers = [int(s) for s in meta_product.name.split() if s.isdigit()]
                 for number in numbers:
                     if number not in other_numbers:
                         return None
             return meta_product
 
-        data = request.data
+        def find_similar_meta_products(meta_product):
+            words = meta_product.name.split(" ")
+            checked_meta_products = []
+            numbers = [int(s) for s in meta_product.name.split() if s.isdigit()]
 
+            for i in range(len(words) - 1):
+                combo = words[i] + " " + words[i + 1]
+                other_meta_products.append(MetaProduct.objects.exclude(url=website).filter(name__icontains=combo).all())
+                print(other_meta_products)
+
+            for m_product in other_meta_products:
+                m_product = check_meta_product(numbers, m_product)
+                if m_product == True: checked_meta_products.append(m_product)
+
+            return checked_meta_products
+
+        def find_specs(specs):
+            possible_specs = {}
+            for key, value in specs:
+                try:
+                    spec = Spec.objects.get(key__iexact=key)
+                    spec_group = spec.spec_group
+
+                    if spec_group and spec_group.is_active:
+                        possible_keys = [spec.key for spec in spec_group.specs]
+                    else:
+                        possible_keys = [key]
+                except:
+                    possible_keys = [key]
+
+                for i in range(len(possible_keys)):
+                    if len(possible_keys[i]) > 32:
+                        possible_keys.pop(i)
+
+                possible_specs[value] = possible_keys
+
+            return possible_specs
+
+        data = request.data
         price = data.get("price")
         website = data.get("website")
         name = data.get("title")
@@ -110,67 +147,31 @@ class ProductsAPI(generics.GenericAPIView):
         if meta_product.product is None:
             print("finding other meta products")
             try:
-                other_meta_products = []
-                words = meta_product.name.split(" ")
-                for i in range(len(words) - 1):
-                    combo = words[i] + " " + words[i + 1]
-                    other_meta_products.append(MetaProduct.objects.exclude(url=website).filter(name__icontains=combo).all())
-                    print(other_meta_products)
-
-                numbers = [int(s) for s in meta_product.name.split() if s.isdigit()]
-                checked_meta_products = []
-                for m_product in other_meta_products:
-                    m_product = check_meta_product(numbers, m_product)
-                    if m_product == True: checked_meta_products.append(m_product)
-
-                possible_specs = {}
-                for key, value in meta_product.specs.items():
-                    try:
-                        spec = Spec.objects.get(key__iexact=key)
-                        spec_group = spec.spec_group
-
-                        if spec_group and spec_group.is_active:
-                            possible_keys = [spec.key for spec in spec_group.specs]
-                        else:
-                            possible_keys = [key]
-                    except:
-                        possible_keys = [key]
-
-                    for i in range(len(possible_keys)):
-                        if len(possible_keys[i]) > 32:
-                            possible_keys.pop(i)
-
-                    possible_specs[value] = possible_keys
-
-                other_meta_product = None
-                for other in checked_meta_products:
-                    result = match_specs(possible_specs, other)
-                    if result == True:
-                        other_meta_product = other
+                other_meta_products = [MetaProduct.objects.exclude(url=website).get(name=name)]
             except:
-                other_meta_product = None
+                other_meta_products = find_similar_meta_products(meta_product)
+
+            possible_specs = find_specs(meta_product.specs.items())
+            other_meta_product = None
+            for other in other_meta_products:
+                result = match_specs(possible_specs, other)
+                if result == True:
+                    other_meta_product = other
 
             print(other_meta_product)
-
             if other_meta_product != None:
                 product = Product.objects.create()
-                print(product)
                 meta_product.product = product
                 meta_product.save()
-                print(1)
                 other_meta_product.product = product
                 other_meta_product.save()
-                print(2)
             else:
                 product = None
         else:
             product = meta_product.product
 
         if product != None:
-            print(3)
             product.update_info()
-            print(4)
-
             product.save()
 
         return Response({})
