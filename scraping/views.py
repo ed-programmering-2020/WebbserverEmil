@@ -30,7 +30,7 @@ class ProductsAPI(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         def match_specs(possible_specs, other_meta_product):
-            for spec in other_meta_product.specs:
+            for spec in other_meta_product.specs.all():
                 other_key = spec.key
                 other_value = spec.value
 
