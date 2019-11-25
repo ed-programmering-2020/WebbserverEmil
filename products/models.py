@@ -39,12 +39,17 @@ class Product(models.Model):
         self._specs = json.dumps(self.specs.update(specs))
 
     def update_specs(self, specs_list):
-        specs = {}
-        for spec in specs_list:
-            specs[spec.key] = spec.value
+        specs_set_list = []
+        for specs in specs_list:
+            specs_set = {}
+
+            for spec in specs:
+                specs_set[spec.key] = spec.value
+
+            specs_set_list.append(specs_set)
 
         combined_specs = {}
-        for specs in specs:
+        for specs in specs_set_list:
             combined_specs.update(specs)
 
         self.specs = combined_specs
