@@ -101,7 +101,10 @@ class ProductsAPI(generics.GenericAPIView):
 
         def find_specs(specs):
             possible_specs = {}
-            for key, value in specs:
+            for spec in specs:
+                key = spec.key
+                value = spec.value
+
                 try:
                     spec = Spec.objects.get(key__iexact=key)
                     spec_group = spec.spec_group
@@ -151,7 +154,7 @@ class ProductsAPI(generics.GenericAPIView):
             except:
                 other_meta_products = find_similar_meta_products(meta_product)
 
-            possible_specs = find_specs(meta_product.specs.items())
+            possible_specs = find_specs(meta_product.specs)
             other_meta_product = None
             for other in other_meta_products:
                 result = match_specs(possible_specs, other)
