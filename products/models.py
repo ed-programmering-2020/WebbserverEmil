@@ -39,9 +39,12 @@ class Product(models.Model):
         self._specs = json.dumps(self.specs.update(specs))
 
     def update_specs(self, specs_list):
-        combined_specs = {}
+        specs = {}
+        for spec in specs_list:
+            specs[spec.key] = spec.value
 
-        for specs in specs_list:
+        combined_specs = {}
+        for specs in specs:
             combined_specs.update(specs)
 
         self.specs = combined_specs
@@ -82,7 +85,7 @@ class Product(models.Model):
         categories, names, prices, specs_list, important_words = [], [], [], [], []
         for meta_product in self.meta_products.all():
             names.append(meta_product.name)
-            specs_list.append(meta_product.specs)
+            specs_list.append(meta_product.specs.all())
             if meta_product.category: categories.append(meta_product.category)
 
             price = meta_product.get_price()
