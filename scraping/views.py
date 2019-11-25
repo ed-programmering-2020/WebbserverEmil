@@ -90,7 +90,7 @@ class ProductsAPI(generics.GenericAPIView):
 
             for i in range(len(words) - 1):
                 combo = words[i] + " " + words[i + 1]
-                other_meta_products.append(MetaProduct.objects.exclude(url=website).filter(name__icontains=combo).all())
+                other_meta_products += MetaProduct.objects.exclude(url=website).filter(name__icontains=combo).all()
                 print(other_meta_products)
 
             for m_product in other_meta_products:
