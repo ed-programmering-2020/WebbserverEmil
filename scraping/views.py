@@ -85,7 +85,7 @@ class ProductsAPI(generics.GenericAPIView):
 
         def find_similar_meta_products(meta_product):
             words = meta_product.name.split(" ")
-            checked_meta_products = []
+            checked_meta_products, other_meta_products = [], []
             numbers = [int(s) for s in meta_product.name.split() if s.isdigit()]
 
             for i in range(len(words) - 1):
