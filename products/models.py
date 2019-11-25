@@ -1,5 +1,4 @@
 from django.db import models
-from statistics import mode
 from scraping.models import Website
 from difflib import SequenceMatcher
 import json, re
@@ -26,7 +25,6 @@ class Product(models.Model):
     id = models.AutoField(primary_key=True, blank=True)
     name = models.CharField('name', max_length=128, blank=True, null=True)
     _specs = models.CharField("specs", max_length=256, default=json.dumps({}))
-    prices = models.IntegerField(blank=True, null=True)
     category = models.ForeignKey(Category, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     manufacturer = models.ForeignKey(Manufacturer, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
 
@@ -60,15 +58,34 @@ class Product(models.Model):
             split_words = name.split(" ")
 
             for other_name in names:
-                if name != other_name:
-                    for split_word in split_words:
-                        pos = other_name.find(split_word)
+                if other_name != name:
+                    other_split_words = other_name.split(" ")
 
-                        if pos >= 0:
-                            if split_word in words:
-                                words[split_word].append(pos)
+                    for pos, word in enumerate(other_split_words):
+                        for split_word in split_words:
+                            if SequenceMatcher(None, split_word, word).ratio() >= 0.9:
+                                if pos >= 0:
+                                    if word in words:
+                                        words[word].append(pos)
+                                    else:
+                                        words[word] = [pos]
+
+        words_copy = words
+        removed_words = []
+        for word in words_copy:
+            if word not in removed_words:
+                for other_word in words:
+                    if word != other_word:
+                        if SequenceMatcher(None, other_word, word).ratio() >= 0.9:
+                            length = len(words[word])
+                            other_length = len(words[other_word])
+
+                            if length >= other_length:
+                                words.pop(other_word, None)
+                                removed_words.append(other_word)
                             else:
-                                words[split_word] = [pos]
+                                words.pop(word, None)
+                                removed_words.append(word)
 
         calc_words = {}
         for word, pos_list in words.items():
@@ -77,7 +94,6 @@ class Product(models.Model):
 
         sorted_words = sorted(calc_words.items(), key=lambda kv: kv[1])
         name = ""
-
         for word, pos in sorted_words:
             if len(name) > 0:
                 name += " " + word
@@ -109,6 +125,10 @@ class Product(models.Model):
             category = Category.objects.get(name=category_name)
         except:
             category = Category.objects.create(name=category_name)
+
+        if self.category and self.category.products.count <= 1:
+            self.category.delete()
+
         self.category = category
 
         # Update Manufacturer
@@ -118,7 +138,13 @@ class Product(models.Model):
             manufacturer = Manufacturer.objects.get(name=manufacturer_name)
         except:
             manufacturer = Manufacturer.objects.create(name=manufacturer_name)
+
+        if self.manufacturer and self.manufacturer.products.count <= 1:
+            self.manufacturer.delete()
         self.manufacturer = manufacturer
+
+    def get_price(self):
+        return min([mp.get_price() for mp in self.meta_products.all()])
 
     def __str__(self):
         return "<Product {}>".format(self.name)
@@ -164,8 +190,8 @@ class MetaProduct(models.Model):
     @category.setter
     def category(self, categories):
         list_len = len(categories)
-        last_str = categories[list_len - 1]
-        self._category = categories[list_len - 2] if SequenceMatcher(None, last_str, self.name).ratio() >= 0.7 else last_str
+        last_str = categories[:-1]
+        self._category = categories[:-2] if SequenceMatcher(None, last_str, self.name).ratio() >= 0.7 else last_str
         self.name.replace(self._category, "")
 
     def get_price(self):
