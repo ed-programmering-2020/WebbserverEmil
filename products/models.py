@@ -87,6 +87,9 @@ class Product(models.Model):
         self.name = name
 
     def update_info(self):
+        def most_frequent(List):
+            return max(set(List), key=List.count)
+
         categories, names, prices, specs_list, important_words = [], [], [], [], []
         for meta_product in self.meta_products.all():
             names.append(meta_product.name)
@@ -101,7 +104,7 @@ class Product(models.Model):
         self.update_specs(specs_list)
 
         # Update Category
-        category_name = mode(categories)
+        category_name = most_frequent(categories)
         try:
             category = Category.objects.get(name=category_name)
         except:
@@ -110,7 +113,7 @@ class Product(models.Model):
 
         # Update Manufacturer
         first_names = [name.split(' ', 1)[0] for name in names]
-        manufacturer_name = mode(first_names)
+        manufacturer_name = most_frequent(first_names)
         try:
             manufacturer = Manufacturer.objects.get(name=manufacturer_name)
         except:
