@@ -80,7 +80,7 @@ class Product(models.Model):
 
     def update_info(self):
         categories, names, prices, specs_list, important_words = [], [], [], [], []
-        for meta_product in self.meta_products:
+        for meta_product in self.meta_products.all():
             names.append(meta_product.name)
             specs_list.append(meta_product.specs)
             if meta_product.category: categories.append(meta_product.category)
