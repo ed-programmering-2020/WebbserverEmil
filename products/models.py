@@ -84,7 +84,9 @@ class Product(models.Model):
             names.append(meta_product.name)
             specs_list.append(meta_product.specs)
             if meta_product.category: categories.append(meta_product.category)
-            if meta_product.price: prices.append(meta_product.price)
+
+            price = meta_product.get_price()
+            if price: prices.append(price)
 
         self.price = min(prices)
         self.update_name(names)
