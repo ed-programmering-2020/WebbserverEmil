@@ -163,7 +163,7 @@ class MetaProduct(models.Model):
         self.name.replace(self._category, "")
 
     def get_price(self):
-        return self.price_history[len(self.price_history) - 1].price
+        return self.price_history.first().price
 
     def __str__(self):
         return "<MetaProduct {} {} {}>".format(self.name, self.category, self.get_price())
