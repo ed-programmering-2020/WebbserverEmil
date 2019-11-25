@@ -100,11 +100,14 @@ class Product(models.Model):
             else:
                 name = word
 
+        if name == "" and names != []:
+            name = names[0]
+
         self.name = name
 
     def update_info(self):
         def most_frequent(List):
-            return max(set(List), key=List.count)
+            return max(set(List), key=List.count) if List != [] else None
 
         categories, names, prices, specs_list, important_words = [], [], [], [], []
         for meta_product in self.meta_products.all():
