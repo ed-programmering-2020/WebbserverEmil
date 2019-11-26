@@ -110,7 +110,6 @@ class ProductsAPI(generics.GenericAPIView):
         return possible_specs
 
     def post(self, request, *args, **kwargs):
-
         data = request.data
         price = data.get("price")
         website = data.get("website")

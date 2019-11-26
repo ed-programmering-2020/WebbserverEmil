@@ -5,14 +5,14 @@ import json, re
 
 
 class Manufacturer(models.Model):
-    name = models.CharField('name', max_length=30, blank=True)
+    name = models.CharField('name', max_length=30, blank=True, null=True)
 
     def __str__(self):
         return "<Manufacturer %s>" % self.name
 
 
 class Category(models.Model):
-    name = models.CharField('name', max_length=30, blank=True)
+    name = models.CharField('name', max_length=30, blank=True, null=True)
 
     def __str__(self):
         return "<Category %s>" % self.name
