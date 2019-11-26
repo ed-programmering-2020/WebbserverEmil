@@ -69,7 +69,7 @@ class ProductsAPI(generics.GenericAPIView):
                     return None
         return meta_product
 
-    def find_similar_meta_products(self, meta_product):
+    def find_similar_meta_products(self, website, meta_product):
         words = meta_product.name.split(" ")
         checked_meta_products, other_meta_products = [], []
         numbers = [int(s) for s in meta_product.name.split() if s.isdigit()]
@@ -137,7 +137,7 @@ class ProductsAPI(generics.GenericAPIView):
 
         if meta_product.product is None:
             try: other_meta_products = [MetaProduct.objects.exclude(url=website).get(name=name)]
-            except: other_meta_products = self.find_similar_meta_products(meta_product)
+            except: other_meta_products = self.find_similar_meta_products(website, meta_product)
 
             possible_specs = self.find_specs(meta_product.specs.all())
             other_meta_product = None
