@@ -63,12 +63,9 @@ class Product(models.Model):
 
                     for pos, word in enumerate(other_split_words):
                         for split_word in split_words:
-                            if SequenceMatcher(None, split_word, word).ratio() >= 0.9:
-                                if pos >= 0:
-                                    if word in words:
-                                        words[word].append(pos)
-                                    else:
-                                        words[word] = [pos]
+                            if SequenceMatcher(None, split_word, word).ratio() >= 0.9 and pos >= 0:
+                                if word in words: words[word].append(pos)
+                                else: words[word] = [pos]
 
         words_copy = words
         removed_words = []
@@ -88,9 +85,7 @@ class Product(models.Model):
                                 removed_words.append(word)
 
         calc_words = {}
-        for word, pos_list in words.items():
-            pos = sum(pos_list) / len(pos_list)
-            calc_words[word] = pos
+        for word, pos_list in words.items(): calc_words[word] = sum(pos_list) / len(pos_list)
 
         sorted_words = sorted(calc_words.items(), key=lambda kv: kv[1])
         name = ""
@@ -124,26 +119,21 @@ class Product(models.Model):
 
         # Update Category
         category_name = most_frequent(categories)
-        try:
-            category = Category.objects.get(name=category_name)
-        except:
-            category = Category.objects.create(name=category_name)
 
-        if self.category and self.category.products.count <= 1:
-            self.category.delete()
+        try: category = Category.objects.get(name=category_name)
+        except: category = Category.objects.create(name=category_name)
 
+        if self.category and self.category.products.count <= 1: self.category.delete()
         self.category = category
 
         # Update Manufacturer
         first_names = [name.split(' ', 1)[0] for name in names]
         manufacturer_name = most_frequent(first_names)
-        try:
-            manufacturer = Manufacturer.objects.get(name=manufacturer_name)
-        except:
-            manufacturer = Manufacturer.objects.create(name=manufacturer_name)
 
-        if self.manufacturer and self.manufacturer.products.count <= 1:
-            self.manufacturer.delete()
+        try: manufacturer = Manufacturer.objects.get(name=manufacturer_name)
+        except: manufacturer = Manufacturer.objects.create(name=manufacturer_name)
+
+        if self.manufacturer and self.manufacturer.products.count <= 1: self.manufacturer.delete()
         self.manufacturer = manufacturer
 
     def get_price(self):
@@ -164,11 +154,12 @@ class MetaProduct(models.Model):
     def set_specs(self, specs):
         for key, value in specs.items():
             try:
-                spec = Spec.objects.get(meta_product=self, key__iexact=key)
-                spec.value = value
+                spec = Spec.objects.get(key__iexact=key, value__iexact=value)
+                spec.meta_products.add(self)
+                self.save()
                 spec.save()
             except:
-                spec = Spec.objects.create(meta_product=self, key=key, value=value)
+                spec = Spec.objects.create(key=key, value=value)
 
             try:
                 other_spec = Spec.objects.get(key__iexact=key)
@@ -257,7 +248,7 @@ class SpecGroup(models.Model):
 
 
 class Spec(models.Model):
-    meta_product = models.ForeignKey(MetaProduct, related_name="specs", on_delete=models.CASCADE)
+    meta_products = models.ManyToManyField(MetaProduct)
     spec_group = models.ForeignKey(SpecGroup, related_name="specs", on_delete=models.CASCADE, blank=True, null=True)
     key = models.CharField('key', max_length=128, blank=True)
     value = models.CharField('value', max_length=128, blank=True)
