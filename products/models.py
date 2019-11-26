@@ -248,7 +248,7 @@ class SpecGroup(models.Model):
 
 
 class Spec(models.Model):
-    meta_products = models.ManyToManyField(MetaProduct)
+    meta_products = models.ManyToManyField(MetaProduct, related_name="specs")
     spec_group = models.ForeignKey(SpecGroup, related_name="specs", on_delete=models.CASCADE, blank=True, null=True)
     key = models.CharField('key', max_length=128, blank=True)
     value = models.CharField('value', max_length=128, blank=True)
