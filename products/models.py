@@ -72,7 +72,7 @@ class Product(models.Model):
         removed_words = []
         for word in words_copy:
             if word not in removed_words:
-                for other_word in words:
+                for other_word in words_copy:
                     if word != other_word:
                         if SequenceMatcher(None, other_word, word).ratio() >= 0.9:
                             length = len(words[word])
@@ -114,7 +114,7 @@ class Product(models.Model):
             price = meta_product.get_price()
             if price: prices.append(price)
 
-        self.price = min(prices)
+        self.price = min(prices) if prices else None
         self.update_name(names)
         self.update_specs(specs_list)
 
