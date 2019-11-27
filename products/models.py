@@ -124,7 +124,7 @@ class Product(models.Model):
             try: category = Category.objects.get(name=category_name)
             except: category = Category.objects.create(name=category_name)
 
-            if self.category and self.category.products.count <= 1: self.category.delete()
+            if self.category and self.category.products.count() <= 1: self.category.delete()
             self.category = category
 
         # Update Manufacturer
@@ -134,7 +134,7 @@ class Product(models.Model):
             try: manufacturer = Manufacturer.objects.get(name=manufacturer_name)
             except: manufacturer = Manufacturer.objects.create(name=manufacturer_name)
 
-            if self.manufacturer and self.manufacturer.products.count <= 1: self.manufacturer.delete()
+            if self.manufacturer and self.manufacturer.products.count() <= 1: self.manufacturer.delete()
             self.manufacturer = manufacturer
 
     def get_price(self):
