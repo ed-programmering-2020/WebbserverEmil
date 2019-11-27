@@ -34,7 +34,8 @@ class Product(models.Model):
 
     @specs.setter
     def specs(self, specs):
-        self._specs = json.dumps(self.specs.update(specs))
+        if self.specs:
+            self._specs = json.dumps(self.specs.update(specs))
 
     def update_specs(self, specs_list):
         specs_set_list = []
@@ -48,7 +49,7 @@ class Product(models.Model):
 
         combined_specs = {}
         for specs in specs_set_list:
-            combined_specs.update(specs)
+            if specs: combined_specs.update(specs)
 
         self.specs = combined_specs
 
