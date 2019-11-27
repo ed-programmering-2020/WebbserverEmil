@@ -119,22 +119,22 @@ class Product(models.Model):
 
         # Update Category
         category_name = most_frequent(categories)
+        if category_name:
+            try: category = Category.objects.get(name=category_name)
+            except: category = Category.objects.create(name=category_name)
 
-        try: category = Category.objects.get(name=category_name)
-        except: category = Category.objects.create(name=category_name)
-
-        if self.category and self.category.products.count <= 1: self.category.delete()
-        self.category = category
+            if self.category and self.category.products.count <= 1: self.category.delete()
+            self.category = category
 
         # Update Manufacturer
         first_names = [name.split(' ', 1)[0] for name in names]
         manufacturer_name = most_frequent(first_names)
+        if manufacturer_name:
+            try: manufacturer = Manufacturer.objects.get(name=manufacturer_name)
+            except: manufacturer = Manufacturer.objects.create(name=manufacturer_name)
 
-        try: manufacturer = Manufacturer.objects.get(name=manufacturer_name)
-        except: manufacturer = Manufacturer.objects.create(name=manufacturer_name)
-
-        if self.manufacturer and self.manufacturer.products.count <= 1: self.manufacturer.delete()
-        self.manufacturer = manufacturer
+            if self.manufacturer and self.manufacturer.products.count <= 1: self.manufacturer.delete()
+            self.manufacturer = manufacturer
 
     def get_price(self):
         return min([mp.get_price() for mp in self.meta_products.all()])
