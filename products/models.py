@@ -106,7 +106,7 @@ class Product(models.Model):
         def most_frequent(List):
             return max(set(List), key=List.count) if List != [] else None
 
-        categories, names, prices, manufacturing_names, specs_list, important_words = [], [], [], [], []
+        categories, names, prices, manufacturing_names, specs_list, important_words = [], [], [], [], [], []
         for meta_product in self.meta_products.all():
             names.append(meta_product.name)
             specs_list.append(meta_product.specs.all())
@@ -248,8 +248,11 @@ class Price(models.Model):
         elif 0 <= comma_pos < dot_pos:
             price = price[comma_pos:dot_pos]
 
-        price = int(re.sub("\D", "", str(price)))
-        self._price = None if price >= 10 ** 6 else price
+        if price != "" and price != None:
+            price = int(re.sub("\D", "", str(price)))
+            self._price = None if price >= 10 ** 6 else price
+        else:
+            self._price = None
 
     def __str__(self):
         return "<Price {} {} {}>".format(self.id, self.price, self.date_seen)

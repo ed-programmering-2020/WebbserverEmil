@@ -118,11 +118,13 @@ class Command(BaseCommand):
                     product = other_meta_product.product
                     meta_product.product = product
 
-                meta_product.save()
             elif meta_product.product:
                 product = meta_product.product
             else:
                 product = None
+
+            meta_product.is_updated = False
+            meta_product.save()
 
             if product != None:
                 product.update_info()

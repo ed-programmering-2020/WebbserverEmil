@@ -56,7 +56,7 @@ class ProductsAPI(generics.GenericAPIView):
 
         manufacturing_name = data.get("manufacturing_name")
         if manufacturing_name:
-            meta_product.set_manufacturing_name(manufacturing_name)
+            meta_product.manufacturing_name = manufacturing_name
 
         price_obj = Price(meta_product=meta_product)
         price_obj.price = data.get("price")
