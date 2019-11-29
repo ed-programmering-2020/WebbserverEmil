@@ -211,6 +211,14 @@ class Price(models.Model):
 
     @price.setter
     def price(self, price):
+        dot_pos = price.find(".")
+        comma_pos = price.find(",")
+
+        if 0 <= dot_pos < comma_pos:
+            price = price[dot_pos:comma_pos]
+        elif 0 <= comma_pos < dot_pos:
+            price = price[comma_pos:dot_pos]
+
         price = int(re.sub("\D", "", str(price)))
         self._price = None if price >= 10 ** 6 else price
 
