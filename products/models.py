@@ -27,6 +27,7 @@ class Product(models.Model):
     _specs = models.CharField("specs", max_length=256, default=json.dumps({}))
     category = models.ForeignKey(Category, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     manufacturer = models.ForeignKey(Manufacturer, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
+    manufacturing_name = models.CharField('manufacturing_name', max_length=128, blank=True, null=True)
 
     @property
     def specs(self):
@@ -105,16 +106,20 @@ class Product(models.Model):
         def most_frequent(List):
             return max(set(List), key=List.count) if List != [] else None
 
-        categories, names, prices, specs_list, important_words = [], [], [], [], []
+        categories, names, prices, manufacturing_names, specs_list, important_words = [], [], [], [], []
         for meta_product in self.meta_products.all():
             names.append(meta_product.name)
             specs_list.append(meta_product.specs.all())
-            if meta_product.category: categories.append(meta_product.category)
+            manufacturing_names.append(meta_product.manufacturing_name)
+            if meta_product.category:
+                categories.append(meta_product.category)
 
             price = meta_product.get_price()
-            if price: prices.append(price)
+            if price:
+                prices.append(price)
 
         self.price = min(prices) if prices else None
+        self.manufacturing_name = most_frequent(manufacturing_names)
         self.update_name(names)
         self.update_specs(specs_list)
 
@@ -148,35 +153,40 @@ class MetaProduct(models.Model):
     id = models.AutoField(primary_key=True, blank=True)
     name = models.CharField('name', max_length=128, blank=True)
     _category = models.CharField("category", max_length=32, blank=True, null=True)
+    _manufacturing_name = models.CharField('manufacturing_name', max_length=128, blank=True, null=True)
     url = models.CharField('url', max_length=128, blank=True)
     host = models.ForeignKey(Website, related_name="meta_products", on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(Product, related_name="meta_products", on_delete=models.CASCADE, null=True)
+    is_updated = models.BooleanField(default=False)
 
     def set_specs(self, specs):
         for key, value in specs.items():
             try:
-                spec = Spec.objects.get(key__iexact=key, value__iexact=value)
-                spec.meta_products.add(self)
-                self.save()
-                spec.save()
+                spec = self.specs.get(key__iexact=key, value__iexact=value)
             except:
-                spec = Spec.objects.create(key=key, value=value)
-
-            try:
-                other_spec = Spec.objects.get(key__iexact=key)
-            except:
-                other_spec = None
-
-            if other_spec:
-                if other_spec.spec_group:
-                    spec.spec_group = other_spec.spec_group
+                try:
+                    spec = Spec.objects.get(key__iexact=key, value__iexact=value)
+                    spec.meta_products.add(self)
+                    self.save()
                     spec.save()
-                else:
-                    spec_group = SpecGroup.objects.create(key=spec.key)
-                    spec.spec_group = spec_group
-                    spec.save()
-                    other_spec.spec_group = spec_group
-                    other_spec.save()
+                except:
+                    spec = Spec.objects.create(key=key, value=value)
+
+                try:
+                    other_spec = Spec.objects.get(key__iexact=key)
+                except:
+                    other_spec = None
+
+                if other_spec:
+                    if other_spec.spec_group:
+                        spec.spec_group = other_spec.spec_group
+                        spec.save()
+                    else:
+                        spec_group = SpecGroup.objects.create(key=spec.key)
+                        spec.spec_group = spec_group
+                        spec.save()
+                        other_spec.spec_group = spec_group
+                        other_spec.save()
 
     @property
     def category(self):
@@ -188,6 +198,25 @@ class MetaProduct(models.Model):
         last_str = categories[:-1]
         self._category = categories[:-2] if SequenceMatcher(None, last_str, self.name).ratio() >= 0.7 else last_str
         self.name.replace(self._category, "")
+
+    @property
+    def manufacturing_name(self):
+        return self._manufacturing_name
+
+    @manufacturing_name.setter
+    def manufacturing_name(self, name):
+        if name is None:
+            try:
+                for key in ["Tillverkarens artikelnr", "Tillverkarens ArtNr", "Artikelnr", "Artnr"]:
+                    try:
+                        self._manufacturing_name = self.specs.get(key=key).value
+                        break
+                    except:
+                        pass
+            except:
+                pass
+        else:
+            self._manufacturing_name = name
 
     def get_price(self):
         price_history = self.price_history.first()
