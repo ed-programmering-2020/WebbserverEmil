@@ -9,7 +9,7 @@ import json, re, uuid, os
 def get_file_path(instance, filename):
     ext = filename.split('.')[-1]
     filename = "%s.%s" % (uuid.uuid4(), ext)
-    return os.path.join(BASE_DIR, "media/product_images/", filename)
+    return os.path.join("product_images/", filename)
 
 
 class Manufacturer(models.Model):
