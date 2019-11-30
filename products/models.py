@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.safestring import mark_safe
+from Orpose.settings.base import BASE_DIR
 from scraping.models import Website
 from difflib import SequenceMatcher
 import json, re, uuid, os
@@ -8,7 +9,7 @@ import json, re, uuid, os
 def get_file_path(instance, filename):
     ext = filename.split('.')[-1]
     filename = "%s.%s" % (uuid.uuid4(), ext)
-    return os.path.join("media/product_images/", filename)
+    return os.path.join(BASE_DIR, "media/product_images/", filename)
 
 
 class Manufacturer(models.Model):
@@ -160,7 +161,7 @@ class Product(models.Model):
         return min([mp.get_price() for mp in self.meta_products.all()])
 
     def image_tag(self):
-        return mark_safe('<img src="media/%s" height="50" />' % self.image)
+        return mark_safe('<img src="%s" height="50" />' % self.image)
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True
 
@@ -246,7 +247,7 @@ class MetaProduct(models.Model):
             return None
 
     def image_tag(self):
-        return mark_safe('<img src="media/%s" height="50" />' % self.image)
+        return mark_safe('<img src="%s" height="50" />' % self.image)
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True
 
