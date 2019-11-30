@@ -23,6 +23,6 @@ DATABASES = {
     }
 }
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\','/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'Orpose-Backend/media').replace('\\', '/')
 
 MEDIA_URL = '/media/'
