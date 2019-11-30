@@ -7,7 +7,7 @@ import json, re, uuid, os
 def get_file_path(instance, filename):
     ext = filename.split('.')[-1]
     filename = "%s.%s" % (uuid.uuid4(), ext)
-    return os.path.join("product_images/", filename)
+    return os.path.join("product_images/", filename, ".jpg")
 
 
 class Manufacturer(models.Model):
@@ -158,6 +158,11 @@ class Product(models.Model):
     def get_price(self):
         return min([mp.get_price() for mp in self.meta_products.all()])
 
+    def image_tag(self):
+        return u'<img src="%s" height="150" />' % self.image
+    image_tag.short_description = 'Image'
+    image_tag.allow_tags = True
+
     def __str__(self):
         return "<Product {}>".format(self.name)
 
@@ -238,6 +243,11 @@ class MetaProduct(models.Model):
             return price_history.price
         else:
             return None
+
+    def image_tag(self):
+        return u'<img src="%s" height="150" />' % self.image
+    image_tag.short_description = 'Image'
+    image_tag.allow_tags = True
 
     def __str__(self):
         return "<MetaProduct {} {} {}>".format(self.name, self.category, self.get_price())

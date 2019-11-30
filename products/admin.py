@@ -3,27 +3,13 @@ from .models import Product, MetaProduct, Manufacturer, Category, Spec, SpecGrou
 
 
 class ProductAdmin(admin.ModelAdmin):
-    fields = ['image_tag']
-    readonly_fields = ['image_tag']
-    list_display = ["name", "category", "manufacturer"]
+    list_display = ["name", "category", "manufacturer", "image_tag"]
     search_fields = ["name"]
-
-    def image_tag(self, obj):
-        return u'<img src="%s" />' % obj.image
-    image_tag.short_description = 'Image'
-    image_tag.allow_tags = True
 
 
 class MetaProductAdmin(admin.ModelAdmin):
-    fields = ['image_tag']
-    readonly_fields = ['image_tag']
-    list_display = ["name", "product"]
+    list_display = ["name", "product", "image_tag"]
     search_fields = ["name"]
-
-    def image_tag(self, obj):
-        return u'<img src="%s" />' % obj.image
-    image_tag.short_description = 'Image'
-    image_tag.allow_tags = True
 
 
 class ManufacturerAdmin(admin.ModelAdmin):
