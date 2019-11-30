@@ -41,6 +41,7 @@ class ProductsAPI(generics.GenericAPIView):
                 name=data.get("title"),
                 url=website,
                 host=Website.objects.get(id=data.get("host_id")),
+                img=request.FILES["img"]
             )
 
         category = data.get("category")

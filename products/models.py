@@ -26,6 +26,7 @@ class Product(models.Model):
     id = models.AutoField(primary_key=True, blank=True)
     name = models.CharField('name', max_length=128, blank=True, null=True)
     _specs = models.CharField("specs", max_length=256, default=json.dumps({}))
+    image = models.ImageField(upload_to="product_images/", blank=True, null=True)
     category = models.ForeignKey(Category, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     manufacturer = models.ForeignKey(Manufacturer, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     manufacturing_name = models.CharField('manufacturing_name', max_length=128, blank=True, null=True)
@@ -144,6 +145,10 @@ class Product(models.Model):
                 if self.manufacturer and self.manufacturer.products.count() <= 1: self.manufacturer.delete()
                 self.manufacturer = manufacturer
 
+            meta_product_with_image = self.meta_products.get(image != None)
+            if meta_product_with_image:
+                self.image = meta_product_with_image.image
+
     def get_price(self):
         return min([mp.get_price() for mp in self.meta_products.all()])
 
@@ -157,6 +162,7 @@ class MetaProduct(models.Model):
     _category = models.CharField("category", max_length=32, blank=True, null=True)
     _manufacturing_name = models.CharField('manufacturing_name', max_length=128, blank=True, null=True)
     url = models.CharField('url', max_length=128, blank=True)
+    image = models.ImageField(upload_to="product_images/", blank=True, null=True)
     host = models.ForeignKey(Website, related_name="meta_products", on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(Product, related_name="meta_products", on_delete=models.CASCADE, null=True)
     is_updated = models.BooleanField(default=False)

@@ -139,7 +139,7 @@ class Command(BaseCommand):
                 if product != None:
                     products.append(product)
 
-                print("-- %s updated (%s)" % (meta_product, count))
+                print(" -- %s (%s)" % (meta_product, count))
 
         print("Updating products")
         count = 0
@@ -148,6 +148,6 @@ class Command(BaseCommand):
             product.update_info()
             product.save()
 
-            print("-- %s updated (%s)" % (product, count))
+            print("-- %s (%s)" % (product, count))
 
         self.stdout.write(self.style.SUCCESS("Successfully combined meta-products and updated the products"))
