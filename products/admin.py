@@ -3,7 +3,9 @@ from .models import Product, MetaProduct, Manufacturer, Category, Spec, SpecGrou
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ["name", "category", "manufacturer", "image_tag"]
+    fields = ['image_tag']
+    readonly_fields = ['image_tag']
+    list_display = ["name", "category", "manufacturer"]
     search_fields = ["name"]
 
     def image_tag(self, obj):
@@ -13,7 +15,9 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 class MetaProductAdmin(admin.ModelAdmin):
-    list_display = ["name", "product", "image_tag"]
+    fields = ['image_tag']
+    readonly_fields = ['image_tag']
+    list_display = ["name", "product"]
     search_fields = ["name"]
 
     def image_tag(self, obj):
