@@ -1,8 +1,13 @@
 from django.db import models
 from scraping.models import Website
 from difflib import SequenceMatcher
-from unique_upload import unique_upload
-import json, re
+import json, re, uuid, os
+
+
+def get_file_path(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return os.path.join("product_images", filename)
 
 
 class Manufacturer(models.Model):
@@ -27,7 +32,7 @@ class Product(models.Model):
     id = models.AutoField(primary_key=True, blank=True)
     name = models.CharField('name', max_length=128, blank=True, null=True)
     _specs = models.CharField("specs", max_length=256, default=json.dumps({}))
-    image = models.ImageField(upload_to=unique_upload, blank=True, null=True)
+    image = models.ImageField(upload_to=get_file_path, blank=True, null=True)
     category = models.ForeignKey(Category, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     manufacturer = models.ForeignKey(Manufacturer, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     manufacturing_name = models.CharField('manufacturing_name', max_length=128, blank=True, null=True)
@@ -163,7 +168,7 @@ class MetaProduct(models.Model):
     _category = models.CharField("category", max_length=32, blank=True, null=True)
     _manufacturing_name = models.CharField('manufacturing_name', max_length=128, blank=True, null=True)
     url = models.CharField('url', max_length=128, blank=True)
-    image = models.ImageField(upload_to=unique_upload, blank=True, null=True)
+    image = models.ImageField(upload_to=get_file_path, blank=True, null=True)
     host = models.ForeignKey(Website, related_name="meta_products", on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(Product, related_name="meta_products", on_delete=models.CASCADE, null=True)
     is_updated = models.BooleanField(default=False)
