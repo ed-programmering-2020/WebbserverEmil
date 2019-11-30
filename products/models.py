@@ -159,7 +159,7 @@ class Product(models.Model):
         return min([mp.get_price() for mp in self.meta_products.all()])
 
     def image_tag(self):
-        return u'<img src="%s" height="150" />' % self.image
+        return u'<img src="media/%s" height="150" />' % self.image
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True
 
@@ -245,7 +245,7 @@ class MetaProduct(models.Model):
             return None
 
     def image_tag(self):
-        return u'<img src="%s" height="150" />' % self.image
+        return u'<img src="media/%s" height="150" />' % self.image
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True
 

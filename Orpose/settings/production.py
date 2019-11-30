@@ -22,3 +22,7 @@ DATABASES = {
         'OPTIONS': {"init_command": "SET foreign_key_checks = 0;"}
     }
 }
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\','/')
+
+MEDIA_URL = '/media/'
