@@ -88,46 +88,63 @@ class Command(BaseCommand):
         return possible_specs
 
     def handle(self, *args, **options):
+        count = 0
+        updated_meta_products = []
+        products = []
+        self.stdout.write(self.style.INFO("Combining meta-products"))
         for meta_product in MetaProduct.objects.filter(is_updated=True):
-            other_meta_product = None
+            if meta_product not in updated_meta_products:
+                updated_meta_products.append(meta_product)
+                other_meta_product = None
+                count += 1
 
-            try:
-                other_meta_product = MetaProduct.objects.exclude(url=meta_product.url).get(
-                    Q(name=meta_product.name) |
-                    Q(manufacturing_name=meta_product.manufacturing_name)
-                )
-            except:
-                other_meta_products = self.find_similar_meta_products(meta_product)
-                possible_specs = self.find_specs(meta_product.specs.all())
-                checked_meta_products = []
-                for other in other_meta_products:
-                    if other not in checked_meta_products:
-                        result = self.match_specs(possible_specs, other)
-                        if result == True:
-                            other_meta_product = other
-                            break
-                        checked_meta_products.append(other)
+                try:
+                    other_meta_product = MetaProduct.objects.exclude(url=meta_product.url).get(
+                        Q(name=meta_product.name) |
+                        Q(manufacturing_name=meta_product.manufacturing_name)
+                    )
+                except:
+                    other_meta_products = self.find_similar_meta_products(meta_product)
+                    possible_specs = self.find_specs(meta_product.specs.all())
+                    checked_meta_products = []
+                    for other in other_meta_products:
+                        if other not in checked_meta_products:
+                            result = self.match_specs(possible_specs, other)
+                            if result == True:
+                                other_meta_product = other
+                                break
+                            checked_meta_products.append(other)
 
-            if other_meta_product != None:
-                if other_meta_product.product == None:
-                    product = Product.objects.create()
-                    meta_product.product = product
-                    meta_product.save()
-                    other_meta_product.product = product
+                if other_meta_product != None:
+                    updated_meta_products.append(other_meta_product)
+                    if other_meta_product.product == None:
+                        product = Product.objects.create()
+                        meta_product.product = product
+                        meta_product.save()
+                        other_meta_product.product = product
+                        other_meta_product.save()
+                    else:
+                        product = other_meta_product.product
+                        meta_product.product = product
+                        meta_product.save()
+                elif meta_product.product:
+                    product = meta_product.product
                 else:
-                    product = other_meta_product.product
-                    meta_product.product = product
+                    product = None
 
-            elif meta_product.product:
-                product = meta_product.product
-            else:
-                product = None
+                meta_product.is_updated = False
+                meta_product.save()
 
-            meta_product.is_updated = False
-            meta_product.save()
+                if product != None:
+                    products.append(product)
 
-            if product != None:
+                self.stdout.write(self.style.INFO("-- %s updated (%s)" % (meta_product, count)))
+
+            self.stdout.write(self.style.INFO("Updating products"))
+            for product in products:
                 product.update_info()
                 product.save()
 
-        self.stdout.write(self.style.SUCCESS("Updated products have been combined"))
+                self.stdout.write(self.style.INFO("-- %s updated (%s)" % (meta_product, count)))
+
+        self.stdout.write(self.style.SUCCESS("Successfully combined meta-products and updated the products"))
