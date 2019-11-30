@@ -141,13 +141,13 @@ class Command(BaseCommand):
 
                 print("-- %s updated (%s)" % (meta_product, count))
 
-            print("Updating products")
-            count = 0
-            for product in products:
-                count += 1
-                product.update_info()
-                product.save()
+        print("Updating products")
+        count = 0
+        for product in products:
+            count += 1
+            product.update_info()
+            product.save()
 
-                print("-- %s updated (%s)" % (product, count))
+            print("-- %s updated (%s)" % (product, count))
 
         self.stdout.write(self.style.SUCCESS("Successfully combined meta-products and updated the products"))
