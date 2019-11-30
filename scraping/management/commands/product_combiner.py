@@ -91,7 +91,7 @@ class Command(BaseCommand):
         count = 0
         updated_meta_products = []
         products = []
-        self.stdout.write(self.style.INFO("Combining meta-products"))
+        print("Combining meta-products")
         for meta_product in MetaProduct.objects.filter(is_updated=True):
             if meta_product not in updated_meta_products:
                 updated_meta_products.append(meta_product)
@@ -117,6 +117,7 @@ class Command(BaseCommand):
 
                 if other_meta_product != None:
                     updated_meta_products.append(other_meta_product)
+                    other_meta_product.is_updated = False
                     if other_meta_product.product == None:
                         product = Product.objects.create()
                         meta_product.product = product
@@ -138,13 +139,15 @@ class Command(BaseCommand):
                 if product != None:
                     products.append(product)
 
-                self.stdout.write(self.style.INFO("-- %s updated (%s)" % (meta_product, count)))
+                print("-- %s updated (%s)" % (meta_product, count))
 
-            self.stdout.write(self.style.INFO("Updating products"))
+            print("Updating products")
+            count = 0
             for product in products:
+                count += 1
                 product.update_info()
                 product.save()
 
-                self.stdout.write(self.style.INFO("-- %s updated (%s)" % (meta_product, count)))
+                print("-- %s updated (%s)" % (product, count))
 
         self.stdout.write(self.style.SUCCESS("Successfully combined meta-products and updated the products"))
