@@ -58,7 +58,7 @@ class Command(BaseCommand):
 
             spec_group = spec.spec_group
             if spec_group and spec_group.is_active:
-                possible_keys = [spec.key for spec in spec_group.specs]
+                possible_keys = [spec.key for spec in spec_group.specs.all()]
             else:
                 possible_keys = [key]
 
@@ -84,7 +84,7 @@ class Command(BaseCommand):
                 try:
                     other_meta_product = MetaProduct.objects.exclude(url=meta_product.url).get(
                         Q(name=meta_product.name) |
-                        Q(manufacturing_name=meta_product.manufacturing_name)
+                        Q(_manufacturing_name=meta_product.manufacturing_name)
                     )
                 except:
                     other_meta_products = self.find_similar_meta_products(meta_product)
