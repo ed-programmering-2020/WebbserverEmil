@@ -39,28 +39,16 @@ class Command(BaseCommand):
                 return False
         return True
 
-    def check_meta_product(self, numbers, meta_product):
-        if SequenceMatcher(None, meta_product.name, meta_product.name).ratio() <= 0.7:
-            other_numbers = [int(s) for s in meta_product.name.split() if s.isdigit()]
-            for number in numbers:
-                if number not in other_numbers:
-                    return None
-        return meta_product
-
     def find_similar_meta_products(self, meta_product):
         words = meta_product.name.split(" ")
-        checked_meta_products, other_meta_products = [], []
-        numbers = [int(s) for s in meta_product.name.split() if s.isdigit()]
+        other_meta_products = []
+        # numbers = [int(s) for s in meta_product.name.split() if s.isdigit()]
 
         for i in range(len(words) - 1):
             combo = words[i] + " " + words[i + 1]
             other_meta_products += MetaProduct.objects.exclude(url=meta_product.url).filter(name__icontains=combo).all()
 
-        for m_product in other_meta_products:
-            m_product = self.check_meta_product(numbers, m_product)
-            if m_product == True: checked_meta_products.append(m_product)
-
-        return checked_meta_products
+        return other_meta_products
 
     def find_specs(self, specs):
         possible_specs = {}
@@ -68,15 +56,10 @@ class Command(BaseCommand):
             key = spec.key
             value = spec.value
 
-            try:
-                spec = Spec.objects.get(key__iexact=key)
-                spec_group = spec.spec_group
-
-                if spec_group and spec_group.is_active:
-                    possible_keys = [spec.key for spec in spec_group.specs]
-                else:
-                    possible_keys = [key]
-            except:
+            spec_group = spec.spec_group
+            if spec_group and spec_group.is_active:
+                possible_keys = [spec.key for spec in spec_group.specs]
+            else:
                 possible_keys = [key]
 
             for i in range(len(possible_keys)):
