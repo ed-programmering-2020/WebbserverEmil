@@ -1,9 +1,9 @@
 from django.db import models
 from django.utils.safestring import mark_safe
-from Orpose.settings.base import BASE_DIR
 from scraping.models import Website
 from difflib import SequenceMatcher
-import json, re, uuid, os
+from categories.models import MetaCategory
+import json, re, uuid
 
 
 def get_file_path(instance, filename):
@@ -17,23 +17,12 @@ class Manufacturer(models.Model):
         return "<Manufacturer %s>" % self.name
 
 
-class Category(models.Model):
-    name = models.CharField('name', max_length=30, blank=True, null=True)
-    is_active = models.BooleanField(default=False)
-
-    def __str__(self):
-        return "<Category %s>" % self.name
-
-    class Meta:
-        verbose_name_plural = 'Categories'
-
-
 class Product(models.Model):
     id = models.AutoField(primary_key=True, blank=True)
     name = models.CharField('name', max_length=128, blank=True, null=True)
     _specs = models.CharField("specs", max_length=256, default=json.dumps({}))
     image = models.ImageField(upload_to=get_file_path, blank=True, null=True)
-    category = models.ForeignKey(Category, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
+    category = models.ForeignKey(MetaCategory, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     manufacturer = models.ForeignKey(Manufacturer, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     manufacturing_name = models.CharField('manufacturing_name', max_length=128, blank=True, null=True)
 
@@ -129,8 +118,8 @@ class Product(models.Model):
         # Update Category
         category_name = most_frequent(categories)
         if category_name:
-            try: category = Category.objects.get(name=category_name)
-            except: category = Category.objects.create(name=category_name)
+            try: category = MetaCategory.objects.get(name=category_name)
+            except: category = MetaCategory.objects.create(name=category_name)
 
             if self.category and self.category.products.count() <= 1: self.category.delete()
             self.category = category
@@ -176,7 +165,10 @@ class MetaProduct(models.Model):
     image = models.ImageField(upload_to=get_file_path, blank=True, null=True)
     host = models.ForeignKey(Website, related_name="meta_products", on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(Product, related_name="meta_products", on_delete=models.CASCADE, null=True)
+
+    # Scraping values
     is_updated = models.BooleanField(default=False)
+    is_combined = models.BooleanField(default=False)
 
     def set_specs(self, specs):
         for key, value in specs.items():

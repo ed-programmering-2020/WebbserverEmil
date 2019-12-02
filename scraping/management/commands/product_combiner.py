@@ -75,7 +75,12 @@ class Command(BaseCommand):
         updated_meta_products = []
         products = []
         print("Combining meta-products")
-        for meta_product in MetaProduct.objects.filter(is_updated=True):
+
+        meta_products = MetaProduct.objects.filter(is_updated=True, is_combined=False)[:8000]
+        if not meta_products or not len(meta_products) >= 8000:
+            meta_products = meta_products.update(is_combined=False)
+
+        for meta_product in meta_products:
             if meta_product not in updated_meta_products:
                 updated_meta_products.append(meta_product)
                 other_meta_product = None
@@ -101,6 +106,7 @@ class Command(BaseCommand):
                 if other_meta_product != None:
                     updated_meta_products.append(other_meta_product)
                     other_meta_product.is_updated = False
+                    other_meta_product.is_combined = True
                     if other_meta_product.product == None:
                         product = Product.objects.create()
                         meta_product.product = product
@@ -117,6 +123,7 @@ class Command(BaseCommand):
                     product = None
 
                 meta_product.is_updated = False
+                meta_product.is_combined = True
                 meta_product.save()
 
                 if product != None:
