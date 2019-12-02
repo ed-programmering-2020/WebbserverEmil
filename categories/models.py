@@ -1,18 +1,15 @@
 from django.db import models
-from abc import ABCMeta, abstractmethod
 
 
-class Category(models.Model, metaclass=ABCMeta):
+class Category(models.Model):
     name = models.CharField('name', max_length=30, blank=True, null=True)
     is_active = models.BooleanField(default=True)
 
-    @abstractmethod
     def match(self):
-        pass
+        raise NotImplementedError
 
-    @abstractmethod
     def __str__(self):
-        pass
+        raise NotImplementedError
 
     class Meta:
         verbose_name_plural = 'Categories'
