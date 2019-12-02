@@ -1,8 +1,5 @@
-from django import forms
-from django.conf.urls import url
 from django.contrib import admin
-from django.utils.translation import ugettext as _
-from .models import Category
+from .models import Category, MetaCategory
 
 
 class CategoryAdmin(admin.ModelAdmin):
