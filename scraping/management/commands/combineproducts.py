@@ -87,10 +87,14 @@ class Command(BaseCommand):
                 count += 1
 
                 try:
-                    other_meta_product = MetaProduct.objects.exclude(url=meta_product.url).get(
-                        Q(name=meta_product.name) |
-                        Q(_manufacturing_name=meta_product.manufacturing_name)
-                    )
+                    other_meta_product = MetaProduct.objects.exclude(url=meta_product.url)
+                    if meta_product.manufacturing_name != None:
+                        other_meta_product = other_meta_product.get(
+                            Q(name=meta_product.name) |
+                            Q(_manufacturing_name=meta_product.manufacturing_name)
+                        )
+                    else:
+                        other_meta_product = other_meta_product.get(name=meta_product.name)
                 except:
                     other_meta_products = self.find_similar_meta_products(meta_product)
                     possible_specs = self.find_specs(meta_product.specs.all())
