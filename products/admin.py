@@ -3,7 +3,7 @@ from .models import Product, MetaProduct, Manufacturer, Spec, SpecGroup, SpecGro
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ["name", "category", "manufacturer", "image_tag"]
+    list_display = ["name", "meta_category", "manufacturer", "image_tag"]
     search_fields = ["name"]
 
 
