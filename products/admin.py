@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, MetaProduct, Manufacturer, Category, Spec, SpecGroup, SpecGroupCollection
+from .models import Product, MetaProduct, Manufacturer, Spec, SpecGroup, SpecGroupCollection
 
 
 class ProductAdmin(admin.ModelAdmin):
@@ -14,10 +14,6 @@ class MetaProductAdmin(admin.ModelAdmin):
 
 class ManufacturerAdmin(admin.ModelAdmin):
     pass
-
-
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ["name", "is_active"]
 
 
 class SpecAdmin(admin.ModelAdmin):
@@ -38,7 +34,6 @@ class SpecGroupCollectionAdmin(admin.ModelAdmin):
 admin.site.register(Product, ProductAdmin)
 admin.site.register(MetaProduct, MetaProductAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
-admin.site.register(Category, CategoryAdmin)
 admin.site.register(Spec, SpecAdmin)
 admin.site.register(SpecGroup, SpecGroupAdmin)
 admin.site.register(SpecGroupCollection, SpecGroupCollectionAdmin)
