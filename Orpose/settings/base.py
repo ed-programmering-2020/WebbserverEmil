@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     "scraping",
     "content",
     "localization",
-    "core"
+    "categories"
 ]
 
 MIDDLEWARE = [
