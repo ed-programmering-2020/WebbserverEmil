@@ -22,7 +22,7 @@ class Product(models.Model):
     name = models.CharField('name', max_length=128, blank=True, null=True)
     _specs = models.CharField("specs", max_length=256, default=json.dumps({}))
     image = models.ImageField(upload_to=get_file_path, blank=True, null=True)
-    category = models.ForeignKey(MetaCategory, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
+    meta_category = models.ForeignKey(MetaCategory, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     manufacturer = models.ForeignKey(Manufacturer, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     manufacturing_name = models.CharField('manufacturing_name', max_length=128, blank=True, null=True)
 
@@ -108,23 +108,23 @@ class Product(models.Model):
             names.append(meta_product.name)
             specs_list.append(meta_product.specs.all())
             manufacturing_names.append(meta_product.manufacturing_name)
-            if meta_product.category:
-                categories.append(meta_product.category)
+            if meta_product.meta_category:
+                categories.append(meta_product.meta_category)
 
             price = meta_product.get_price()
             if price:
                 prices.append(price)
 
-        # Update Category
+        # Update Meta Category
         category_name = most_frequent(categories)
         if category_name:
-            try: category = MetaCategory.objects.get(name=category_name)
-            except: category = MetaCategory.objects.create(name=category_name)
+            try: meta_category = MetaCategory.objects.get(name=category_name)
+            except: meta_category = MetaCategory.objects.create(name=category_name)
 
-            if self.category and self.category.products.count() <= 1: self.category.delete()
-            self.category = category
+            if self.meta_category and self.meta_category.products.count() <= 1: self.meta_category.delete()
+            self.meta_category = meta_category
 
-        if self.category.is_active:
+        if self.meta_category.is_active:
             self.price = min(prices) if prices else None
             self.manufacturing_name = most_frequent(manufacturing_names)
             self.update_name(names)
