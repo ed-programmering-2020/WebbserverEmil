@@ -7,7 +7,7 @@ from .views import FrontendAppView
 
 
 urlpatterns = [
-    re_path(r'^.*/', FrontendAppView.as_view()),
+    re_path(r'.*', FrontendAppView.as_view()),
     path("admin/", admin.site.urls),
     path("api/", include("products.urls")),
     path("api/scraping/", include("scraping.urls")),
