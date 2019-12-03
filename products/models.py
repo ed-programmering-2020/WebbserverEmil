@@ -183,21 +183,21 @@ class MetaProduct(models.Model):
                 except:
                     spec = Spec.objects.create(key=key, value=value)
 
-                try:
-                    other_spec = Spec.objects.get(key__iexact=key)
-                except:
-                    other_spec = None
+            try:
+                other_spec = Spec.objects.get(key__iexact=key)
+            except:
+                other_spec = None
 
-                if other_spec:
-                    if other_spec.spec_group:
-                        spec.spec_group = other_spec.spec_group
-                        spec.save()
-                    else:
-                        spec_group = SpecGroup.objects.create(key=spec.key)
-                        spec.spec_group = spec_group
-                        spec.save()
-                        other_spec.spec_group = spec_group
-                        other_spec.save()
+            if other_spec:
+                if other_spec.spec_group:
+                    spec.spec_group = other_spec.spec_group
+                    spec.save()
+                else:
+                    spec_group = SpecGroup.objects.create(key=spec.key)
+                    spec.spec_group = spec_group
+                    spec.save()
+                    other_spec.spec_group = spec_group
+                    other_spec.save()
 
     @property
     def category(self):
