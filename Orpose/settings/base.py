@@ -16,12 +16,6 @@ STATICFILES_DIRS = [
 
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
     "corsheaders",
     "rest_framework",
     "knox",
@@ -31,6 +25,12 @@ INSTALLED_APPS = [
     "scraping",
     "content",
     "localization",
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE = [
