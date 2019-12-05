@@ -25,6 +25,3 @@ DATABASES = {
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 4000
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
-
-MEDIA_URL = '/media/'

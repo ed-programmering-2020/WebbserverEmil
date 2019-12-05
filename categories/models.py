@@ -1,5 +1,4 @@
 from django.db import models
-from products.models import Product
 
 
 class Category(models.Model):
@@ -50,15 +49,3 @@ class Laptop(Category):
 
     def __str__(self):
         return "<Laptop>"
-
-
-class MetaCategory(models.Model):
-    name = models.CharField('name', max_length=30, blank=True, null=True)
-    category = models.ForeignKey(Category, related_name="meta_categories", on_delete=models.CASCADE)
-    is_active = models.BooleanField(default=False)
-
-    def __str__(self):
-        return "<MetaCategory %s>" % self.name
-
-    class Meta:
-        verbose_name_plural = 'Meta categories'
