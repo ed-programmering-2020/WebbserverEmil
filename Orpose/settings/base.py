@@ -19,7 +19,6 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "knox",
-    "categories",
     "users",
     "products",
     "scraping",
