@@ -76,9 +76,11 @@ class Command(BaseCommand):
         products = []
         print("Combining meta-products")
 
-        meta_products = MetaProduct.objects.filter(is_updated=True, is_combined=False)[:8000]
-        if not meta_products or not len(meta_products) >= 8000:
+        meta_products = MetaProduct.objects.filter(is_updated=True, is_combined=False)
+        if not meta_products:
             meta_products = meta_products.update(is_combined=False)
+
+        meta_products = meta_products[:8000]
 
         for meta_product in meta_products:
             if meta_product not in updated_meta_products:
