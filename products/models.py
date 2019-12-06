@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils.safestring import mark_safe
 from scraping.models import Website
+from categories.models import Category
 from difflib import SequenceMatcher
-from categories.models import MetaCategory
 import json, re, uuid
 
 
@@ -15,6 +15,18 @@ class Manufacturer(models.Model):
 
     def __str__(self):
         return "<Manufacturer %s>" % self.name
+
+
+class MetaCategory(models.Model):
+    name = models.CharField('name', max_length=30, blank=True, null=True)
+    category = models.ForeignKey(Category, related_name="meta_categories", on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "<MetaCategory %s>" % self.name
+
+    class Meta:
+        verbose_name_plural = 'Meta categories'
 
 
 class Product(models.Model):

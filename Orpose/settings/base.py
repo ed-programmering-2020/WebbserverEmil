@@ -93,6 +93,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
+
+MEDIA_URL = '/media/'
+
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
