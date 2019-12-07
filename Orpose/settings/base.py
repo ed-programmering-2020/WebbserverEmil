@@ -11,7 +11,8 @@ REACT_APP_DIR = "/home/Orpose/Orpose-Frontend/"
 STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
 STATICFILES_DIRS = [
-    os.path.join(REACT_APP_DIR, 'build', 'static')
+    os.path.join(REACT_APP_DIR, 'build', 'static'),
+
 ]
 
 

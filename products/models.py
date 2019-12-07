@@ -31,6 +31,12 @@ class Category(models.Model):
         else:
             raise NotImplementedError
 
+    def sort_with_usage(self):
+        raise NotImplementedError
+
+    def sort_with_priorities(self):
+        raise NotImplementedError
+
     def get_recommendations(self, usage):
         raise NotImplementedError
 
@@ -81,7 +87,14 @@ class Laptop(Category):
 
         return checked_products
 
+    def sort_with_usage(self, products, usage):
+        pass
+
     def sort_with_priorities(self, products, priorities):
+        prioritized_lists = {
+
+        }
+
         return products
 
     def match(self, **kwargs):
@@ -96,11 +109,11 @@ class Laptop(Category):
                 "values": (13.3, 15.6)
             },
             "priorities": {
-                "battery": 0,
-                "performance": 0,
-                "storage": 0,
-                "screen": 0,
-                "ports": 0
+                "battery": 3,
+                "performance": 3,
+                "storage": 7,
+                "screen": 2,
+                "ports": 10
             }
         }
 
@@ -110,7 +123,8 @@ class Laptop(Category):
 
         products_price_matched = self.find_with_price(all_products, kwargs["price"]["range"], True)
         product_size_matched = self.find_with_size(products_price_matched, kwargs["size"]["values"])
-        products_prioritization_sorted = self.sort_with_priorities(product_size_matched, kwargs["priorities"])
+        products_usage_sorted = self.sort_with_usage(product_size_matched, kwargs["usage"]["value"])
+        products_prioritization_sorted = self.sort_with_priorities(products_usage_sorted, kwargs["priorities"])
 
     def __str__(self):
         return "<Laptop>"
