@@ -374,7 +374,7 @@ class Manufacturer(models.Model):
 
 class MetaCategory(models.Model):
     name = models.CharField('name', max_length=30, blank=True, null=True)
-    category = models.ForeignKey(Category, related_name="meta_categories", on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, related_name="meta_categories", on_delete=models.CASCADE, null=True, blank=True)
     is_active = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
 
