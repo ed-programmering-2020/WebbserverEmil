@@ -1,10 +1,10 @@
 from django.utils.safestring import mark_safe
 from scraping.models import Website
 from difflib import SequenceMatcher
+from collections import defaultdict
 from django.db import models
 from enum import Enum
-import json, re, uuid
-from collections import defaultdict
+import json, re, uuid, operator
 
 
 def get_file_path(instance, filename):
@@ -95,13 +95,38 @@ class Category(models.Model):
 
         return sorted_products
 
+    def get_top_products(self, products):
+        top_id, top_value = None, 0
+        for id, value in products.items():
+            if value > top_value:
+                top_value = value
+                top_id = id
+
+        top_products = {
+            top_id: top_value
+        }
+        for id, value in products.items():
+            if id != top_id and value >= (top_value * 0.9):
+                top_products[id] = value
+
+        return top_products
+
+    def get_product_models(self, products):
+        product_list = []
+        for product in products:
+            id, value = product
+
+            product_list.append(Product.objects.get(id=id))
+
+        return product_list
+
     def products_to_json(self, products):
         if len(products) >= 1:
             main_product = products[0]
 
             alternative_products = None
             if len(products) >= 4:
-                alternative_products = products[1:3]
+                alternative_products = products[1:4]
             elif len(products) > 1:
                 alternative_products = products[1:len(products)]
 
@@ -180,10 +205,8 @@ class Laptop(Category):
 
         return checked_products
 
-    def sort_with_usage(self, products, usage):
-        amount_of_products = len(products)
-
-        sorted_products = {}
+    def sort_with_usage(self, products, amount_of_products, usage):
+        sorted_products = defaultdict()
         def get_value(products_list_length, key, product, i_inverse):
             id, value = product
             id = str(id)
@@ -191,9 +214,9 @@ class Laptop(Category):
             result = self.biases[usage][key] * ((amount_of_products / products_list_length) * i_inverse)
 
             if id in sorted_products.keys():
-                sorted_products[key] = sorted_products[id] + result
+                sorted_products[id] = sorted_products[id] + result
             else:
-                sorted_products[key] = i_inverse
+                sorted_products[id] = result
 
         for key, products_list in products.items():
             products_list_length = len(products_list)
@@ -203,19 +226,50 @@ class Laptop(Category):
 
                 if type(product) == list:
                     for sub_product in product:
-                        get_value(products_list_length, key, product, i_inverse)
+                        get_value(products_list_length, key, sub_product, i_inverse)
                 else:
                     get_value(products_list_length, key, product, i_inverse)
 
         return sorted_products
 
-    def sort_with_priorities(self, products_with_values, products, priorities):
-        sorted_products = {}
+    def sort_with_priorities(self, products_with_values, amount_of_products, top_products, priorities):
+        sorted_products = defaultdict()
 
+        def save_value(id, key, product, products_list_length, i):
+            product_id, value = product
+            if product_id == id:
+                i_inverse = products_list_length - i
+                result = ((amount_of_products / products_list_length) * i_inverse)
+                sorted_products[id]["values"][key] = result
 
+        for id, value in top_products.items():
+            sorted_products[id] = {"usage_value": value, "values": {}}
+            for key, products_list in products_with_values.items():
+                products_list_length = len(products_list)
 
+                for i, product in enumerate(products_list):
+                    if type(product) == list:
+                        for sub_product in product:
+                            save_value(id, key, sub_product, products_list_length, i)
+                    else:
+                        save_value(id, key, product, products_list_length, i)
 
-        return products
+        priority_sorted_products = []
+        for id, all_values in sorted_products.items():
+            resulting_value = all_values["usage_value"]
+
+            for group, values in self.priority_groups.items():
+                key_value = 0
+
+                for key, value in all_values["values"].items():
+                    if key in values:
+                        key_value += value
+
+                resulting_value += 0.1 * priorities[group] * (key_value / len(values))
+
+            priority_sorted_products.append((id, resulting_value))
+
+        return priority_sorted_products
 
     def match(self, **kwargs):
         kwargs = {
@@ -229,11 +283,10 @@ class Laptop(Category):
                 "values": (13.3, 15.6)
             },
             "priorities": {
-                "battery": 3,
+                "battery": 5,
                 "performance": 3,
                 "storage": 7,
-                "screen": 2,
-                "ports": 10
+                "screen": 5,
             }
         }
 
@@ -252,12 +305,16 @@ class Laptop(Category):
 
         products_with_values = self.sort_with_values(products_size_matched)
 
-        products_usage_sorted = self.sort_with_usage(products_with_values, self.values, kwargs["usage"]["value"])
+        products_usage_sorted = self.sort_with_usage(products_with_values, len(products_size_matched), kwargs["usage"]["value"])
         products_price_sorted = self.sort_with_price(products_usage_sorted)
 
-        products_prioritization_sorted = self.sort_with_priorities(products_with_values, products_price_sorted, kwargs["priorities"])
+        top_products = self.get_top_products(products_price_sorted)
+        products_prioritization_sorted = self.sort_with_priorities(products_with_values, len(products_size_matched), top_products, kwargs["priorities"])
 
-        return self.products_to_json(products_prioritization_sorted)
+        ranked_products = products_prioritization_sorted.sort(key=operator.itemgetter(1), reverse=True)
+        product_models = self.get_product_models(ranked_products)
+
+        return self.products_to_json(product_models)
 
     def __str__(self):
         return "<Laptop>"
@@ -383,13 +440,15 @@ class Product(models.Model):
         # Update Meta Category
         category_name = most_frequent(categories)
         if category_name:
-            try: meta_category = MetaCategory.objects.get(name=category_name)
-            except: meta_category = MetaCategory.objects.create(name=category_name)
+            try:
+                meta_category = MetaCategory.objects.get(name=category_name)
+            except:
+                meta_category = MetaCategory.objects.create(name=category_name)
 
             if self.meta_category and self.meta_category.products.count() <= 1: self.meta_category.delete()
             self.meta_category = meta_category
 
-        if self.meta_category.is_active:
+        if self.meta_category and self.meta_category.is_active:
             self.price = min(prices) if prices else None
             self.manufacturing_name = most_frequent(manufacturing_names)
             self.update_name(names)
