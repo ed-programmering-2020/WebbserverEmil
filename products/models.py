@@ -4,6 +4,7 @@ from difflib import SequenceMatcher
 from django.db import models
 from enum import Enum
 import json, re, uuid
+from collections import defaultdict
 
 
 def get_file_path(instance, filename):
@@ -19,6 +20,8 @@ class Category(models.Model):
     name = models.CharField('name', max_length=30, blank=True, null=True)
     is_active = models.BooleanField(default=True)
 
+    values = {}  # to be overridden
+
     def find_with_price(self, products, value_range, strict=True):
         low_price, high_price = value_range
         low_price -= 1
@@ -31,17 +34,83 @@ class Category(models.Model):
         else:
             raise NotImplementedError
 
-    def sort_with_usage(self):
-        raise NotImplementedError
+    def sort_with_values(self, products):
+        sorted_products = defaultdict()
+        for product in products:
+            specs = product.specs.all()
+            id = product.id
 
-    def sort_with_priorities(self):
-        raise NotImplementedError
+            for key, value in self.values.items():
+                sgc = SpecGroupCollection.objects.get(name=key)
 
-    def get_recommendations(self, usage):
-        raise NotImplementedError
+                spec_value = None
+                for spec in specs:
+                    if spec.spec_group and spec.spec_group.spec_group_collection and spec.spec_group.spec_group_collection == sgc:
+                        spec_value = spec.value
+                        break
 
-    def match(self):
-        raise NotImplementedError
+                if not sorted_products[key]:
+                    sorted_products[key] = [(id, spec_value)]
+                else:
+                    for saved_index, saved_value in enumerate(sorted_products[key]):
+                        if type(saved_value) == list:
+                            saved_value = saved_value[0]
+
+                        saved_id, saved_spec_value = saved_value
+                        value_package = (id, spec_value)
+
+                        if value != []:
+                            saved_spec_value = value.index(saved_spec_value)
+                            spec_value = value.index(spec_value)
+
+                        if spec_value > saved_spec_value:
+                            sorted_products[key].insert(saved_index, value_package)
+                            break
+                        elif spec_value == saved_spec_value:
+                            if type(sorted_products[key][saved_index]) == list:
+                                sorted_products[key][saved_index].append(value_package)
+                            else:
+                                sorted_products[key][saved_index] = [sorted_products[key][saved_index], value_package]
+                            break
+                        elif saved_index == (len(sorted_products[key]) - 1):
+                            sorted_products[key].append([value_package])
+                            break
+
+        return sorted_products
+
+    def sort_with_price(self, products):
+        sorted_products = {}
+
+        def divide_by_price(values):
+            id, price = values
+            id = str(id)
+            sorted_products[id] = sorted_products[id] / (price / 1000)
+
+        for values in products:
+            if type(values) == list:
+                for sub_values in values:
+                    divide_by_price(sub_values)
+            else:
+                divide_by_price(values)
+
+        return sorted_products
+
+    def products_to_json(self, products):
+        if len(products) >= 1:
+            main_product = products[0]
+
+            alternative_products = None
+            if len(products) >= 4:
+                alternative_products = products[1:3]
+            elif len(products) > 1:
+                alternative_products = products[1:len(products)]
+
+            return {
+                "main": main_product,
+                "alternatives": alternative_products
+            }
+        else:
+            return None
 
     def __str__(self):
         raise NotImplementedError
@@ -51,6 +120,30 @@ class Category(models.Model):
 
 
 class Laptop(Category):
+    values = {
+
+    }
+
+    biases = {
+        Usages.General: {
+
+        }, Usages.Gaming: {
+
+        }
+    }
+
+    priority_groups = {
+        "battery": [
+
+        ], "performance": [
+
+        ], "storage": [
+
+        ], "screen": [
+
+        ]
+    }
+
     def get_recommendations(self, usage):
         if usage == Usages.General:
             return {
@@ -62,8 +155,8 @@ class Laptop(Category):
                 "price": (6000, 14000),
                 "size": (14, 17.3)
             }
-
-        raise NotImplementedError
+        else:
+            return None
 
     def find_with_size(self, products, size):
         min_size, max_size = size
@@ -88,12 +181,39 @@ class Laptop(Category):
         return checked_products
 
     def sort_with_usage(self, products, usage):
-        pass
+        amount_of_products = len(products)
 
-    def sort_with_priorities(self, products, priorities):
-        prioritized_lists = {
+        sorted_products = {}
+        def get_value(products_list_length, key, product, i_inverse):
+            id, value = product
+            id = str(id)
 
-        }
+            result = self.biases[usage][key] * ((amount_of_products / products_list_length) * i_inverse)
+
+            if id in sorted_products.keys():
+                sorted_products[key] = sorted_products[id] + result
+            else:
+                sorted_products[key] = i_inverse
+
+        for key, products_list in products.items():
+            products_list_length = len(products_list)
+
+            for i, product in enumerate(products_list):
+                i_inverse = products_list_length - i
+
+                if type(product) == list:
+                    for sub_product in product:
+                        get_value(products_list_length, key, product, i_inverse)
+                else:
+                    get_value(products_list_length, key, product, i_inverse)
+
+        return sorted_products
+
+    def sort_with_priorities(self, products_with_values, products, priorities):
+        sorted_products = {}
+
+
+
 
         return products
 
@@ -122,9 +242,22 @@ class Laptop(Category):
             all_products.extend(meta_category.products)
 
         products_price_matched = self.find_with_price(all_products, kwargs["price"]["range"], True)
-        product_size_matched = self.find_with_size(products_price_matched, kwargs["size"]["values"])
-        products_usage_sorted = self.sort_with_usage(product_size_matched, kwargs["usage"]["value"])
-        products_prioritization_sorted = self.sort_with_priorities(products_usage_sorted, kwargs["priorities"])
+        if products_price_matched:
+            products_size_matched = self.find_with_size(products_price_matched, kwargs["size"]["values"])
+
+            if products_price_matched is None:
+                return None
+        else:
+            return None
+
+        products_with_values = self.sort_with_values(products_size_matched)
+
+        products_usage_sorted = self.sort_with_usage(products_with_values, self.values, kwargs["usage"]["value"])
+        products_price_sorted = self.sort_with_price(products_usage_sorted)
+
+        products_prioritization_sorted = self.sort_with_priorities(products_with_values, products_price_sorted, kwargs["priorities"])
+
+        return self.products_to_json(products_prioritization_sorted)
 
     def __str__(self):
         return "<Laptop>"
@@ -240,8 +373,8 @@ class Product(models.Model):
             names.append(meta_product.name)
             specs_list.append(meta_product.specs.all())
             manufacturing_names.append(meta_product.manufacturing_name)
-            if meta_product.meta_category:
-                categories.append(meta_product.meta_category)
+            if meta_product.category:
+                categories.append(meta_product.category)
 
             price = meta_product.get_price()
             if price:

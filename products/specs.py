@@ -73,3 +73,8 @@ panel_types = [
     "va",
     "tn"
 ]
+
+storage_types = [
+    "ssd",
+    "hdd"
+]

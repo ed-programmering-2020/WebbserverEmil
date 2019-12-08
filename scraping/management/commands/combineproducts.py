@@ -80,7 +80,7 @@ class Command(BaseCommand):
         if not meta_products:
             meta_products = meta_products.update(is_combined=False)
 
-        meta_products = meta_products[:8000]
+        meta_products = meta_products[:20000]
 
         for meta_product in meta_products:
             if meta_product not in updated_meta_products:
