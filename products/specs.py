@@ -1,4 +1,4 @@
-processor = [
+processors = [
     "9900K",
     "9880H",
     "9980HK",
@@ -68,13 +68,17 @@ processor = [
     "9225",
 ]
 
+graphics_cards = []
+
 panel_types = [
     "ips",
     "va",
     "tn"
 ]
 
-storage_types = [
+disk_types = [
     "ssd",
     "hdd"
 ]
+
+

@@ -4,6 +4,7 @@ from difflib import SequenceMatcher
 from collections import defaultdict
 from django.db import models
 from enum import Enum
+from products import specs
 import json, re, uuid, operator
 
 
@@ -35,6 +36,18 @@ class Category(models.Model):
             raise NotImplementedError
 
     def sort_with_values(self, products):
+        def check_text_value(spec_value, value_list):
+            val = None
+            for sub_value in value_list:
+                if sub_value in spec_value:
+                    val = sub_value
+                    break
+
+            if val:
+                return value_list.index(val)
+            else:
+                return None
+
         sorted_products = defaultdict()
         for product in products:
             specs = product.specs.all()
@@ -60,8 +73,11 @@ class Category(models.Model):
                         value_package = (id, spec_value)
 
                         if value != []:
-                            saved_spec_value = value.index(saved_spec_value)
-                            spec_value = value.index(spec_value)
+                            saved_spec_value = check_text_value(saved_spec_value, value)
+                            spec_value = check_text_value(spec_value, value)
+                        else:
+                            saved_spec_value = re.sub(r'[^\d.]+', '', saved_spec_value)
+                            spec_value = re.sub(r'[^\d.]+', '', spec_value)
 
                         if spec_value > saved_spec_value:
                             sorted_products[key].insert(saved_index, value_package)
@@ -146,26 +162,55 @@ class Category(models.Model):
 
 class Laptop(Category):
     values = {
-
+        "battery capacity": [],
+        "processor": specs.processors,
+        "graphics card": specs.graphics_cards,
+        "memory": [],
+        "disk type": specs.disk_types,
+        "storage size": [],
+        "resolution": [],
+        "panel type": specs.panel_types,
+        "refresh rate": []
     }
 
     biases = {
         Usages.General: {
-
+            "battery capacity": 1,
+            "processor": 1,
+            "graphics card": 1,
+            "memory": 1,
+            "disk type": 1,
+            "storage size": 1,
+            "resolution": 1,
+            "panel type": 1,
+            "refresh rate": 1
         }, Usages.Gaming: {
-
+            "battery capacity": 1,
+            "processor": 1,
+            "graphics card": 1,
+            "memory": 1,
+            "disk type": 1,
+            "storage size": 1,
+            "resolution": 1,
+            "panel type": 1,
+            "refresh rate": 1
         }
     }
 
     priority_groups = {
         "battery": [
-
+            "battery capacity"
         ], "performance": [
-
+            "processor",
+            "graphics card",
+            "memory",
+            "disk type"
         ], "storage": [
-
+            "storage size"
         ], "screen": [
-
+            "resolution",
+            "panel type",
+            "refresh rate"
         ]
     }
 
@@ -331,6 +376,7 @@ class MetaCategory(models.Model):
     name = models.CharField('name', max_length=30, blank=True, null=True)
     category = models.ForeignKey(Category, related_name="meta_categories", on_delete=models.CASCADE)
     is_active = models.BooleanField(default=False)
+    created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return "<MetaCategory %s>" % self.name
