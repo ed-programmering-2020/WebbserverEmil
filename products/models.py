@@ -321,7 +321,7 @@ class Laptop(Category):
     def match(self, settings):
         all_products = []
         for meta_category in self.meta_categories.all():
-            all_products.extend(meta_category.products)
+            all_products.extend(meta_category.products.all())
 
         products_price_matched = self.find_with_price(all_products, settings["price"]["range"], True)
         if products_price_matched:
@@ -477,22 +477,24 @@ class Product(models.Model):
 
             if self.meta_category and self.meta_category.products.count() <= 1: self.meta_category.delete()
             self.meta_category = meta_category
+
         try:
-            if self.meta_category and self.meta_category.is_active:
-                self.price = min(prices) if prices else None
-                self.manufacturing_name = most_frequent(manufacturing_names)
-                self.update_name(names)
-                self.update_specs(specs_list)
+            if self.meta_category:
+                if self.meta_category.is_active:
+                    self.price = min(prices) if prices else None
+                    self.manufacturing_name = most_frequent(manufacturing_names)
+                    self.update_name(names)
+                    self.update_specs(specs_list)
 
-                # Update Manufacturer
-                first_names = [name.split(' ', 1)[0] for name in names]
-                manufacturer_name = most_frequent(first_names)
-                if manufacturer_name:
-                    try: manufacturer = Manufacturer.objects.get(name=manufacturer_name)
-                    except: manufacturer = Manufacturer.objects.create(name=manufacturer_name)
+                    # Update Manufacturer
+                    first_names = [name.split(' ', 1)[0] for name in names]
+                    manufacturer_name = most_frequent(first_names)
+                    if manufacturer_name:
+                        try: manufacturer = Manufacturer.objects.get(name=manufacturer_name)
+                        except: manufacturer = Manufacturer.objects.create(name=manufacturer_name)
 
-                    if self.manufacturer and self.manufacturer.products.count() <= 1: self.manufacturer.delete()
-                    self.manufacturer = manufacturer
+                        if self.manufacturer and self.manufacturer.products.count() <= 1: self.manufacturer.delete()
+                        self.manufacturer = manufacturer
 
                 try:
                     meta_product_with_image = self.meta_products.get(image != None)
