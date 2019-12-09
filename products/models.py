@@ -6,7 +6,6 @@ from collections import defaultdict
 from django.db import models
 from enum import Enum
 from products import specs
-from products.serializers import ProductSerializer
 import json, re, uuid, operator
 
 
