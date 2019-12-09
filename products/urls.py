@@ -1,7 +1,6 @@
 from django.urls import path
-from .views import CategoriesAPI, ProductsAPI
+from .views import MatchAPI
 
 urlpatterns = [
-    path("categories/", CategoriesAPI.as_view()),
-    path("products/", ProductsAPI.as_view()),
+    path("match/<string:name>", MatchAPI.as_view()),
 ]
