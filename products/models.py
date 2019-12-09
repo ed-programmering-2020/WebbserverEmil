@@ -1,4 +1,5 @@
 from django.utils.safestring import mark_safe
+from django.core.exceptions import ObjectDoesNotExist
 from scraping.models import Website
 from difflib import SequenceMatcher
 from collections import defaultdict
@@ -32,8 +33,6 @@ class Category(models.Model):
                 return products.filter(get_price__lte=low_price, get__gte=high_price)
             except:
                 return None
-        else:
-            raise NotImplementedError
 
     def sort_with_values(self, products):
         def check_text_value(spec_value, value_list):
@@ -152,9 +151,6 @@ class Category(models.Model):
             }
         else:
             return None
-
-    def __str__(self):
-        raise NotImplementedError
 
     class Meta:
         verbose_name_plural = 'Categories'
@@ -493,26 +489,28 @@ class Product(models.Model):
 
             if self.meta_category and self.meta_category.products.count() <= 1: self.meta_category.delete()
             self.meta_category = meta_category
+        try:
+            if self.meta_category and self.meta_category.is_active:
+                self.price = min(prices) if prices else None
+                self.manufacturing_name = most_frequent(manufacturing_names)
+                self.update_name(names)
+                self.update_specs(specs_list)
 
-        if self.meta_category and self.meta_category.is_active:
-            self.price = min(prices) if prices else None
-            self.manufacturing_name = most_frequent(manufacturing_names)
-            self.update_name(names)
-            self.update_specs(specs_list)
+                # Update Manufacturer
+                first_names = [name.split(' ', 1)[0] for name in names]
+                manufacturer_name = most_frequent(first_names)
+                if manufacturer_name:
+                    try: manufacturer = Manufacturer.objects.get(name=manufacturer_name)
+                    except: manufacturer = Manufacturer.objects.create(name=manufacturer_name)
 
-            # Update Manufacturer
-            first_names = [name.split(' ', 1)[0] for name in names]
-            manufacturer_name = most_frequent(first_names)
-            if manufacturer_name:
-                try: manufacturer = Manufacturer.objects.get(name=manufacturer_name)
-                except: manufacturer = Manufacturer.objects.create(name=manufacturer_name)
+                    if self.manufacturer and self.manufacturer.products.count() <= 1: self.manufacturer.delete()
+                    self.manufacturer = manufacturer
 
-                if self.manufacturer and self.manufacturer.products.count() <= 1: self.manufacturer.delete()
-                self.manufacturer = manufacturer
-
-            meta_product_with_image = self.meta_products.get(image != None)
-            if meta_product_with_image:
-                self.image = meta_product_with_image.image
+                meta_product_with_image = self.meta_products.get(image != None)
+                if meta_product_with_image:
+                    self.image = meta_product_with_image.image
+        except ObjectDoesNotExist:
+            pass
 
     def get_price(self):
         return min([mp.get_price() for mp in self.meta_products.all()])
