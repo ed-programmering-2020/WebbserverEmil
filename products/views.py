@@ -25,7 +25,7 @@ class MatchAPI(generics.GenericAPIView):
                 "value": "gaming"
             },
             "price": {
-                "range": (1000, 4000),
+                "range": (1000, 20000),
             },
             "size": {
                 "values": (13.3, 15.6)
