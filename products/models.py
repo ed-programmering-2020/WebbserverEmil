@@ -6,6 +6,7 @@ from collections import defaultdict
 from django.db import models
 from enum import Enum
 from products import specs
+from products.serializers import ProductSerializer
 import json, re, uuid, operator
 
 
@@ -148,9 +149,14 @@ class Category(models.Model):
             elif len(products) > 1:
                 alternative_products = products[1:len(products)]
 
+            serialized_alternatives = []
+            if alternative_products:
+                for product in alternative_products:
+                    serialized_alternatives.append(ProductSerializer(product).data)
+
             return {
-                "main": main_product,
-                "alternatives": alternative_products
+                "main": ProductSerializer(main_product).data,
+                "alternatives": serialized_alternatives
             }
         else:
             return None
