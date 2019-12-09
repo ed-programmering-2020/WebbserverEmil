@@ -317,7 +317,7 @@ class Laptop(Category):
 
     def match(self, settings):
         all_products = []
-        for meta_category in self.meta_categories:
+        for meta_category in self.meta_categories.all():
             all_products.extend(meta_category.products)
 
         products_price_matched = self.find_with_price(all_products, settings["price"]["range"], True)
