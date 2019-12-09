@@ -42,6 +42,9 @@ class Category(models.Model):
                     val = sub_value
                     break
 
+            if val < 0:
+                val = 1
+
             if val:
                 return value_list.index(val)
             else:
@@ -313,24 +316,6 @@ class Laptop(Category):
         return priority_sorted_products
 
     def match(self, **kwargs):
-        kwargs = {
-            "usage": {
-                "value": "general"
-            },
-            "price": {
-                "range": (1000, 4000),
-            },
-            "size": {
-                "values": (13.3, 15.6)
-            },
-            "priorities": {
-                "battery": 5,
-                "performance": 3,
-                "storage": 7,
-                "screen": 5,
-            }
-        }
-
         all_products = []
         for meta_category in self.meta_categories:
             all_products.extend(meta_category.products)
