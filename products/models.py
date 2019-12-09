@@ -475,7 +475,11 @@ class Product(models.Model):
             except:
                 meta_category = MetaCategory.objects.create(name=category_name)
 
-            if self.meta_category and self.meta_category.products.count() <= 1: self.meta_category.delete()
+            if self.meta_category and self.meta_category.products.count() <= 1:
+                try:
+                    self.meta_category.delete()
+                except:
+                    pass
             self.meta_category = meta_category
 
         try:
@@ -493,7 +497,11 @@ class Product(models.Model):
                         try: manufacturer = Manufacturer.objects.get(name=manufacturer_name)
                         except: manufacturer = Manufacturer.objects.create(name=manufacturer_name)
 
-                        if self.manufacturer and self.manufacturer.products.count() <= 1: self.manufacturer.delete()
+                        if self.manufacturer and self.manufacturer.products.count() <= 1:
+                            try:
+                                self.manufacturer.delete()
+                            except:
+                                pass
                         self.manufacturer = manufacturer
 
                 try:
