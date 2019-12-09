@@ -138,6 +138,9 @@ class Category(models.Model):
 
         return product_list
 
+    def match(self, settings):
+        raise NotImplementedError
+
     def products_to_json(self, products):
         if len(products) >= 1:
             main_product = products[0]
