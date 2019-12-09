@@ -10,7 +10,15 @@ class MatchAPI(generics.GenericAPIView):
     serializer_class = ProductSerializer
 
     def get(self, request, name, *args, **kwargs):
-        category = Category.objects.get(name=name)
+        def import_category(name):
+            name = "products.models." + name
+            components = name.split('.')
+            mod = __import__(components[0])
+            for comp in components[1:]:
+                mod = getattr(mod, comp)
+            return mod
+
+        category = import_category(name).objects.get(name=name)
 
         settings = {
             "usage": {
