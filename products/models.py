@@ -491,9 +491,12 @@ class Product(models.Model):
                     if self.manufacturer and self.manufacturer.products.count() <= 1: self.manufacturer.delete()
                     self.manufacturer = manufacturer
 
-                meta_product_with_image = self.meta_products.get(image != None)
-                if meta_product_with_image:
-                    self.image = meta_product_with_image.image
+                try:
+                    meta_product_with_image = self.meta_products.get(image != None)
+                    if meta_product_with_image:
+                        self.image = meta_product_with_image.image
+                except:
+                    pass
         except ObjectDoesNotExist:
             pass
 
