@@ -40,12 +40,15 @@ class MatchAPI(generics.GenericAPIView):
 
         products = category.match(settings)
 
-        serialized_alternatives = []
-        if products["alternatives"]:
-            for product in products["alternatives"]:
-                serialized_alternatives.append(ProductSerializer(product).data)
+        if products:
+            serialized_alternatives = []
+            if products["alternatives"]:
+                for product in products["alternatives"]:
+                    serialized_alternatives.append(ProductSerializer(product).data)
 
-        return Response({
-            "main": ProductSerializer(products["main"]).data,
-            "alternatives": serialized_alternatives
-        })
+            return Response({
+                "main": ProductSerializer(products["main"]).data,
+                "alternatives": serialized_alternatives
+            })
+        else:
+            return Response({"main": None})
