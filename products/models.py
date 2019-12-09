@@ -149,14 +149,9 @@ class Category(models.Model):
             elif len(products) > 1:
                 alternative_products = products[1:len(products)]
 
-            serialized_alternatives = []
-            if alternative_products:
-                for product in alternative_products:
-                    serialized_alternatives.append(ProductSerializer(product).data)
-
             return {
-                "main": ProductSerializer(main_product).data,
-                "alternatives": serialized_alternatives
+                "main": main_product,
+                "alternatives": alternative_products
             }
         else:
             return None
