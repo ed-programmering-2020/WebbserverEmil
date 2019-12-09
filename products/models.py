@@ -315,14 +315,14 @@ class Laptop(Category):
 
         return priority_sorted_products
 
-    def match(self, **kwargs):
+    def match(self, settings):
         all_products = []
         for meta_category in self.meta_categories:
             all_products.extend(meta_category.products)
 
-        products_price_matched = self.find_with_price(all_products, kwargs["price"]["range"], True)
+        products_price_matched = self.find_with_price(all_products, settings["price"]["range"], True)
         if products_price_matched:
-            products_size_matched = self.find_with_size(products_price_matched, kwargs["size"]["values"])
+            products_size_matched = self.find_with_size(products_price_matched, settings["size"]["values"])
 
             if products_price_matched is None:
                 return None
@@ -331,11 +331,11 @@ class Laptop(Category):
 
         products_with_values = self.sort_with_values(products_size_matched)
 
-        products_usage_sorted = self.sort_with_usage(products_with_values, len(products_size_matched), kwargs["usage"]["value"])
+        products_usage_sorted = self.sort_with_usage(products_with_values, len(products_size_matched), settings["usage"]["value"])
         products_price_sorted = self.sort_with_price(products_usage_sorted)
 
         top_products = self.get_top_products(products_price_sorted)
-        products_prioritization_sorted = self.sort_with_priorities(products_with_values, len(products_size_matched), top_products, kwargs["priorities"])
+        products_prioritization_sorted = self.sort_with_priorities(products_with_values, len(products_size_matched), top_products, settings["priorities"])
 
         ranked_products = products_prioritization_sorted.sort(key=operator.itemgetter(1), reverse=True)
         product_models = self.get_product_models(ranked_products)
