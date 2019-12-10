@@ -1,5 +1,5 @@
 from django.utils.safestring import mark_safe
-from django.core.exceptions import Does
+from django.core.exceptions import ObjectDoesNotExist
 from scraping.models import Website
 from difflib import SequenceMatcher
 from collections import defaultdict
@@ -41,6 +41,9 @@ class Category(models.Model):
                 if sub_value in spec_value:
                     val = sub_value
                     break
+
+            if val < 0:
+                val = 1
 
             if val:
                 return value_list.index(val)
@@ -134,6 +137,9 @@ class Category(models.Model):
             product_list.append(Product.objects.get(id=id))
 
         return product_list
+
+    def match(self, settings):
+        raise NotImplementedError
 
     def products_to_json(self, products):
         if len(products) >= 1:
@@ -312,32 +318,14 @@ class Laptop(Category):
 
         return priority_sorted_products
 
-    def match(self, **kwargs):
-        kwargs = {
-            "usage": {
-                "value": "general"
-            },
-            "price": {
-                "range": (1000, 4000),
-            },
-            "size": {
-                "values": (13.3, 15.6)
-            },
-            "priorities": {
-                "battery": 5,
-                "performance": 3,
-                "storage": 7,
-                "screen": 5,
-            }
-        }
-
+    def match(self, settings):
         all_products = []
-        for meta_category in self.meta_categories:
-            all_products.extend(meta_category.products)
+        for meta_category in self.meta_categories.all():
+            all_products.extend(meta_category.products.all())
 
-        products_price_matched = self.find_with_price(all_products, kwargs["price"]["range"], True)
+        products_price_matched = self.find_with_price(all_products, settings["price"]["range"], True)
         if products_price_matched:
-            products_size_matched = self.find_with_size(products_price_matched, kwargs["size"]["values"])
+            products_size_matched = self.find_with_size(products_price_matched, settings["size"]["values"])
 
             if products_price_matched is None:
                 return None
@@ -346,11 +334,11 @@ class Laptop(Category):
 
         products_with_values = self.sort_with_values(products_size_matched)
 
-        products_usage_sorted = self.sort_with_usage(products_with_values, len(products_size_matched), kwargs["usage"]["value"])
+        products_usage_sorted = self.sort_with_usage(products_with_values, len(products_size_matched), settings["usage"]["value"])
         products_price_sorted = self.sort_with_price(products_usage_sorted)
 
         top_products = self.get_top_products(products_price_sorted)
-        products_prioritization_sorted = self.sort_with_priorities(products_with_values, len(products_size_matched), top_products, kwargs["priorities"])
+        products_prioritization_sorted = self.sort_with_priorities(products_with_values, len(products_size_matched), top_products, settings["priorities"])
 
         ranked_products = products_prioritization_sorted.sort(key=operator.itemgetter(1), reverse=True)
         product_models = self.get_product_models(ranked_products)
@@ -487,29 +475,42 @@ class Product(models.Model):
             except:
                 meta_category = MetaCategory.objects.create(name=category_name)
 
-            if self.meta_category and self.meta_category.products.count() <= 1: self.meta_category.delete()
+            if self.meta_category and self.meta_category.products.count() <= 1:
+                try:
+                    self.meta_category.delete()
+                except:
+                    pass
             self.meta_category = meta_category
+
         try:
-            if self.meta_category and self.meta_category.is_active:
-                self.price = min(prices) if prices else None
-                self.manufacturing_name = most_frequent(manufacturing_names)
-                self.update_name(names)
-                self.update_specs(specs_list)
+            if self.meta_category:
+                if self.meta_category.is_active:
+                    self.price = min(prices) if prices else None
+                    self.manufacturing_name = most_frequent(manufacturing_names)
+                    self.update_name(names)
+                    self.update_specs(specs_list)
 
-                # Update Manufacturer
-                first_names = [name.split(' ', 1)[0] for name in names]
-                manufacturer_name = most_frequent(first_names)
-                if manufacturer_name:
-                    try: manufacturer = Manufacturer.objects.get(name=manufacturer_name)
-                    except: manufacturer = Manufacturer.objects.create(name=manufacturer_name)
+                    # Update Manufacturer
+                    first_names = [name.split(' ', 1)[0] for name in names]
+                    manufacturer_name = most_frequent(first_names)
+                    if manufacturer_name:
+                        try: manufacturer = Manufacturer.objects.get(name=manufacturer_name)
+                        except: manufacturer = Manufacturer.objects.create(name=manufacturer_name)
 
-                    if self.manufacturer and self.manufacturer.products.count() <= 1: self.manufacturer.delete()
-                    self.manufacturer = manufacturer
+                        if self.manufacturer and self.manufacturer.products.count() <= 1:
+                            try:
+                                self.manufacturer.delete()
+                            except:
+                                pass
+                        self.manufacturer = manufacturer
 
-                meta_product_with_image = self.meta_products.get(image != None)
-                if meta_product_with_image:
-                    self.image = meta_product_with_image.image
-        except MetaCategory.DoesNotExist:
+                try:
+                    meta_product_with_image = self.meta_products.get(image != None)
+                    if meta_product_with_image:
+                        self.image = meta_product_with_image.image
+                except:
+                    pass
+        except ObjectDoesNotExist:
             pass
 
     def get_price(self):
