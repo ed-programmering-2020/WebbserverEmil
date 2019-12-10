@@ -1,5 +1,4 @@
 from django.utils.safestring import mark_safe
-from django.core.exceptions import ObjectDoesNotExist
 from scraping.models import Website
 from difflib import SequenceMatcher
 from collections import defaultdict
@@ -510,7 +509,7 @@ class Product(models.Model):
                         self.image = meta_product_with_image.image
                 except:
                     pass
-        except ObjectDoesNotExist:
+        except MetaCategory.DoesNotExist:
             pass
 
     def get_price(self):
