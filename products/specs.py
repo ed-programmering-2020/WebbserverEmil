@@ -741,5 +741,3 @@ disk_types = [
     "ssd",
     "hdd"
 ]
-
-

@@ -1,5 +1,5 @@
 from django.utils.safestring import mark_safe
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import Does
 from scraping.models import Website
 from difflib import SequenceMatcher
 from collections import defaultdict
@@ -473,7 +473,7 @@ class Product(models.Model):
             specs_list.append(meta_product.specs.all())
             manufacturing_names.append(meta_product.manufacturing_name)
             if meta_product.category:
-                categories.append(meta_product.category)
+                categories.append(meta_product.category.rstrip())
 
             price = meta_product.get_price()
             if price:
@@ -509,7 +509,7 @@ class Product(models.Model):
                 meta_product_with_image = self.meta_products.get(image != None)
                 if meta_product_with_image:
                     self.image = meta_product_with_image.image
-        except ObjectDoesNotExist:
+        except MetaCategory.DoesNotExist:
             pass
 
     def get_price(self):
@@ -575,7 +575,7 @@ class MetaProduct(models.Model):
     def category(self, categories):
         list_len = len(categories)
         last_str = categories[:-1]
-        self._category = categories[:-2] if SequenceMatcher(None, last_str, self.name).ratio() >= 0.7 else last_str
+        self._category = categories[:-2].rstrip() if SequenceMatcher(None, last_str, self.name).ratio() >= 0.7 else last_str
         self.name.replace(self._category, "")
 
     @property
