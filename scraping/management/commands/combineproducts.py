@@ -133,6 +133,7 @@ class Command(BaseCommand):
                 meta_product.save()
 
                 if product != None:
+                    product.save()
                     products.append(product)
 
                 print(" -- %s (%s)" % (meta_product, count))
