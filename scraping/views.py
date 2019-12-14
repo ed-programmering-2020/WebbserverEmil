@@ -36,7 +36,6 @@ class ProductsAPI(generics.GenericAPIView):
 
         try:
             meta_product = MetaProduct.objects.get(url=website)
-            meta_product.image = request.FILES.get('img', False)
         except:
             meta_product = MetaProduct(
                 name=data.get("title"),
