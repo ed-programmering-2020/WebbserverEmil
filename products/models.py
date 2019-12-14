@@ -480,26 +480,25 @@ class Product(models.Model):
                 pass
             self.meta_category = meta_category
 
-            if self.meta_category:
-                if self.meta_category.is_active:
-                    self.price = min(prices) if prices else None
-                    self.manufacturing_name = most_frequent(manufacturing_names)
-                    self.update_name(names)
-                    self.update_specs(specs_list)
+            if self.meta_category.is_active:
+                self.price = min(prices) if prices else None
+                self.manufacturing_name = most_frequent(manufacturing_names)
+                self.update_name(names)
+                self.update_specs(specs_list)
 
-                    # Update Manufacturer
-                    first_names = [name.split(' ', 1)[0] for name in names]
-                    manufacturer_name = most_frequent(first_names)
-                    if manufacturer_name:
-                        try: manufacturer = Manufacturer.objects.get(name=manufacturer_name)
-                        except: manufacturer = Manufacturer.objects.create(name=manufacturer_name)
+                # Update Manufacturer
+                first_names = [name.split(' ', 1)[0] for name in names]
+                manufacturer_name = most_frequent(first_names)
+                if manufacturer_name:
+                    try: manufacturer = Manufacturer.objects.get(name=manufacturer_name)
+                    except: manufacturer = Manufacturer.objects.create(name=manufacturer_name)
 
-                        if self.manufacturer and self.manufacturer.products.count() <= 1:
-                            try:
-                                self.manufacturer.delete()
-                            except:
-                                pass
-                        self.manufacturer = manufacturer
+                    if self.manufacturer and self.manufacturer.products.count() <= 1:
+                        try:
+                            self.manufacturer.delete()
+                        except:
+                            pass
+                    self.manufacturer = manufacturer
 
                 try:
                     meta_product_with_image = self.meta_products.get(image != None)
