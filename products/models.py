@@ -474,14 +474,12 @@ class Product(models.Model):
             except:
                 meta_category = MetaCategory.objects.create(name=category_name)
 
-            if self.meta_category and self.meta_category.products.count() <= 1:
-                try:
-                    self.meta_category.delete()
-                except:
-                    pass
+            try:
+                if self.meta_category and self.meta_category.products.count() <= 1: self.meta_category.delete()
+            except:
+                pass
             self.meta_category = meta_category
 
-        try:
             if self.meta_category:
                 if self.meta_category.is_active:
                     self.price = min(prices) if prices else None
@@ -509,8 +507,6 @@ class Product(models.Model):
                         self.image = meta_product_with_image.image
                 except:
                     pass
-        except MetaCategory.DoesNotExist:
-            pass
 
     def get_price(self):
         return min([mp.get_price() for mp in self.meta_products.all()])
