@@ -80,6 +80,7 @@ class Command(BaseCommand):
         if not meta_products:
             meta_products = meta_products.update(is_combined=False)
 
+        print(meta_products)
         for meta_product in meta_products:
             if meta_product not in updated_meta_products:
                 updated_meta_products.append(meta_product)
