@@ -358,7 +358,6 @@ class Manufacturer(models.Model):
 class MetaCategory(models.Model):
     name = models.CharField('name', max_length=30, blank=True, null=True)
     category = models.ForeignKey(Category, related_name="meta_categories", on_delete=models.CASCADE, null=True, blank=True)
-    is_active = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -480,7 +479,7 @@ class Product(models.Model):
                 pass
             self.meta_category = meta_category
 
-            if self.meta_category.is_active:
+            if self.meta_category.category:
                 self.price = min(prices) if prices else None
                 self.manufacturing_name = most_frequent(manufacturing_names)
                 self.update_name(names)
