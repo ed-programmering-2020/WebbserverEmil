@@ -77,8 +77,8 @@ class Command(BaseCommand):
         print("Combining meta-products")
 
         meta_products = MetaProduct.objects.filter(is_updated=True, is_combined=False)
-        if not meta_products:
-            meta_products = meta_products.update(is_combined=False)
+        # if not meta_products:
+        #     meta_products = meta_products.update(is_combined=False)
 
         print(meta_products)
         for meta_product in meta_products:
