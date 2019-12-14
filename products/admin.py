@@ -13,7 +13,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class MetaCategoryAdmin(admin.ModelAdmin):
-    list_display = ["name", "category", "is_active", "created_date"]
+    list_display = ["name", "category", "created_date"]
     search_fields = ["name"]
 
 
