@@ -157,6 +157,9 @@ class Category(models.Model):
         else:
             return None
 
+    def __str__(self):
+        return "<Category %s>" % self.name
+
     class Meta:
         verbose_name_plural = 'Categories'
 
@@ -344,9 +347,6 @@ class Laptop(Category):
 
         return self.products_to_json(product_models)
 
-    def __str__(self):
-        return "<Laptop>"
-
 
 class Manufacturer(models.Model):
     name = models.CharField('name', max_length=30, blank=True, null=True)
@@ -416,7 +416,7 @@ class Product(models.Model):
                                 if word in words: words[word].append(pos)
                                 else: words[word] = [pos]
 
-        words_copy = words
+        words_copy = words.copy()
         removed_words = []
         for word in words_copy:
             if word not in removed_words:
