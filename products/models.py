@@ -528,10 +528,6 @@ class MetaProduct(models.Model):
     host = models.ForeignKey(Website, related_name="meta_products", on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(Product, related_name="meta_products", on_delete=models.CASCADE, null=True)
 
-    # Scraping values
-    is_updated = models.BooleanField(default=False)
-    is_combined = models.BooleanField(default=False)
-
     def set_specs(self, specs):
         for key, value in specs.items():
             try:

@@ -7,7 +7,7 @@ from .views import FrontendAppView
 
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("knacka-på-eriks-klon/", admin.site.urls),
     path("api/", include("products.urls")),
     path("api/scraping/", include("scraping.urls")),
     path("api/localization/", include("localization.urls")),
