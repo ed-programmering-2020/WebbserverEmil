@@ -100,6 +100,7 @@ class ProductsAPI(generics.GenericAPIView):
         count = 0
         updated_meta_products = []
 
+        print(request.data)
         print(data_list)
 
         for data in data_list:
