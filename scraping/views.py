@@ -94,7 +94,7 @@ class ProductsAPI(generics.GenericAPIView):
         return possible_specs
 
     def post(self, request, *args, **kwargs):
-        data = request.data
+        data = request.data.get("products")
         files = request.FILES
 
         count = 0
