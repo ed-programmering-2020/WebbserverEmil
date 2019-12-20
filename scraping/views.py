@@ -94,13 +94,15 @@ class ProductsAPI(generics.GenericAPIView):
         return possible_specs
 
     def post(self, request, *args, **kwargs):
-        data = request.data.get("products")
+        data_list = request.data.get("products")
         files = request.FILES
 
         count = 0
         updated_meta_products = []
 
-        for data in data:
+        print(data_list)
+
+        for data in data_list:
             website = data.get("website")
             image = files.get(data["filename"]) if "filename" in data else None
 
