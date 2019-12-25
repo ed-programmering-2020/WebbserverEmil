@@ -5,6 +5,7 @@ from collections import defaultdict
 from django.db import models
 from enum import Enum
 from products import specs
+from .customizers import LaptopCustomizer
 import json, re, uuid, operator
 
 
@@ -164,7 +165,7 @@ class Category(models.Model):
         verbose_name_plural = 'Categories'
 
 
-class Laptop(Category):
+class Laptop(Category, LaptopCustomizer):
     values = {
         "battery capacity": [],
         "processor": specs.processors,
@@ -221,13 +222,13 @@ class Laptop(Category):
     def get_recommendations(self, usage):
         if usage == Usages.General:
             return {
-                "price": (3000, 11000),
-                "size": (13.3, 15.6)
+                "price": [3000, 11000],
+                "size": [13.3, 15.6]
             }
         elif usage == Usages.Gaming:
             return {
-                "price": (6000, 14000),
-                "size": (14, 17.3)
+                "price": [6000, 14000],
+                "size": [14, 17.3]
             }
         else:
             return None
@@ -506,8 +507,9 @@ class Product(models.Model):
                 except:
                     pass
 
-    def get_price(self):
-        return min([mp.get_price() for mp in self.meta_products.all()])
+    def get_websites(self):
+        metaproducts = [[mp.website, mp.get_price()] for mp in self.meta_products.all()]
+        return metaproducts
 
     def image_tag(self):
         return mark_safe('<img src="/media/%s" height="50" />' % self.image)

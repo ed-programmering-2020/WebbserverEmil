@@ -5,39 +5,22 @@ from products.models import Category
 from products.serializers import ProductSerializer
 
 
+def import_category(name):
+    name = "products.models." + name
+    components = name.split('.')
+    mod = __import__(components[0])
+    for comp in components[1:]:
+        mod = getattr(mod, comp)
+    return mod
+
+
 class MatchAPI(generics.GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = ProductSerializer
 
     def get(self, request, name, *args, **kwargs):
-        def import_category(name):
-            name = "products.models." + name
-            components = name.split('.')
-            mod = __import__(components[0])
-            for comp in components[1:]:
-                mod = getattr(mod, comp)
-            return mod
-
         category = import_category(name).objects.get(name=name)
-
-        settings = {
-            "usage": {
-                "value": "gaming"
-            },
-            "price": {
-                "range": (1000, 20000),
-            },
-            "size": {
-                "values": (13.3, 15.6)
-            },
-            "priorities": {
-                "battery": 5,
-                "performance": 3,
-                "storage": 7,
-                "screen": 5,
-            }
-        }
-
+        settings = request.GET["settings"]
         products = category.match(settings)
 
         if products:
@@ -52,3 +35,25 @@ class MatchAPI(generics.GenericAPIView):
             })
         else:
             return Response({"main": None})
+
+
+class RecommendedAPI(generics.GenericAPIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, name, usage, *args, **kwargs):
+        category = import_category(name).objects.get(name=name)
+        recommedations = category.get_recommendations(usage)
+        return Response(recommedations)
+
+
+class CustomizationAPI(generics.GenericAPIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, name, *args, **kwargs):
+        category = import_category(name).objects.get(name=name)
+        return Response({
+            "settings": category.customization_settings,
+            "category": {
+                "subHeader": category.sub_header
+            }
+        })
