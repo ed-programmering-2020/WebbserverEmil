@@ -43,7 +43,7 @@ class RecommendedAPI(generics.GenericAPIView):
     def get(self, request, name, usage, *args, **kwargs):
         category = import_category(name).objects.get(name=name)
         recommedations = category.get_recommendations(usage)
-        return Response(recommedations)
+        return Response({"recommendations": recommedations})
 
 
 class CustomizationAPI(generics.GenericAPIView):
