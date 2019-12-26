@@ -174,7 +174,7 @@ class Laptop(Category, LaptopCustomizer):
     }
 
     biases = {
-        Usages.General: {
+        "general": {
             "battery capacity": 1,
             "processor": 1,
             "graphics card": 1,
@@ -184,7 +184,7 @@ class Laptop(Category, LaptopCustomizer):
             "resolution": 1,
             "panel type": 1,
             "refresh rate": 1
-        }, Usages.Gaming: {
+        }, "gaming": {
             "battery capacity": 1,
             "processor": 1,
             "graphics card": 1,
