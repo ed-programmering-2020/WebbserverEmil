@@ -20,6 +20,7 @@ class MatchAPI(generics.GenericAPIView):
 
     def get(self, request, name, *args, **kwargs):
         category = import_category(name).objects.get(name=name)
+        print(request.GET)
         settings = request.GET["settings"]
         print(settings)
         products = category.match(settings)

@@ -13,11 +13,6 @@ def get_file_path(instance, filename):
     return "%s.%s" % (uuid.uuid4(), "jpg")
 
 
-class Usages(Enum):
-    General = 1
-    Gaming = 2
-
-
 class Category(models.Model):
     name = models.CharField('name', max_length=30, blank=True, null=True)
     is_active = models.BooleanField(default=True)
@@ -222,12 +217,12 @@ class Laptop(Category, LaptopCustomizer):
     @staticmethod
     def get_recommendations(usage):
         print(usage)
-        if usage == Usages.General:
+        if usage == "general":
             return {
                 "price": [3000, 11000],
                 "size": [13.3, 15.6]
             }
-        elif usage == Usages.Gaming:
+        elif usage == "gaming":
             return {
                 "price": [6000, 14000],
                 "size": [14, 17.3]
