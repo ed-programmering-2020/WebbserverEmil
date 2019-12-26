@@ -219,7 +219,9 @@ class Laptop(Category, LaptopCustomizer):
         ]
     }
 
-    def get_recommendations(self, usage):
+    @staticmethod
+    def get_recommendations(usage):
+        print(usage)
         if usage == Usages.General:
             return {
                 "price": [3000, 11000],
