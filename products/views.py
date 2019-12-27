@@ -3,6 +3,7 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from products.models import Category
 from products.serializers import ProductSerializer
+import json
 
 
 def import_category(name):
@@ -21,7 +22,7 @@ class MatchAPI(generics.GenericAPIView):
     def get(self, request, name, *args, **kwargs):
         category = import_category(name).objects.get(name=name)
         print(request.GET)
-        settings = request.GET["settings"]
+        settings = json.loads(request.GET["settings"])
         print(settings)
         print(type(settings))
         print(settings["price"])
@@ -48,9 +49,9 @@ class RecommendedAPI(generics.GenericAPIView):
         category = import_category(name).objects.get(name=name)
         print("recommendations get")
 
-        recommedations = category.get_recommendations(usage)
-        print(recommedations)
-        return Response({"recommendations": recommedations})
+        recommendations = category.get_recommendations(usage)
+        print(recommendations)
+        return Response({"recommendations": recommendations})
 
 
 class CustomizationAPI(generics.GenericAPIView):
