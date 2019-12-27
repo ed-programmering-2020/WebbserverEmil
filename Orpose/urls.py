@@ -15,7 +15,7 @@ urlpatterns = [
     path("api/localization/", include("localization.urls")),
     path("api/content/", include("content.urls")),
     path("api/auth/", include("users.urls")),
-    re_path(r"^sitemap.xml$", TemplateView.as_view(template_name="static/sitemap.xml", content_type="application/xml")),
-    re_path(r"^robots.txt$", TemplateView.as_view(template_name="static/robots.txt", content_type="text/plain")),
+    re_path(r"^sitemap.xml$", TemplateView.as_view(template_name=os.path.join(settings.BASE_DIR, "static", "sitemap.xml"), content_type="application/xml")),
+    re_path(r"^robots.txt$", TemplateView.as_view(template_name=os.path.join(settings.BASE_DIR, "static", "robots.txt"), content_type="text/plain")),
     re_path(r'.*', FrontendAppView.as_view())
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
