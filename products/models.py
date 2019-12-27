@@ -323,9 +323,9 @@ class Laptop(Category, LaptopCustomizer):
         for meta_category in self.meta_categories.all():
             all_products.extend(meta_category.products.all())
 
-        products_price_matched = self.find_with_price(all_products, settings["price"]["range"], True)
+        products_price_matched = self.find_with_price(all_products, settings["price"], True)
         if products_price_matched:
-            products_size_matched = self.find_with_size(products_price_matched, settings["size"]["values"])
+            products_size_matched = self.find_with_size(products_price_matched, settings["size"])
 
             if products_price_matched is None:
                 return None
@@ -334,7 +334,7 @@ class Laptop(Category, LaptopCustomizer):
 
         products_with_values = self.sort_with_values(products_size_matched)
 
-        products_usage_sorted = self.sort_with_usage(products_with_values, len(products_size_matched), settings["usage"]["value"])
+        products_usage_sorted = self.sort_with_usage(products_with_values, len(products_size_matched), settings["usage"])
         products_price_sorted = self.sort_with_price(products_usage_sorted)
 
         top_products = self.get_top_products(products_price_sorted)
