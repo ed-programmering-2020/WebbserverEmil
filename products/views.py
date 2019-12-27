@@ -21,11 +21,7 @@ class MatchAPI(generics.GenericAPIView):
 
     def get(self, request, name, *args, **kwargs):
         category = import_category(name).objects.get(name=name)
-        print(request.GET)
         settings = json.loads(request.GET["settings"])
-        print(settings)
-        print(type(settings))
-        print(settings["price"])
         products = category.match(settings)
 
         if products:
@@ -47,10 +43,7 @@ class RecommendedAPI(generics.GenericAPIView):
 
     def get(self, request, name, usage, *args, **kwargs):
         category = import_category(name).objects.get(name=name)
-        print("recommendations get")
-
         recommendations = category.get_recommendations(usage)
-        print(recommendations)
         return Response({"recommendations": recommendations})
 
 
