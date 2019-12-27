@@ -15,8 +15,10 @@ urlpatterns = [
     path("api/localization/", include("localization.urls")),
     path("api/content/", include("content.urls")),
     path("api/auth/", include("users.urls")),
-    re_path(r'.*', FrontendAppView.as_view())
+    re_path(r'.*', FrontendAppView.as_view()),
+    re_path(r'^(?P<path>.*)$', 'django.contrib.staticfiles.views.serve', {
+        'document_root': settings.STATIC_ROOT, 'show_indexes': True
+    }),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-urlpatterns += static("/", document_root=settings.REACT_BUILD_DIR)
