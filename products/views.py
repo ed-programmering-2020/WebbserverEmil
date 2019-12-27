@@ -23,6 +23,8 @@ class MatchAPI(generics.GenericAPIView):
         print(request.GET)
         settings = request.GET["settings"]
         print(settings)
+        print(type(settings))
+        print(settings["price"])
         products = category.match(settings)
 
         if products:
