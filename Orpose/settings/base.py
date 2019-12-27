@@ -7,14 +7,13 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 REACT_APP_DIR = "/home/Orpose/Orpose-Frontend/"
+REACT_BUILD_DIR = os.path.join(REACT_APP_DIR, 'build')
 
 STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
 STATICFILES_DIRS = [
     os.path.join(REACT_APP_DIR, 'build', 'static'),
-
 ]
-
 
 INSTALLED_APPS = [
     "corsheaders",

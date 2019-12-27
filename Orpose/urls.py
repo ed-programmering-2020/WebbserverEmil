@@ -15,6 +15,8 @@ urlpatterns = [
     path("api/localization/", include("localization.urls")),
     path("api/content/", include("content.urls")),
     path("api/auth/", include("users.urls")),
-    re_path(r'.*', static(os.path.join(Orpose.settings.base.REACT_APP_DIR, 'build'))),
+    path("/sitemap.xml", os.path.join(Orpose.settings.base.REACT_BUILD_DIR, "sitemap.xml")),
+    path("/robots.txt", os.path.join(Orpose.settings.base.REACT_BUILD_DIR, "robots.txt")),
+    path("/serviceWorker.js", os.path.join(Orpose.settings.base.REACT_BUILD_DIR, "serviceWorker.js")),
     re_path(r'.*', FrontendAppView.as_view())
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
