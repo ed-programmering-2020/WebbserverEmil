@@ -15,8 +15,8 @@ urlpatterns = [
     path("api/localization/", include("localization.urls")),
     path("api/content/", include("content.urls")),
     path("api/auth/", include("users.urls")),
-    re_path(r"^sitemap.xml$", TemplateView.as_view(template_name="sitemap.xml")),
-    re_path(r"^robots.txt$", TemplateView.as_view(template_name="robots.txt")),
-    re_path(r"^serviceWorker.js$", TemplateView.as_view(template_name="serviceWorker.js")),
     re_path(r'.*', FrontendAppView.as_view())
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static("/", document_root=settings.REACT_BUILD_DIR)

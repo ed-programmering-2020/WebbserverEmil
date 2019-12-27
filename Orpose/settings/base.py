@@ -12,7 +12,8 @@ REACT_BUILD_DIR = os.path.join(REACT_APP_DIR, 'build')
 STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
 STATICFILES_DIRS = [
-    os.path.join(REACT_APP_DIR, 'build', 'static'),
+    os.path.join(REACT_BUILD_DIR, 'static'),
+    REACT_BUILD_DIR
 ]
 
 INSTALLED_APPS = [
@@ -61,7 +62,7 @@ ROOT_URLCONF = 'Orpose.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates'), REACT_BUILD_DIR],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
