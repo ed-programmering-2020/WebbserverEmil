@@ -1,10 +1,6 @@
 from django.utils.safestring import mark_safe
 from django.db import models
 from difflib import SequenceMatcher
-
-from scraping.models import Website
-from categories.models import MetaCategory
-
 import json
 import uuid
 import re
@@ -26,7 +22,7 @@ class Product(models.Model):
     name = models.CharField('name', max_length=128, blank=True, null=True)
     _specs = models.CharField("specs", max_length=256, default=json.dumps({}))
     image = models.ImageField(upload_to=get_file_path, blank=True, null=True)
-    meta_category = models.ForeignKey(MetaCategory, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
+    meta_category = models.ForeignKey("categories.MetaCategory", related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     manufacturer = models.ForeignKey(Manufacturer, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     manufacturing_name = models.CharField('manufacturing_name', max_length=128, blank=True, null=True)
 
@@ -87,9 +83,7 @@ class Product(models.Model):
                                 words.pop(word, None)
                                 removed_words.append(word)
 
-        calc_words = {}
-        for word, pos_list in words.items(): calc_words[word] = sum(pos_list) / len(pos_list)
-
+        calc_words = {word: (sum(p) / len(p)) for (word, p) in words.items()}
         sorted_words = sorted(calc_words.items(), key=lambda kv: kv[1])
         name = ""
         for word, pos in sorted_words:
@@ -128,8 +122,9 @@ class Product(models.Model):
                 meta_category = MetaCategory.objects.create(name=category_name)
 
             try:
-                if self.meta_category and self.meta_category.products.count() <= 1: self.meta_category.delete()
-            except:
+                if self.meta_category and self.meta_category.products.count() <= 1:
+                    self.meta_category.delete()
+            except:  # TODO fix danger
                 pass
             self.meta_category = meta_category
 
@@ -166,6 +161,7 @@ class Product(models.Model):
 
     def image_tag(self):
         return mark_safe('<img src="/media/%s" height="50" />' % self.image)
+    
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True
 
@@ -180,7 +176,7 @@ class MetaProduct(models.Model):
     _manufacturing_name = models.CharField('manufacturing_name', max_length=128, blank=True, null=True)
     url = models.CharField('url', max_length=128, blank=True)
     image = models.ImageField(upload_to=get_file_path, blank=True, null=True)
-    host = models.ForeignKey(Website, related_name="meta_products", on_delete=models.CASCADE, null=True)
+    host = models.ForeignKey("scraping.Website", related_name="meta_products", on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(Product, related_name="meta_products", on_delete=models.CASCADE, null=True)
 
     def set_specs(self, specs):

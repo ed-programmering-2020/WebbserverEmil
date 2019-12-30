@@ -10,7 +10,7 @@ class BaseMatcher:
 
         if strict:
             try:
-                return products.filter(get_price__lte=low_price, get__gte=high_price)
+                return products.filter(get_price__lte=low_price, get_price__gte=high_price)
             except:  # TODO fix this danger
                 return None
 

@@ -1,6 +1,6 @@
-from .matchers import LaptopMatcher
-from .customizers import LaptopCustomizer
-from .values import LaptopValues
+from categories.matchers import LaptopMatcher
+from categories.customizers import LaptopCustomizer
+from categories.values import LaptopValues
 from django.db import models
 import operator
 
