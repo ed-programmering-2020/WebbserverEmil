@@ -1,8 +1,9 @@
 from django.utils.safestring import mark_safe
 from django.db import models
-
 from difflib import SequenceMatcher
+
 from scraping.models import Website
+from categories.models import MetaCategory
 
 import json
 import uuid
