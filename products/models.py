@@ -13,7 +13,7 @@ def get_file_path(instance, filename):
     return "%s.%s" % (uuid.uuid4(), "jpg")
 
 
-class BaseCategory(models.Model):
+class Category(models.Model):
     name = models.CharField('name', max_length=30, blank=True, null=True)
     is_active = models.BooleanField(default=True)
 

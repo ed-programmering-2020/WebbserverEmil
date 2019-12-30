@@ -1,11 +1,11 @@
-from products.models import BaseCategory
+from products.models import Category
 from .matchers import LaptopMatcher
 from .customizers import LaptopCustomizer
 from .values import LaptopValues
 import operator
 
 
-class Laptop(BaseCategory, LaptopMatcher, LaptopCustomizer, LaptopValues):
+class Laptop(Category, LaptopMatcher, LaptopCustomizer, LaptopValues):
     def match(self, settings):
         all_products = self.get_all_products()
 
