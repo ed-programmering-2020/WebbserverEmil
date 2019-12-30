@@ -40,7 +40,7 @@ class Manufacturer(models.Model):
 
 class MetaCategory(models.Model):
     name = models.CharField('name', max_length=30, blank=True, null=True)
-    category = models.ForeignKey(BaseCategory, related_name="meta_categories", on_delete=models.CASCADE, null=True, blank=True)
+    category = models.ForeignKey(Category, related_name="meta_categories", on_delete=models.CASCADE, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
