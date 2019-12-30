@@ -1,4 +1,4 @@
-from categories.models import Product, SpecGroupCollection
+from products.models import Product, SpecGroupCollection
 from collections import defaultdict
 import re
 
@@ -14,7 +14,7 @@ class BaseMatcher:
             except:  # TODO fix this danger
                 return None
 
-    def check_text_value(spec_value, value_list):
+    def check_text_value(self, spec_value, value_list):
         val = None
         for sub_value in value_list:
             if sub_value in spec_value:
@@ -55,8 +55,8 @@ class BaseMatcher:
                         value_package = (id, spec_value)
 
                         if value != []:
-                            saved_spec_value = check_text_value(saved_spec_value, value)
-                            spec_value = check_text_value(spec_value, value)
+                            saved_spec_value = self.check_text_value(saved_spec_value, value)
+                            spec_value = self.check_text_value(spec_value, value)
                         else:
                             saved_spec_value = re.sub(r'[^\d.]+', '', saved_spec_value)
                             spec_value = re.sub(r'[^\d.]+', '', spec_value)
