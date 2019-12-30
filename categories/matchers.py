@@ -1,6 +1,5 @@
-from products.models import Product, SpecGroupCollection
+from categories.models import Product, SpecGroupCollection
 from collections import defaultdict
-import operator
 import re
 
 

@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     "knox",
     "users",
     "products",
+    "categories",
     "scraping",
     "content",
     "localization",

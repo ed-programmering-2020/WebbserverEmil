@@ -1,19 +1,9 @@
 from django.contrib import admin
-from products.models import Product, MetaProduct, Manufacturer, MetaCategory, Spec, SpecGroup, SpecGroupCollection, Category
+from .models import Product, MetaProduct, Manufacturer, Spec, SpecGroup, SpecGroupCollection
 
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ["name", "manufacturer", "meta_category", "image_tag"]
-    search_fields = ["name"]
-
-
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ["name", "is_active"]
-    search_fields = ["name"]
-
-
-class MetaCategoryAdmin(admin.ModelAdmin):
-    list_display = ["name", "category", "created_date"]
     search_fields = ["name"]
 
 
@@ -44,8 +34,6 @@ class SpecGroupCollectionAdmin(admin.ModelAdmin):
 admin.site.register(Product, ProductAdmin)
 admin.site.register(MetaProduct, MetaProductAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(MetaCategory, MetaCategoryAdmin)
 admin.site.register(Spec, SpecAdmin)
 admin.site.register(SpecGroup, SpecGroupAdmin)
 admin.site.register(SpecGroupCollection, SpecGroupCollectionAdmin)

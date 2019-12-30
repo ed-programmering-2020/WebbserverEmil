@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny
 from .serializers import WebsiteSerializer
 from .models import Website
 from django.db.models import Q
-from products.models import Product, MetaProduct, Price
+from categories.models import Product, MetaProduct, Price
 from difflib import SequenceMatcher
 import re, json
 
