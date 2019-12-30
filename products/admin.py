@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, MetaProduct, Manufacturer, MetaCategory, Spec, SpecGroup, SpecGroupCollection, Category
+from products.models import Product, MetaProduct, Manufacturer, MetaCategory, Spec, SpecGroup, SpecGroupCollection, Category
 
 
 class ProductAdmin(admin.ModelAdmin):

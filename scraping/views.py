@@ -1,11 +1,10 @@
 from rest_framework.response import Response
 from rest_framework import generics
-from rest_framework.permissions import IsAdminUser, AllowAny
-from django.http import HttpResponseBadRequest
+from rest_framework.permissions import AllowAny
 from .serializers import WebsiteSerializer
 from .models import Website
 from django.db.models import Q
-from products.models import Product, MetaProduct, Price, Spec, SpecGroup
+from products.models import Product, MetaProduct, Price
 from difflib import SequenceMatcher
 import re, json
 
@@ -94,7 +93,7 @@ class ProductsAPI(generics.GenericAPIView):
         return possible_specs
 
     def post(self, request, *args, **kwargs):
-        data_list = request.data.get("products")
+        data_list = json.loads(request.data.get("products"))
         files = request.FILES
 
         count = 0
