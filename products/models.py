@@ -1,6 +1,8 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.safestring import mark_safe
 from django.db import models
 from difflib import SequenceMatcher
+import importlib
 import json
 import uuid
 import re
@@ -97,7 +99,7 @@ class Product(models.Model):
 
         self.name = name
 
-    def update_info(self):
+    def update(self):
         def most_frequent(List):
             return max(set(List), key=List.count) if List != [] else None
 
@@ -116,16 +118,19 @@ class Product(models.Model):
         # Update Meta Category
         category_name = most_frequent(categories)
         if category_name:
-            try:
-                meta_category = MetaCategory.objects.get(name=category_name)
-            except:
-                meta_category = MetaCategory.objects.create(name=category_name)
+            meta_category_model = importlib.import_module("categories.MetaCategory").MetaCategory
 
             try:
-                if self.meta_category and self.meta_category.products.count() <= 1:
+                meta_category = meta_category_model.objects.get(name=category_name)
+            except ObjectDoesNotExist:
+                meta_category = meta_category_model.objects.create(name=category_name)
+
+            if self.meta_category and self.meta_category.products.count() <= 1:
+                try:
                     self.meta_category.delete()
-            except:  # TODO fix danger
-                pass
+                except:
+                    pass
+
             self.meta_category = meta_category
 
             if self.meta_category.category:
@@ -155,6 +160,8 @@ class Product(models.Model):
                 except:
                     pass
 
+        self.save()
+
     def get_websites(self):
         metaproducts = [[mp.website, mp.get_price()] for mp in self.meta_products.all()]
         return metaproducts
@@ -172,83 +179,83 @@ class Product(models.Model):
 class MetaProduct(models.Model):
     id = models.AutoField(primary_key=True, blank=True)
     name = models.CharField('name', max_length=128, blank=True)
-    _category = models.CharField("category", max_length=32, blank=True, null=True)
-    _manufacturing_name = models.CharField('manufacturing_name', max_length=128, blank=True, null=True)
+    category = models.CharField("category", max_length=32, blank=True, null=True)
+    manufacturing_name = models.CharField('manufacturing_name', max_length=128, blank=True, null=True)
     url = models.CharField('url', max_length=128, blank=True)
     image = models.ImageField(upload_to=get_file_path, blank=True, null=True)
     host = models.ForeignKey("scraping.Website", related_name="meta_products", on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(Product, related_name="meta_products", on_delete=models.CASCADE, null=True)
 
-    def set_specs(self, specs):
-        for key, value in specs.items():
-            try:
-                spec = self.specs.get(key__iexact=key, value__iexact=value)
-            except:
+    def update(self, data):
+        manufacturing_name = data.get("manufacturing_name")
+        category_list = data.get("category")
+        specs_json = data.get("specs")
+        specs = json.loads(specs_json) if specs_json else None
+        price = data.get("price")
+
+        # Update internals
+        self.update_manufacturing_name(manufacturing_name)
+        self.update_category(category_list)
+        self.is_updated = True
+        self.save()
+
+        # Update external models
+        Price(meta_product=self, price=price)
+        self.update_specs(specs)
+        self.save()
+
+    def update_category(self, category_list):
+        if category_list:
+            # Remove product name from list
+            for category in category_list:
+                if SequenceMatcher(None, category, self.name).ratio() >= 0.7:
+                    category_list.remove(category)
+
+            # Set category to last in list
+            self.category = category_list[-1].rstrip()
+
+    def update_specs(self, specs):
+        if specs:
+            updated_specs = []
+            for key, value in specs.items():
                 try:
                     spec = Spec.objects.get(key__iexact=key, value__iexact=value)
-                    spec.meta_products.add(self)
-                    self.save()
-                    spec.save()
-                except:
+                except ObjectDoesNotExist:
                     spec = Spec.objects.create(key=key, value=value)
 
-            try:
-                other_spec = Spec.objects.get(key__iexact=key)
-            except:
-                other_spec = None
+                updated_specs.append(spec)
 
-            if other_spec:
-                if other_spec.spec_group:
-                    spec.spec_group = other_spec.spec_group
+                if self not in spec.meta_products:
+                    spec.meta_products.add(self)
                     spec.save()
-                else:
-                    spec_group = SpecGroup.objects.create(key=spec.key)
-                    spec.spec_group = spec_group
-                    spec.save()
-                    other_spec.spec_group = spec_group
-                    other_spec.save()
 
-    @property
-    def category(self):
-        return self._category
+            # Delete non updated specs
+            for spec in self.specs:
+                if spec not in updated_specs:
+                    spec.meta_products.remove(self)
 
-    @category.setter
-    def category(self, categories):
-        list_len = len(categories)
-        last_str = categories[:-1]
-        self._category = categories[:-2].rstrip() if SequenceMatcher(None, last_str, self.name).ratio() >= 0.7 else last_str
-        self.name.replace(self._category, "")
+                    if spec.meta_products.count() == 0:
+                        spec.objects.delete()
 
-    @property
-    def manufacturing_name(self):
-        return self._manufacturing_name
-
-    @manufacturing_name.setter
-    def manufacturing_name(self, name):
-        if name is None:
-            try:
-                for key in ["Tillverkarens artikelnr", "Tillverkarens ArtNr", "Artikelnr", "Artnr"]:
-                    try:
-                        self._manufacturing_name = self.specs.get(key=key).value
-                        break
-                    except:
-                        pass
-            except:
-                pass
+    def update_manufacturing_name(self, name):
+        if name:
+            self.manufacturing_name = name
         else:
-            self._manufacturing_name = name
+            # Find name in specs
+            for key in ["Tillverkarens artikelnr", "Tillverkarens ArtNr", "Artikelnr", "Artnr"]:
+                try:
+                    self.manufacturing_name = self.specs.get(key=key).value
+                    break
+                except ObjectDoesNotExist:
+                    pass
 
     def get_price(self):
-        price_history = self.price_history.first()
-        if price_history:
-            return price_history.price
-        else:
-            return None
+        return self.price_history.first().price
 
-    def image_tag(self):
+    def serve_admin_image(self):
         return mark_safe('<img src="/media/%s" height="50" />' % self.image)
-    image_tag.short_description = 'Image'
-    image_tag.allow_tags = True
+    serve_admin_image.short_description = 'Image'
+    serve_admin_image.allow_tags = True
 
     def __str__(self):
         return "<MetaProduct {} {} {}>".format(self.name, self.category, self.get_price())
@@ -280,45 +287,14 @@ class Price(models.Model):
             self._price = None
 
     def __str__(self):
-        return "<Price {} {} {}>".format(self.id, self.price, self.date_seen)
-
-
-class SpecGroupCollection(models.Model):
-    _name = models.CharField('name', max_length=128, blank=True, null=True)
-
-    @property
-    def name(self):
-        if self._name == "" or self._name == None:
-            try:
-                return self.spec_groups[0].key
-            except:
-                return ""
-        else:
-            return self._name
-
-    @name.setter
-    def name(self, name):
-        self._name = name
-
-    def __str__(self):
-        return "<SpecGroupCollection {} {}>".format(self.id, self.name)
-
-
-class SpecGroup(models.Model):
-    key = models.CharField('key', max_length=128, blank=True)
-    spec_group_collection = models.ForeignKey(SpecGroupCollection, related_name="spec_groups", on_delete=models.CASCADE, blank=True, null=True)
-    is_active = models.BooleanField(default=True)
-
-    def __str__(self):
-        return "<SpecGroup {} {}>".format(self.id, self.key)
+        return "<Price %s %s>" % (self.price, self.date_seen)
 
 
 class Spec(models.Model):
     meta_products = models.ManyToManyField(MetaProduct, related_name="specs")
-    spec_group = models.ForeignKey(SpecGroup, related_name="specs", on_delete=models.CASCADE, blank=True, null=True)
     key = models.CharField('key', max_length=128, blank=True)
     value = models.CharField('value', max_length=128, blank=True)
 
     def __str__(self):
-        return "<Spec {} {} {}>".format(self.id, self.key, self.value)
+        return "<Spec %s %s>" % (self.key, self.value)
 
