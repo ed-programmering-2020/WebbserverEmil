@@ -290,6 +290,36 @@ class Price(models.Model):
         return "<Price %s %s>" % (self.price, self.date_seen)
 
 
+class SpecGroupCollection(models.Model):
+    _name = models.CharField('name', max_length=128, blank=True, null=True)
+
+    @property
+    def name(self):
+        if self._name == "" or self._name == None:
+            try:
+                return self.spec_groups[0].key
+            except:
+                return ""
+        else:
+            return self._name
+
+    @name.setter
+    def name(self, name):
+        self._name = name
+
+    def __str__(self):
+        return "<SpecGroupCollection {} {}>".format(self.id, self.name)
+
+
+class SpecGroup(models.Model):
+    key = models.CharField('key', max_length=128, blank=True)
+    spec_group_collection = models.ForeignKey(SpecGroupCollection, related_name="spec_groups", on_delete=models.CASCADE, blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return "<SpecGroup {} {}>".format(self.id, self.key)
+
+
 class Spec(models.Model):
     meta_products = models.ManyToManyField(MetaProduct, related_name="specs")
     key = models.CharField('key', max_length=128, blank=True)

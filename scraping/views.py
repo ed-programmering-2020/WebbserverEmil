@@ -33,7 +33,7 @@ class ProductsAPI(generics.GenericAPIView):
         files = request.FILES
 
         if type(data) == list and type(files) == dict:
-            combiner = Combiner(data, files)
+            Combiner(data, files)
             return Response({})
         else:
             return Response({}, status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
