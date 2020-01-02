@@ -166,11 +166,11 @@ class Product(models.Model):
         metaproducts = [[mp.website, mp.get_price()] for mp in self.meta_products.all()]
         return metaproducts
 
-    def image_tag(self):
+    def serve_admin_image(self):
         return mark_safe('<img src="/media/%s" height="50" />' % self.image)
 
-    image_tag.short_description = 'Image'
-    image_tag.allow_tags = True
+    serve_admin_image.short_description = 'Image'
+    serve_admin_image.allow_tags = True
 
     def __str__(self):
         return "<Product {}>".format(self.name)
@@ -223,6 +223,13 @@ class MetaProduct(models.Model):
                 except ObjectDoesNotExist:
                     spec = Spec.objects.create(key=key, value=value)
 
+                    try:
+                        spec_group = SpecGroup.objects.filter(key__iexact=key).first()
+                    except ObjectDoesNotExist:
+                        spec_group = SpecGroup.objects.create(key=key)
+
+                spec.spec_group = spec_group
+                spec.save()
                 updated_specs.append(spec)
 
                 if self not in spec.meta_products:
@@ -324,6 +331,7 @@ class Spec(models.Model):
     meta_products = models.ManyToManyField(MetaProduct, related_name="specs")
     key = models.CharField('key', max_length=128, blank=True)
     value = models.CharField('value', max_length=128, blank=True)
+    spec_group = models.ForeignKey(SpecGroupCollection, related_name="spec_groups", on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return "<Spec %s %s>" % (self.key, self.value)
