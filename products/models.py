@@ -200,11 +200,11 @@ class MetaProduct(models.Model):
         self.save()
 
         # Update external models
+        self.update_specs(specs)
+        self.save()
         price_obj = Price(meta_product=self)
         price_obj.price = price
         price_obj.save()
-        self.update_specs(specs)
-        self.save()
 
     def update_category(self, category_list):
         if category_list:
