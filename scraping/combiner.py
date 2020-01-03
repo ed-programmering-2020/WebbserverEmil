@@ -60,16 +60,18 @@ class Combiner:
             return None
 
     def match_with_probability(self, main_meta_product):
-        min_price, max_price = self.acceptable_price_span(main_meta_product)
-        meta_products = MetaProduct.objects.exclude(id=main_meta_product.id).filter(price__lte=max_price, price__gte=min_price).all()
-
+        meta_products = MetaProduct.objects.exclude(id=main_meta_product.id).all()
         meta_products_with_probability = []
-        for meta_product in meta_products.iterator():
-            name_similarity = self.name_similarity(main_meta_product.name, meta_product.name)
-            parameter_similarity = self.parameter_similarity(main_meta_product.specs, meta_product.specs)
 
-            average_similarity = (name_similarity + parameter_similarity) / 2
-            meta_products_with_probability.append((average_similarity, meta_product))
+        for meta_product in meta_products.iterator():
+            min_price, max_price = self.acceptable_price_span(main_meta_product)
+
+            if min_price <= meta_product.get_price() <= max_price:
+                name_similarity = self.name_similarity(main_meta_product.name, meta_product.name)
+                parameter_similarity = self.parameter_similarity(main_meta_product.specs, meta_product.specs)
+
+                average_similarity = (name_similarity + parameter_similarity) / 2
+                meta_products_with_probability.append((average_similarity, meta_product))
 
         top_meta_product = max(meta_products_with_probability, key=itemgetter(1))
         return top_meta_product[1] if top_meta_product[0] >= 0.8 else None
