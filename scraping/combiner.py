@@ -79,7 +79,7 @@ class Combiner:
 
     def acceptable_price_span(self, meta_product):
         if meta_product.product:
-            prices = [meta_product.get_price() for meta_product in meta_product.product.meta_products]
+            prices = [meta_product.get_price() for meta_product in meta_product.product.meta_products.all()]
             price = sum(prices) / len(prices)
         else:
             price = meta_product.get_price()
