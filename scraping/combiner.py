@@ -152,7 +152,7 @@ class Combiner:
 
         if first_product and second_product:
             product = first_product
-            product.meta_products = product.meta_products + second_product.meta_products
+            product.meta_products.set(product.meta_products.all() + second_product.meta_products.all())
             second_product.delete()
 
         elif first_product:
