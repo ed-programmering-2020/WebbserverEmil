@@ -230,11 +230,12 @@ class MetaProduct(models.Model):
                     except ObjectDoesNotExist:
                         spec_group = SpecGroup.objects.create(key=key)
 
-                spec.spec_group = spec_group
-                spec.save()
+                    spec.spec_group = spec_group
+                    spec.save()
+
                 updated_specs.append(spec)
 
-                if self not in spec.meta_products:
+                if self not in spec.meta_products.all():
                     spec.meta_products.add(self)
                     spec.save()
 
