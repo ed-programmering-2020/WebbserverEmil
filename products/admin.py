@@ -1,4 +1,3 @@
-"""
 from django.contrib import admin
 from .models import Product, MetaProduct, Manufacturer, Spec, SpecGroup, SpecGroupCollection
 
@@ -38,4 +37,3 @@ admin.site.register(Manufacturer, ManufacturerAdmin)
 admin.site.register(Spec, SpecAdmin)
 admin.site.register(SpecGroup, SpecGroupAdmin)
 admin.site.register(SpecGroupCollection, SpecGroupCollectionAdmin)
-"""

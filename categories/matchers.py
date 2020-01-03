@@ -1,4 +1,4 @@
-"""from products.models import Product, SpecGroupCollection"""
+from products.models import Product, SpecGroupCollection
 from collections import defaultdict
 import re
 
@@ -31,7 +31,6 @@ class BaseMatcher:
 
     def sort_with_values(self, products):
         sorted_products = defaultdict()
-        """
         for product in products:
             specs = product.specs.all()
             id = product.id
@@ -74,7 +73,7 @@ class BaseMatcher:
                         elif saved_index == (len(sorted_products[key]) - 1):
                             sorted_products[key].append([value_package])
                             break
-"""
+
         return sorted_products
 
     def sort_with_price(self, products):
@@ -112,13 +111,10 @@ class BaseMatcher:
 
     def get_product_models(self, products):
         product_list = []
-        """
         for product in products:
             id, value = product
 
             product_list.append(Product.objects.get(id=id))
-        """
-
 
         return product_list
 
@@ -148,14 +144,12 @@ class LaptopMatcher:
         min_size, max_size = size
 
         try:
-            pass
-            """spec_groups = SpecGroupCollection.objects.get(name="screen size").spec_groups.all()
-            spec_keys = [spec_group.key for spec_group in spec_groups]"""
+            spec_groups = SpecGroupCollection.objects.get(name="screen size").spec_groups.all()
+            spec_keys = [spec_group.key for spec_group in spec_groups]
         except:
             return None
 
         checked_products = []
-        """
         for product in products:
             for key in spec_keys:
                 try:
@@ -164,8 +158,7 @@ class LaptopMatcher:
                         checked_products.append(product)
                     break
                 except:
-                    
-        """
+                    pass
 
         return checked_products
 

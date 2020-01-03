@@ -4,7 +4,6 @@ from categories.values import LaptopValues
 from django.db import models
 import operator
 
-"""
 class Category(models.Model):
     name = models.CharField('name', max_length=30, blank=True, null=True)
     is_active = models.BooleanField(default=True)
@@ -55,4 +54,3 @@ class Laptop(Category, LaptopMatcher, LaptopCustomizer, LaptopValues):
 
     def __str__(self):
         return "<Laptop>"
-"""
