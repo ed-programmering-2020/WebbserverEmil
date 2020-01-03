@@ -288,6 +288,7 @@ class Price(models.Model):
 
     @price.setter
     def price(self, price):
+        price = price[0]
         dot_pos = price.find(".")
         comma_pos = price.find(",")
 
