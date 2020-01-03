@@ -114,13 +114,13 @@ class Combiner:
         combined_score = 0
         intersecting_params = 0
 
-        for param in second_params:
-            second_key = self.clean_string(param.key)
-            second_value = self.clean_string(param.value)
+        for second_param in second_params:
+            second_key = self.clean_string(second_param.key)
+            second_value = self.clean_string(second_param.value)
 
-            for first_key, first_value in first_params.items():
-                first_key = self.clean_string(first_key)
-                first_value = self.clean_string(first_value)
+            for first_param in first_params:
+                first_key = self.clean_string(first_param.key)
+                first_value = self.clean_string(first_param.value)
 
                 # Value match
                 if second_value in first_value or first_value in second_value:
