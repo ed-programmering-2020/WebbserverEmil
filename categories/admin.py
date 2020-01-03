@@ -1,3 +1,4 @@
+"""
 from django.contrib import admin
 from .models import Category, MetaCategory
 
@@ -14,3 +15,4 @@ class MetaCategoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(MetaCategory, MetaCategoryAdmin)
+"""
