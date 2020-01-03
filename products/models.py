@@ -192,6 +192,7 @@ class MetaProduct(models.Model):
         specs_json = data.get("specs")
         specs = json.loads(specs_json) if specs_json else None
         price = data.get("price")
+        self.save()
 
         # Update external models
         self.update_specs(specs)
@@ -236,7 +237,7 @@ class MetaProduct(models.Model):
                 updated_specs.append(spec)
 
                 if self not in spec.meta_products.all():
-                    spec.meta_products = spec.meta_products + self
+                    spec.meta_products.add(self)
                     spec.save()
 
             # Delete non updated specs
@@ -251,7 +252,7 @@ class MetaProduct(models.Model):
         if name:
             self.manufacturing_name = name
         else:
-            # Find name in specs
+            # Find manufacturing name in specs
             for key in ["Tillverkarens artikelnr", "Tillverkarens ArtNr", "Artikelnr", "Artnr"]:
                 try:
                     self.manufacturing_name = self.specs.get(key=key).value
