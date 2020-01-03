@@ -165,7 +165,7 @@ class Combiner:
 
         else:
             product = Product.objects.create()
-            product.meta_products = [first_meta_product, second_meta_product]
+            product.meta_products.set([first_meta_product, second_meta_product])
 
         product.save()
         return product
