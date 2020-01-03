@@ -193,18 +193,18 @@ class MetaProduct(models.Model):
         specs = json.loads(specs_json) if specs_json else None
         price = data.get("price")
 
-        # Update internals
-        self.update_manufacturing_name(manufacturing_name)
-        self.update_category(category_list)
-        self.is_updated = True
-        self.save()
-
         # Update external models
         self.update_specs(specs)
         self.save()
         price_obj = Price(meta_product=self)
         price_obj.price = price
         price_obj.save()
+
+        # Update internals
+        self.update_manufacturing_name(manufacturing_name)
+        self.update_category(category_list)
+        self.is_updated = True
+        self.save()
 
     def update_category(self, category_list):
         if category_list:
