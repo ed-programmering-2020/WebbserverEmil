@@ -52,8 +52,6 @@ class CustomizationAPI(generics.GenericAPIView):
     def get(self, request, name, *args, **kwargs):
         category = import_category(name).objects.get(name=name)
         return Response({
-            "settings": category.customization_settings,
-            "category": {
-                "subHeader": category.sub_header
-            }
+            "settings": category.get_settings(),
+            "category": category.get_info()
         })
