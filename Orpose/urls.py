@@ -11,6 +11,7 @@ import os, Orpose.settings.base
 urlpatterns = [
     path("clone-of-erik/", admin.site.urls),
     path("api/", include("products.urls")),
+    path("api/", include("categories.urls")),
     path("api/scraping/", include("scraping.urls")),
     path("api/localization/", include("localization.urls")),
     path("api/content/", include("content.urls")),
