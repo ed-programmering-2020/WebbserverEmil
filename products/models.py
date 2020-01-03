@@ -257,7 +257,12 @@ class MetaProduct(models.Model):
                     pass
 
     def get_price(self):
-        return self.price_history.first().price
+        price = self.price_history.first()
+
+        if price:
+            return price.price
+        else:
+            return None
 
     def serve_admin_image(self):
         return mark_safe('<img src="/media/%s" height="50" />' % self.image)
