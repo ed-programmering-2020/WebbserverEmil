@@ -74,7 +74,7 @@ class Combiner:
                 average_similarity = (name_similarity + parameter_similarity) / 2
                 meta_products_with_probability.append((average_similarity, meta_product))
 
-        top_meta_product = max(meta_products_with_probability, key=itemgetter(1))
+        top_meta_product = max(meta_products_with_probability, key=itemgetter(0))
         return top_meta_product[1] if top_meta_product[0] >= 0.8 else None
 
     def acceptable_price_span(self, meta_product):
