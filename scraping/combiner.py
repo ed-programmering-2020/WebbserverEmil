@@ -3,7 +3,7 @@ from operator import itemgetter
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 from difflib import SequenceMatcher
-from products.models import MetaProduct, Product
+"""from products.models import MetaProduct, Product"""
 from .models import Website
 import string
 
@@ -12,7 +12,7 @@ class Combiner:
     def __init__(self, data_list, files_dict):
         self.data_list = data_list
         self.files_dict = files_dict
-
+"""
         for product_data in self.data_list:
             meta_product = self.create_or_get_meta_product(product_data)
             meta_product.update(product_data)
@@ -163,3 +163,4 @@ class Combiner:
 
         product.save()
         return product
+"""
