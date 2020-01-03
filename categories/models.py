@@ -4,7 +4,7 @@ from categories.values import LaptopValues
 from django.db import models
 import operator
 
-
+"""
 class Category(models.Model):
     name = models.CharField('name', max_length=30, blank=True, null=True)
     is_active = models.BooleanField(default=True)
@@ -32,7 +32,7 @@ class MetaCategory(models.Model):
         return "<MetaCategory %s>" % self.name
 
     class Meta:
-        verbose_name_plural = 'Meta models'
+        verbose_name_plural = 'Meta categories'
 
 
 class Laptop(Category, LaptopMatcher, LaptopCustomizer, LaptopValues):
@@ -55,3 +55,4 @@ class Laptop(Category, LaptopMatcher, LaptopCustomizer, LaptopValues):
 
     def __str__(self):
         return "<Laptop>"
+"""
