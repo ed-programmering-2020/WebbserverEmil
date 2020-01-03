@@ -69,7 +69,7 @@ class Combiner:
             price = meta_product.get_price()
             if price and min_price <= price <= max_price:
                 name_similarity = self.name_similarity(main_meta_product.name, meta_product.name)
-                parameter_similarity = self.parameter_similarity(main_meta_product.specs, meta_product.specs)
+                parameter_similarity = self.parameter_similarity(main_meta_product.specs.all(), meta_product.specs.all())
 
                 average_similarity = (name_similarity + parameter_similarity) / 2
                 meta_products_with_probability.append((average_similarity, meta_product))
