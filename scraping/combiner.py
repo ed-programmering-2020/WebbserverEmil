@@ -136,7 +136,10 @@ class Combiner:
                     intersecting_params += 1
                     break
 
-        return combined_score / intersecting_params
+        if intersecting_params > 0:
+            return combined_score / intersecting_params
+        else:
+            return 0.5
 
     def clean_string(self, text):
         text = "".join([word for word in text if word not in string.punctuation])
