@@ -241,7 +241,7 @@ class MetaProduct(models.Model):
                     spec.save()
 
             # Delete non updated specs
-            for spec in self.specs:
+            for spec in self.specs.all():
                 if spec not in updated_specs:
                     spec.meta_products.remove(self)
 
