@@ -236,7 +236,7 @@ class MetaProduct(models.Model):
                 updated_specs.append(spec)
 
                 if self not in spec.meta_products.all():
-                    spec.meta_products.add(self)
+                    spec.meta_products = spec.meta_products + self
                     spec.save()
 
             # Delete non updated specs
