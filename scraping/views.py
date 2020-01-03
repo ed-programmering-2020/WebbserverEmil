@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import generics, status
 from rest_framework.permissions import IsAdminUser
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from .serializers import WebsiteSerializer
 from .models import Website
@@ -27,10 +28,14 @@ class WebsitesAPI(generics.GenericAPIView):
 
 class ProductsAPI(generics.GenericAPIView):
     permission_classes = [IsAdminUser]
+    parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request, *args, **kwargs):
         data = json.loads(request.data.get("products"))
         files = request.FILES
+
+        print(data)
+        print(files)
 
         if type(data) == list and type(files) == dict:
             Combiner(data, files)

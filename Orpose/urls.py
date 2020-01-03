@@ -9,7 +9,7 @@ import os, Orpose.settings.base
 
 
 urlpatterns = [
-    path("knacka-på-eriks-klon/", admin.site.urls),
+    path("clone-of-erik/", admin.site.urls),
     path("api/", include("products.urls")),
     path("api/scraping/", include("scraping.urls")),
     path("api/localization/", include("localization.urls")),
