@@ -246,7 +246,7 @@ class MetaProduct(models.Model):
                     spec.meta_products.remove(self)
 
                     if spec.meta_products.count() == 0:
-                        spec.objects.delete()
+                        spec.delete()
 
     def update_manufacturing_name(self, name):
         if name:
