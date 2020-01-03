@@ -34,11 +34,5 @@ class ProductsAPI(generics.GenericAPIView):
         data = json.loads(request.data.get("products"))
         files = request.FILES
 
-        print(data)
-        print(files)
-
-        if type(data) == list and type(files) == dict:
-            Combiner(data, files)
-            return Response({})
-        else:
-            return Response({}, status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+        Combiner(data, files)
+        return Response({})
