@@ -66,7 +66,8 @@ class Combiner:
         for meta_product in meta_products.iterator():
             min_price, max_price = self.acceptable_price_span(main_meta_product)
 
-            if min_price <= meta_product.get_price() <= max_price:
+            price = meta_product.get_price()
+            if price and min_price <= price <= max_price:
                 name_similarity = self.name_similarity(main_meta_product.name, meta_product.name)
                 parameter_similarity = self.parameter_similarity(main_meta_product.specs, meta_product.specs)
 
