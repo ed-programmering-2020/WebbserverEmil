@@ -18,13 +18,14 @@ class UserAPI(generics.RetrieveAPIView):
         return self.request.user
 
 
-class TokenRefreshAPI(generics.RetrieveAPIView):
+class TokenAPI(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     
     def get(self, requests, *args, **kwargs):
         user = self.request.user
         user.auth_token.delete()
         return Response({"token": AuthToken.objects.create(user)[1]})
+
 
 class RegistrationAPI(generics.GenericAPIView):
     authentication_classes = ()
