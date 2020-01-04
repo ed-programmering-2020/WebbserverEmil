@@ -23,7 +23,6 @@ class Product(models.Model):
     id = models.AutoField(primary_key=True, blank=True)
     name = models.CharField('name', max_length=128, blank=True, null=True)
     _specs = models.CharField("specs", max_length=256, default=json.dumps({}))
-    image = models.ImageField(upload_to=get_file_path, blank=True, null=True)
     meta_category = models.ForeignKey("categories.MetaCategory", related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     manufacturer = models.ForeignKey(Manufacturer, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     manufacturing_name = models.CharField('manufacturing_name', max_length=128, blank=True, null=True)
@@ -36,6 +35,62 @@ class Product(models.Model):
     def specs(self, specs):
         if self.specs:
             self._specs = json.dumps(self.specs.update(specs))
+
+    def update(self):
+        def most_frequent(List):
+            return max(set(List), key=List.count) if List != [] else None
+
+        categories, names, prices, manufacturing_names, specs_list, important_words = [], [], [], [], [], []
+        for meta_product in self.meta_products.all():
+            names.append(meta_product.name)
+            specs_list.append(meta_product.specs.all())
+            manufacturing_names.append(meta_product.manufacturing_name)
+            if meta_product.category:
+                categories.append(meta_product.category.rstrip())
+
+            price = meta_product.get_price()
+            if price:
+                prices.append(price)
+
+        # Update Meta Category
+        category_name = most_frequent(categories)
+        if category_name:
+            meta_category_model = importlib.import_module("categories").MetaCategory
+
+            try:
+                meta_category = meta_category_model.objects.get(name=category_name)
+            except ObjectDoesNotExist:
+                meta_category = meta_category_model.objects.create(name=category_name)
+
+            if self.meta_category and self.meta_category.products.count() <= 1:
+                try:
+                    self.meta_category.delete()
+                except:
+                    pass
+
+            self.meta_category = meta_category
+
+            if self.meta_category.category:
+                self.price = min(prices) if prices else None
+                self.manufacturing_name = most_frequent(manufacturing_names)
+                self.update_name(names)
+                self.update_specs(specs_list)
+
+                # Update Manufacturer
+                first_names = [name.split(' ', 1)[0] for name in names]
+                manufacturer_name = most_frequent(first_names)
+                if manufacturer_name:
+                    try: manufacturer = Manufacturer.objects.get(name=manufacturer_name)
+                    except: manufacturer = Manufacturer.objects.create(name=manufacturer_name)
+
+                    if self.manufacturer and self.manufacturer.products.count() <= 1:
+                        try:
+                            self.manufacturer.delete()
+                        except:
+                            pass
+                    self.manufacturer = manufacturer
+
+        self.save()
 
     def update_specs(self, specs_list):
         specs_set_list = []
@@ -99,78 +154,9 @@ class Product(models.Model):
 
         self.name = name
 
-    def update(self):
-        def most_frequent(List):
-            return max(set(List), key=List.count) if List != [] else None
-
-        categories, names, prices, manufacturing_names, specs_list, important_words = [], [], [], [], [], []
-        for meta_product in self.meta_products.all():
-            names.append(meta_product.name)
-            specs_list.append(meta_product.specs.all())
-            manufacturing_names.append(meta_product.manufacturing_name)
-            if meta_product.category:
-                categories.append(meta_product.category.rstrip())
-
-            price = meta_product.get_price()
-            if price:
-                prices.append(price)
-
-        # Update Meta Category
-        category_name = most_frequent(categories)
-        if category_name:
-            meta_category_model = importlib.import_module("categories").MetaCategory
-
-            try:
-                meta_category = meta_category_model.objects.get(name=category_name)
-            except ObjectDoesNotExist:
-                meta_category = meta_category_model.objects.create(name=category_name)
-
-            if self.meta_category and self.meta_category.products.count() <= 1:
-                try:
-                    self.meta_category.delete()
-                except:
-                    pass
-
-            self.meta_category = meta_category
-
-            if self.meta_category.category:
-                self.price = min(prices) if prices else None
-                self.manufacturing_name = most_frequent(manufacturing_names)
-                self.update_name(names)
-                self.update_specs(specs_list)
-
-                # Update Manufacturer
-                first_names = [name.split(' ', 1)[0] for name in names]
-                manufacturer_name = most_frequent(first_names)
-                if manufacturer_name:
-                    try: manufacturer = Manufacturer.objects.get(name=manufacturer_name)
-                    except: manufacturer = Manufacturer.objects.create(name=manufacturer_name)
-
-                    if self.manufacturer and self.manufacturer.products.count() <= 1:
-                        try:
-                            self.manufacturer.delete()
-                        except:
-                            pass
-                    self.manufacturer = manufacturer
-
-                try:
-                    meta_product_with_image = self.meta_products.get(image != None)
-                    if meta_product_with_image:
-                        self.image = meta_product_with_image.image
-                except:
-                    pass
-
-        self.save()
-
     def get_websites(self):
         metaproducts = [[mp.website, mp.get_price()] for mp in self.meta_products.all()]
         return metaproducts
-
-    def serve_admin_image(self):
-        return mark_safe('<img src="/media/%s" height="50" />' % self.image)
-
-    serve_admin_image.short_description = 'Image'
-    serve_admin_image.allow_tags = True
 
     def __str__(self):
         return "<Product {}>".format(self.name)
