@@ -45,12 +45,12 @@ class LaptopCustomizer:
 
     @staticmethod
     def get_recommendations(usage):
-        if usage is "general":
+        if usage == "general":
             return {
                 "price": [3000, 11000],
                 "size": [13.3, 15.6]
             }
-        elif usage is "gaming":
+        elif usage == "gaming":
             return {
                 "price": [6000, 14000],
                 "size": [14, 17.3]
