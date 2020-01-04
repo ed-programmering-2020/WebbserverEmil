@@ -28,7 +28,7 @@ class Combiner:
 
     def create_or_get_meta_product(self, data):
         website = data.get("website")
-        filename = data.get("filename")
+        filename = data.get("image")
         image = self.files_dict.get(filename) if filename else None
 
         try:
