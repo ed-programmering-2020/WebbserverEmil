@@ -36,10 +36,10 @@ class Product(models.Model):
         if self.specs:
             self._specs = json.dumps(self.specs.update(specs))
 
-    def update(self):
-        def most_frequent(List):
-            return max(set(List), key=List.count) if List != [] else None
+    def most_frequent(self, List):
+        return max(set(List), key=List.count) if List != [] else None
 
+    def update(self):
         categories, names, prices, manufacturing_names, specs_list, important_words = [], [], [], [], [], []
         for meta_product in self.meta_products.all():
             names.append(meta_product.name)
@@ -53,7 +53,7 @@ class Product(models.Model):
                 prices.append(price)
 
         # Update Meta Category
-        category_name = most_frequent(categories)
+        category_name = self.most_frequent(categories)
         if category_name:
             meta_category_model = importlib.import_module("categories").MetaCategory
 
@@ -65,30 +65,16 @@ class Product(models.Model):
             if self.meta_category and self.meta_category.products.count() <= 1:
                 try:
                     self.meta_category.delete()
-                except:
+                except ObjectDoesNotExist:
                     pass
 
             self.meta_category = meta_category
 
-            if self.meta_category.category:
-                self.price = min(prices) if prices else None
-                self.manufacturing_name = most_frequent(manufacturing_names)
-                self.update_name(names)
-                self.update_specs(specs_list)
-
-                # Update Manufacturer
-                first_names = [name.split(' ', 1)[0] for name in names]
-                manufacturer_name = most_frequent(first_names)
-                if manufacturer_name:
-                    try: manufacturer = Manufacturer.objects.get(name=manufacturer_name)
-                    except: manufacturer = Manufacturer.objects.create(name=manufacturer_name)
-
-                    if self.manufacturer and self.manufacturer.products.count() <= 1:
-                        try:
-                            self.manufacturer.delete()
-                        except:
-                            pass
-                    self.manufacturer = manufacturer
+            self.price = min(prices) if prices else None
+            self.manufacturing_name = self.most_frequent(manufacturing_names)
+            self.update_name(names)
+            self.update_specs(specs_list)
+            self.update_manufacturer(names)
 
         self.save()
 
@@ -154,9 +140,25 @@ class Product(models.Model):
 
         self.name = name
 
+    def update_manufacturer(self, names):
+        first_names = [name.split(' ', 1)[0] for name in names]
+        manufacturer_name = self.most_frequent(first_names)
+        if manufacturer_name:
+            try:
+                manufacturer = Manufacturer.objects.get(name=manufacturer_name)
+            except:
+                manufacturer = Manufacturer.objects.create(name=manufacturer_name)
+
+            if self.manufacturer and self.manufacturer.products.count() <= 1:
+                try:
+                    self.manufacturer.delete()
+                except:
+                    pass
+            self.manufacturer = manufacturer
+
     def get_websites(self):
-        metaproducts = [[mp.website, mp.get_price()] for mp in self.meta_products.all()]
-        return metaproducts
+        meta_products = [[mp.website, mp.get_price()] for mp in self.meta_products.all()]
+        return meta_products
 
     def __str__(self):
         return "<Product {}>".format(self.name)
