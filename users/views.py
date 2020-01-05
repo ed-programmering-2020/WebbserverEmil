@@ -2,8 +2,6 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics
 
-from django.contrib.auth import logout
-
 from knox.models import AuthToken
 from users.models import User
 
@@ -22,7 +20,9 @@ class TokenAPI(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     
     def get(self, requests, *args, **kwargs):
-        return Response({"token": AuthToken.objects.create(self.request.user)[1]})
+        user = self.request.user
+        AuthToken.objects.filter(user=user).delete()
+        return Response({"token": AuthToken.objects.create(user)[1]})
 
 
 class RegistrationAPI(generics.GenericAPIView):
