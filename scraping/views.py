@@ -26,6 +26,15 @@ class WebsitesAPI(generics.GenericAPIView):
         return Response({"website": WebsiteSerializer(website).data})
 
 
+class AllWebsitesAPI(generics.GenericAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = WebsiteSerializer
+
+    def get(self, request, *args, **kwargs):
+        websites = Website.objects.all()
+        return Response({"websites": WebsiteSerializer(websites, many=True).data})
+
+
 class ProductsAPI(generics.GenericAPIView):
     permission_classes = [IsAdminUser]
     parser_classes = (MultiPartParser, FormParser)
@@ -33,9 +42,6 @@ class ProductsAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         data = json.loads(request.data.get("products"))
         files = request.FILES
-
-        print(data)
-        print(files)
 
         Combiner(data, files)
         return Response({})
