@@ -1,18 +1,11 @@
 import os
 
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SECRET_KEY = 'u2v4es^aj+c4d5g_@eh!!st@d8w6kpfz0^^evta15n@**lmc0r'
 
-REACT_APP_DIR = "/home/Orpose/Orpose-Frontend/"
-REACT_BUILD_DIR = os.path.join(REACT_APP_DIR, 'build')
-
+# Static
 STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
-STATICFILES_DIRS = [
-    os.path.join(REACT_BUILD_DIR, 'static'),
-    REACT_BUILD_DIR
-]
 
 INSTALLED_APPS = [
     "corsheaders",
@@ -43,6 +36,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Rest setup
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000",
 ]
@@ -77,7 +71,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Orpose.wsgi.application'
 
-
+# Authentication
 AUTH_USER_MODEL = "users.User"
 AUTHENTICATION_BACKENDS = ('users.backends.MyAuthBackend', 'django.contrib.auth.backends.ModelBackend',)
 
@@ -94,10 +88,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Media
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
-
 MEDIA_URL = '/media/'
 
+# Localization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True

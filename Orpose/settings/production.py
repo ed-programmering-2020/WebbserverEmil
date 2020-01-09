@@ -2,9 +2,19 @@ from .base import *
 import os
 from dotenv import load_dotenv
 
-
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
+# React config
+REACT_APP_DIR = "/home/Orpose/Orpose-Frontend/"
+REACT_BUILD_DIR = os.path.join(REACT_APP_DIR, 'build')
+
+# Static config
+STATICFILES_DIRS = [
+    os.path.join(REACT_BUILD_DIR, 'static'),
+    REACT_BUILD_DIR
+]
+
+# Allowed hosts
 ALLOWED_HOSTS = [
     "www.orpose.pythonanywhere.com",
     "www.orpose.se",
@@ -12,6 +22,7 @@ ALLOWED_HOSTS = [
     "www.orpose.co.uk"
 ]
 
+# Database setup
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',

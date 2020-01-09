@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.views.generic import View
-from users.models import User
-import os, Orpose.settings.base
+import Orpose.settings.base
+import os
 
 
 class FrontendAppView(View):

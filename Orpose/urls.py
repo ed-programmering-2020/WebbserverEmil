@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 from django.views.generic.base import TemplateView
 
 from .views import FrontendAppView
-import os, Orpose.settings.base
+import os
 
 
 urlpatterns = [
@@ -18,5 +18,7 @@ urlpatterns = [
     path("api/auth/", include("users.urls")),
     re_path(r"^sitemap.xml$", TemplateView.as_view(template_name=os.path.join(settings.BASE_DIR, "static", "sitemap.xml"), content_type="application/xml")),
     re_path(r"^robots.txt$", TemplateView.as_view(template_name=os.path.join(settings.BASE_DIR, "static", "robots.txt"), content_type="text/plain")),
-    re_path(r'.*', FrontendAppView.as_view())
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if not getattr(settings, "DEBUG", None):
+    urlpatterns.append(re_path(r'.*', FrontendAppView.as_view()))
