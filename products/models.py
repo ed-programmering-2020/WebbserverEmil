@@ -208,7 +208,10 @@ class MetaProduct(models.Model):
     def update_specs(self, specs):
         if specs:
             updated_specs = []
-            for key, value in specs.items():
+            for spec in specs:
+                key = spec[0]
+                value = spec[1]
+
                 try:
                     spec = Spec.objects.get(key__iexact=key, value__iexact=value)
                 except ObjectDoesNotExist:

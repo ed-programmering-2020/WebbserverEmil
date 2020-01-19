@@ -27,17 +27,17 @@ class Combiner:
                 product.update()
 
     def create_or_get_meta_product(self, data):
-        website = data.get("website")
+        url = data.get("link")
         filename = data.get("image")
         image = self.files_dict.get(filename) if filename else None
 
         try:
-            meta_product = MetaProduct.objects.get(url=website)
+            meta_product = MetaProduct.objects.get(url=url)
         except ObjectDoesNotExist:
             meta_product = MetaProduct(
                 name=data.get("title")[0],
-                url=website,
-                host=Website.objects.get(id=data.get("host_id")),
+                url=url,
+                host=Website.objects.get(name=data.get("website")),
                 image=image
             )
 
