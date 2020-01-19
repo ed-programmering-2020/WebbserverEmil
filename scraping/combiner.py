@@ -34,7 +34,7 @@ class Combiner:
             meta_product = MetaProduct.objects.get(url=url)
         except MetaProduct.DoesNotExist:
             meta_product = MetaProduct(
-                name=data.get("title")[0],
+                name=data.get("title"),
                 url=url,
                 host=Website.objects.get(name=data.get("website")),
                 image=image,
