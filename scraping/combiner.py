@@ -53,7 +53,7 @@ class Combiner:
         if meta_product.manufacturing_name:
             try:
                 return MetaProduct.objects.exclude(id=meta_product.id).get(manufacturing_name=meta_product.manufacturing_name)
-            except ObjectDoesNotExist:
+            except MetaProduct.DoesNotExist:
                 return None
         else:
             return None
