@@ -191,19 +191,8 @@ class MetaProduct(models.Model):
 
         # Update internals
         self.update_manufacturing_name(manufacturing_name)
-        self.update_category(category_list)
         self.is_updated = True
         self.save()
-
-    def update_category(self, category_list):
-        if category_list:
-            # Remove product name from list
-            for category in category_list:
-                if SequenceMatcher(None, category, self.name).ratio() >= 0.7:
-                    category_list.remove(category)
-
-            # Set category to last in list
-            self.category = category_list[-1].rstrip()
 
     def update_specs(self, specs):
         if specs:

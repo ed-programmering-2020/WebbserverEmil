@@ -37,7 +37,8 @@ class Combiner:
                 name=data.get("title")[0],
                 url=url,
                 host=Website.objects.get(name=data.get("website")),
-                image=image
+                image=image,
+                category=data.get("category")
             )
 
         return meta_product
