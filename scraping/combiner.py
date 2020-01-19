@@ -45,8 +45,8 @@ class Combiner:
 
     def find_matching_meta_product(self, meta_product):
         matching_meta_product = self.match_with_manufacturing_name(meta_product)
-        if matching_meta_product is None:
-            matching_meta_product = self.match_with_probability(meta_product)
+        # if matching_meta_product is None:
+            # matching_meta_product = self.match_with_probability(meta_product)
 
         return matching_meta_product
 
