@@ -1,4 +1,3 @@
-from django.core.exceptions import ObjectDoesNotExist
 from operator import itemgetter
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
@@ -33,7 +32,7 @@ class Combiner:
 
         try:
             meta_product = MetaProduct.objects.get(url=url)
-        except ObjectDoesNotExist:
+        except MetaProduct.DoesNotExist:
             meta_product = MetaProduct(
                 name=data.get("title")[0],
                 url=url,
