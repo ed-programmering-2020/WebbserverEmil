@@ -12,7 +12,7 @@ class Category(models.Model):
         all_products = None
         for meta_category in self.meta_categories.all():
             products = meta_category.products.all()
-            
+
             if all_products:
                 all_products = all_products | products
             else:

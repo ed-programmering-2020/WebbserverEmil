@@ -135,6 +135,10 @@ class Product(models.Model):
         meta_products = [[mp.website, mp.get_price()] for mp in self.meta_products.all()]
         return meta_products
 
+    def get_price(self):
+        prices = [mp.get_price() for mp in self.meta_products.all()]
+        return min(prices)
+
     def __str__(self):
         return "<Product {}>".format(self.name)
 
