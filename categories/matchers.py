@@ -7,14 +7,16 @@ import re
 class BaseMatcher:
     def find_with_price(self, products, value_range, strict=True):
         low_price, high_price = value_range
-        print("-", value_range)
         low_price -= 1
 
         if strict:
-            try:
-                return products.filter(get_price__lte=low_price, get_price__gte=high_price)
-            except:
-                return None
+            valid_products = products.all()
+            for product in products.all():
+                price = product.get_price()
+                if not low_price <= price <= high_price:
+                    valid_products = valid_products.exclude(id=product.id)
+
+            return valid_products
 
     def check_text_value(self, spec_value, value_list):
         val = None
