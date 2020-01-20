@@ -40,7 +40,7 @@ class Combiner:
                 image=image,
                 category=data.get("category")
             )
-
+ 
         return meta_product
 
     def find_matching_meta_product(self, meta_product):

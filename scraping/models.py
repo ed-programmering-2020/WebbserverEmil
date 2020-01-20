@@ -9,7 +9,6 @@ class Website(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
 
     is_active = models.BooleanField(default=True)
-    has_run = models.BooleanField(default=False)
     
     def __str__(self):
         return "<Website {} {} {}>".format(self.id, self.name, self.country.name)

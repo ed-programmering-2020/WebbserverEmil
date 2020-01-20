@@ -10,31 +10,6 @@ from .combiner import Combiner
 import json
 
 
-class WebsitesAPI(generics.GenericAPIView):
-    permission_classes = [IsAdminUser]
-    serializer_class = WebsiteSerializer
-
-    def get(self, request, *args, **kwargs):
-        website = Website.objects.filter(has_run=False).first()
-        if not website:
-            Website.objects.all().update(has_run=False)
-            website = Website.objects.filter(has_run=False).first()
-
-        website.has_run = True
-        website.save()
-
-        return Response({"website": WebsiteSerializer(website).data})
-
-
-class AllWebsitesAPI(generics.GenericAPIView):
-    permission_classes = [IsAdminUser]
-    serializer_class = WebsiteSerializer
-
-    def get(self, request, *args, **kwargs):
-        websites = Website.objects.all()
-        return Response({"websites": WebsiteSerializer(websites, many=True).data})
-
-
 class ProductsAPI(generics.GenericAPIView):
     permission_classes = [IsAdminUser]
     parser_classes = (MultiPartParser, FormParser)
