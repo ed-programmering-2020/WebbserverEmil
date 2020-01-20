@@ -12,7 +12,7 @@ class BaseMatcher:
         if strict:
             try:
                 return products.filter(get_price__lte=low_price, get_price__gte=high_price)
-            except:  # TODO fix this danger
+            except:
                 return None
 
     def check_text_value(self, spec_value, value_list):
@@ -142,19 +142,29 @@ class BaseMatcher:
 
 class LaptopMatcher(BaseMatcher):
     def find_with_settings(self, all_products, settings):
+        print("---")
         products_price_matched = self.find_with_price(all_products, settings["price"], True)
+        print(products_price_matched)
         products_size_matched = self.find_with_size(products_price_matched, settings["size"])
+        print(products_size_matched)
 
         products_with_values = self.sort_with_values(products_size_matched)
+        print(products_with_values)
         products_usage_sorted = self.sort_with_usage(products_with_values, len(products_size_matched),
                                                      settings["usage"])
+        print(products_usage_sorted)
         products_price_sorted = self.sort_with_price(products_usage_sorted)
+        print(products_price_sorted)
 
         top_products = self.get_top_products(products_price_sorted)
+        print(top_products)
         products_prioritization_sorted = self.sort_with_priorities(products_with_values, len(products_size_matched),
                                                                    top_products, settings["priorities"])
+        print(products_prioritization_sorted)
         ranked_products = products_prioritization_sorted.sort(key=operator.itemgetter(1), reverse=True)
+        print(ranked_products)
         product_models = self.get_product_models(ranked_products)
+        print(product_models)
 
         return self.products_to_json(product_models)
 

@@ -2,7 +2,7 @@ from categories.matchers import LaptopMatcher
 from categories.customizers import LaptopCustomizer
 from categories.values import LaptopValues
 from django.db import models
-import operator
+
 
 class Category(models.Model):
     name = models.CharField('name', max_length=30, blank=True, null=True)
