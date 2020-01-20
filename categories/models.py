@@ -9,9 +9,14 @@ class Category(models.Model):
     is_active = models.BooleanField(default=True)
 
     def get_all_products(self):
-        all_products = []
+        all_products = None
         for meta_category in self.meta_categories.all():
-            all_products.extend(meta_category.products.all())
+            products = meta_category.products.all()
+            
+            if all_products:
+                all_products = all_products | products
+            else:
+                all_products = products
 
         return all_products
 
