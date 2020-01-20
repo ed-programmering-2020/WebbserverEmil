@@ -150,7 +150,6 @@ class MetaProduct(models.Model):
     product = models.ForeignKey(Product, related_name="meta_products", on_delete=models.CASCADE, null=True)
 
     def update(self, data):
-        manufacturing_name = data.get("manufacturing_name")
         specs_json = data.get("specs")
         specs = json.loads(specs_json) if specs_json else None
         price = data.get("price")
@@ -164,7 +163,6 @@ class MetaProduct(models.Model):
         price_obj.save()
 
         # Update internals
-        self.update_manufacturing_name(manufacturing_name)
         self.is_updated = True
         self.save()
 
