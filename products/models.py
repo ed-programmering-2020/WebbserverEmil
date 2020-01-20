@@ -55,7 +55,7 @@ class Product(models.Model):
         # Update Meta Category
         category_name = self.most_frequent(categories)
         if category_name:
-            meta_category_model = importlib.import_module("categories").MetaCategory
+            meta_category_model = importlib.import_module("categories.models").MetaCategory
 
             try:
                 meta_category = meta_category_model.objects.get(name=category_name)
@@ -176,7 +176,6 @@ class MetaProduct(models.Model):
 
     def update(self, data):
         manufacturing_name = data.get("manufacturing_name")
-        category_list = data.get("category")
         specs_json = data.get("specs")
         specs = json.loads(specs_json) if specs_json else None
         price = data.get("price")
