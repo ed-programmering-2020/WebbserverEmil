@@ -12,19 +12,11 @@ def get_file_path(instance, filename):
     return "%s.%s" % (uuid.uuid4(), "jpg")
 
 
-class Manufacturer(models.Model):
-    name = models.CharField('name', max_length=30, blank=True, null=True)
-
-    def __str__(self):
-        return "<Manufacturer %s>" % self.name
-
-
 class Product(models.Model):
     id = models.AutoField(primary_key=True, blank=True)
     name = models.CharField('name', max_length=128, blank=True, null=True)
     _specs = models.CharField("specs", max_length=256, default=json.dumps({}))
     meta_category = models.ForeignKey("categories.MetaCategory", related_name="products", on_delete=models.CASCADE, blank=True, null=True)
-    manufacturer = models.ForeignKey(Manufacturer, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     manufacturing_name = models.CharField('manufacturing_name', max_length=128, blank=True, null=True)
 
     @property
@@ -74,7 +66,6 @@ class Product(models.Model):
             self.manufacturing_name = self.most_frequent(manufacturing_names)
             self.update_name(names)
             self.update_specs(specs_list)
-            self.update_manufacturer(names)
 
         self.save()
 
@@ -139,22 +130,6 @@ class Product(models.Model):
             name = names[0]
 
         self.name = name
-
-    def update_manufacturer(self, names):
-        first_names = [name.split(' ', 1)[0] for name in names]
-        manufacturer_name = self.most_frequent(first_names)
-        if manufacturer_name:
-            try:
-                manufacturer = Manufacturer.objects.get(name=manufacturer_name)
-            except:
-                manufacturer = Manufacturer.objects.create(name=manufacturer_name)
-
-            if self.manufacturer and self.manufacturer.products.count() <= 1:
-                try:
-                    self.manufacturer.delete()
-                except:
-                    pass
-            self.manufacturer = manufacturer
 
     def get_websites(self):
         meta_products = [[mp.website, mp.get_price()] for mp in self.meta_products.all()]
@@ -226,18 +201,6 @@ class MetaProduct(models.Model):
 
                     if spec.meta_products.count() == 0:
                         spec.delete()
-
-    def update_manufacturing_name(self, name):
-        if name:
-            self.manufacturing_name = name
-        else:
-            # Find manufacturing name in specs
-            for key in ["Tillverkarens artikelnr", "Tillverkarens ArtNr", "Artikelnr", "Artnr"]:
-                try:
-                    self.manufacturing_name = self.specs.get(key=key).value
-                    break
-                except ObjectDoesNotExist:
-                    pass
 
     def get_price(self):
         price = self.price_history.first()
