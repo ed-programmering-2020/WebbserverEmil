@@ -7,6 +7,7 @@ import re
 class BaseMatcher:
     def find_with_price(self, products, value_range, strict=True):
         low_price, high_price = value_range
+        print("-", value_range)
         low_price -= 1
 
         if strict:
