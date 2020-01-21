@@ -12,19 +12,19 @@ class MetaProductAdmin(admin.ModelAdmin):
     search_fields = ["name"]
 
 
-class SpecGroupAdmin(admin.ModelAdmin):
-    list_display = ["key", "spec_group_collection"]
+class SpecValueAdmin(admin.ModelAdmin):
+    list_display = ["key", "value"]
+    search_fields = ["key", "value"]
+
+
+class SpecKeyAdmin(admin.ModelAdmin):
+    list_display = ["key", "spec_group"]
     search_fields = ["key"]
 
 
-class SpecGroupCollectionAdmin(admin.ModelAdmin):
+class SpecGroupAdmin(admin.ModelAdmin):
     list_display = ["name"]
     search_fields = ["name"]
-
-
-class SpecAdmin(admin.ModelAdmin):
-    list_display = ["key", "value", "spec_group"]
-    search_fields = ["key", "value"]
 
 
 class PriceAdmin(admin.ModelAdmin):
@@ -34,7 +34,7 @@ class PriceAdmin(admin.ModelAdmin):
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(MetaProduct, MetaProductAdmin)
-admin.site.register(SpecValue, SpecAdmin)
-admin.site.register(SpecKey, SpecGroupAdmin)
-admin.site.register(SpecGroup, SpecGroupCollectionAdmin)
+admin.site.register(SpecValue, SpecValueAdmin)
+admin.site.register(SpecKey, SpecKeyAdmin)
+admin.site.register(SpecGroup, SpecGroupAdmin)
 admin.site.register(Price, PriceAdmin)
