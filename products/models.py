@@ -25,7 +25,7 @@ class Product(models.Model):
         categories, names, prices, manufacturing_names, specs_list, important_words = [], [], [], [], [], []
         for meta_product in self.meta_products.all():
             names.append(meta_product.name)
-            specs_list.append(meta_product.specs.all())
+            specs_list.append(meta_product.get_specs())
             manufacturing_names.append(meta_product.manufacturing_name)
             if meta_product.category:
                 categories.append(meta_product.category.rstrip())
@@ -179,7 +179,7 @@ class MetaProduct(models.Model):
         price_obj.save()
 
         # Update internals
-        self.specs = json.dumps(specs)
+        self._specs = json.dumps(specs)
         self.save()
 
     def get_price(self):
