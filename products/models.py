@@ -164,7 +164,7 @@ class MetaProduct(models.Model):
     category = models.CharField("category", max_length=32, blank=True, null=True)
     url = models.CharField('url', max_length=128, blank=True)
     image = models.ImageField(upload_to=get_file_path, blank=True, null=True)
-    _specs = models.CharField("specs", max_length=1024, default=json.dumps([]))
+    _specs = models.CharField("specs", max_length=2048, default=json.dumps([]))
     host = models.ForeignKey("scraping.Website", related_name="meta_products", on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(Product, related_name="meta_products", on_delete=models.CASCADE, null=True)
 
