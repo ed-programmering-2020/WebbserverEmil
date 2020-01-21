@@ -176,6 +176,7 @@ class MetaProduct(models.Model):
         price_obj.save()
 
         # Update internals
+        print(data.get("specs"))
         self._specs = json.dumps(data.get("specs"))
         self.save()
 
