@@ -238,7 +238,7 @@ class SpecGroup(models.Model):
 
 
 class SpecKey(models.Model):
-    spec_group_collection = models.ForeignKey(SpecGroup, related_name="spec_keys", on_delete=models.CASCADE, blank=True, null=True)
+    spec_group = models.ForeignKey(SpecGroup, related_name="spec_keys", on_delete=models.CASCADE, blank=True, null=True)
     category = models.ForeignKey("categories.Category", related_name="spec_keys", on_delete=models.CASCADE, blank=True, null=True)
     key = models.CharField('key', max_length=128, blank=True)
 
