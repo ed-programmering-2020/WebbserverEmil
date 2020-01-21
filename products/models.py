@@ -167,19 +167,14 @@ class MetaProduct(models.Model):
     product = models.ForeignKey(Product, related_name="meta_products", on_delete=models.CASCADE, null=True)
 
     def update(self, data):
-        specs_json = data.get("specs")
-        specs = json.loads(specs_json) if specs_json else None
-        price = data.get("price")
-        self.save()
-
         # Update external models
         self.save()
         price_obj = Price(meta_product=self)
-        price_obj.price = price
+        price_obj.price = data.get("price")
         price_obj.save()
 
         # Update internals
-        self._specs = json.dumps(specs)
+        self._specs = data.get("specs")
         self.save()
 
     def get_price(self):
@@ -190,6 +185,7 @@ class MetaProduct(models.Model):
         return None
 
     def get_specs(self):
+        print(self._specs)
         return json.loads(self._specs)
 
     def serve_admin_image(self):

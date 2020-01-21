@@ -1,4 +1,4 @@
-from products.models import Product, SpecGroup
+from products.models import Product, SpecGroup, SpecKey, SpecValue
 from collections import defaultdict
 import operator
 import re
@@ -185,7 +185,7 @@ class LaptopMatcher(BaseMatcher):
         for product in products:
             for key in spec_keys:
                 try:
-                    screen_size = product.specs.get(key=key)
+                    screen_size = product.spec_values.get(spec_key=SpecKey.objects.get(key=key))
                     if min_size < screen_size.value < max_size:
                         checked_products.append(product)
                     break
