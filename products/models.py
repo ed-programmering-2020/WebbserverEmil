@@ -176,7 +176,7 @@ class MetaProduct(models.Model):
         price_obj.save()
 
         # Update internals
-        print("--", data.get("specs"))
+        print("--", type(data.get("specs")))
         self._specs = data.get("specs")
         self.save()
 
