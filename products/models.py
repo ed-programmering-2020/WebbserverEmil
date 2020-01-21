@@ -72,8 +72,10 @@ class Product(models.Model):
                     for pos, word in enumerate(other_split_words):
                         for split_word in split_words:
                             if SequenceMatcher(None, split_word, word).ratio() >= 0.9 and pos >= 0:
-                                if word in words: words[word].append(pos)
-                                else: words[word] = [pos]
+                                if word in words:
+                                    words[word].append(pos)
+                                else:
+                                    words[word] = [pos]
 
         words_copy = words.copy()
         removed_words = []
@@ -174,6 +176,7 @@ class MetaProduct(models.Model):
         price_obj.save()
 
         # Update internals
+        print("--", data.get("specs"))
         self._specs = data.get("specs")
         self.save()
 
