@@ -1,4 +1,4 @@
-from products.models import Product, SpecGroupCollection
+from products.models import Product, SpecGroup
 from collections import defaultdict
 import operator
 import re
@@ -40,7 +40,7 @@ class BaseMatcher:
             id = product.id
 
             for key, value in self.values.items():
-                sgc = SpecGroupCollection.objects.get(name=key)
+                sgc = SpecGroup.objects.get(name=key)
 
                 spec_value = None
                 for spec in specs:
@@ -147,6 +147,7 @@ class LaptopMatcher(BaseMatcher):
     def find_with_settings(self, all_products, settings):
         print("---")
         products_price_matched = self.find_with_price(all_products, settings["price"], True)
+
         print(products_price_matched)
         products_size_matched = self.find_with_size(products_price_matched, settings["size"])
         print(products_size_matched)
@@ -175,7 +176,7 @@ class LaptopMatcher(BaseMatcher):
         min_size, max_size = size
 
         try:
-            spec_groups = SpecGroupCollection.objects.get(name="screen size").spec_groups.all()
+            spec_groups = SpecGroup.objects.get(name="screen size").spec_groups.all()
             spec_keys = [spec_group.key for spec_group in spec_groups]
         except:
             return None

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, MetaProduct, Spec, SpecGroup, SpecGroupCollection, Price
+from .models import Product, MetaProduct, SpecValue, SpecKey, SpecGroup, Price
 
 
 class ProductAdmin(admin.ModelAdmin):
@@ -34,7 +34,7 @@ class PriceAdmin(admin.ModelAdmin):
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(MetaProduct, MetaProductAdmin)
-admin.site.register(Spec, SpecAdmin)
-admin.site.register(SpecGroup, SpecGroupAdmin)
-admin.site.register(SpecGroupCollection, SpecGroupCollectionAdmin)
+admin.site.register(SpecValue, SpecAdmin)
+admin.site.register(SpecKey, SpecGroupAdmin)
+admin.site.register(SpecGroup, SpecGroupCollectionAdmin)
 admin.site.register(Price, PriceAdmin)
