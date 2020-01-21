@@ -177,7 +177,7 @@ class MetaProduct(models.Model):
 
         # Update internals
         print("--", type(data.get("specs")))
-        self._specs = data.get("specs")
+        self._specs = json.loads(data.get("specs"))
         self.save()
 
     def get_price(self):
