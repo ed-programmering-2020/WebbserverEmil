@@ -155,9 +155,11 @@ class LaptopMatcher(BaseMatcher, LaptopValues):
 
         products_size_matched = self.find_with_size(products_price_matched, settings["size"])
         print(products_size_matched)
+        if len(products_size_matched) == 0:  # TODO REMOVE
+            return self.products_to_json(products_price_matched)
 
         products_with_values = self.sort_with_values(products_size_matched)
-        if not products_with_values:
+        if not products_with_values:  # TODO REMOVE
             return self.products_to_json(products_size_matched)
 
         print(products_with_values)
