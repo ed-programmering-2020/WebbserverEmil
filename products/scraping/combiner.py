@@ -2,8 +2,7 @@ from operator import itemgetter
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 from difflib import SequenceMatcher
-from products.models import MetaProduct, Product
-from scraping.models import Website
+from products.models import MetaProduct, Product, Website
 import string
 
 
