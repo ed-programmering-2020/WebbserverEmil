@@ -140,9 +140,9 @@ class Product(models.Model):
                 # Delete non updated specs
                 for spec_value in self.spec_values.all():
                     if spec_value not in updated_specs:
-                        spec_value.meta_products.remove(self)
+                        spec_value.products.remove(self)
 
-                        if spec_value.meta_products.count() == 0:
+                        if spec_value.products.count() == 0:
                             spec_value.delete()
 
     def get_websites(self):
