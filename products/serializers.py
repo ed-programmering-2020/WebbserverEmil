@@ -10,4 +10,4 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', "image_url", "get_websites")
 
     def get_image_url(self, obj):
-        return obj.image.url
+        return obj.get_image().url

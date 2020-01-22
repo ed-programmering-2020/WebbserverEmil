@@ -149,6 +149,12 @@ class Product(models.Model):
         meta_products = [[mp.website, mp.get_price()] for mp in self.meta_products.all()]
         return meta_products
 
+    def get_image(self):
+        images = [mp.image for mp in self.meta_products.all() if mp.image]
+        if len(images) > 0:
+            return images[0]
+        return None
+
     def get_price(self):
         prices = [mp.get_price() for mp in self.meta_products.all() if mp.get_price()]
         if len(prices) > 0:
