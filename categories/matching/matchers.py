@@ -158,7 +158,7 @@ class LaptopMatcher(BaseMatcher, LaptopValues):
 
         products_with_values = self.sort_with_values(products_size_matched)
         if not products_with_values:
-            self.products_to_json(products_size_matched)
+            return self.products_to_json(products_size_matched)
 
         print(products_with_values)
         products_usage_sorted = self.sort_with_usage(products_with_values, len(products_size_matched),
