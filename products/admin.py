@@ -1,9 +1,15 @@
 from django.contrib import admin
-from .models import Product, MetaProduct, SpecValue, SpecKey, SpecGroup, Price
+from .models import Product, MetaProduct, SpecValue, SpecKey, SpecGroup, Price, Website, Country, Category, MetaCategory
+
+
+class CountryAdmin(admin.ModelAdmin):
+    list_display = ["name", "currency", "currency_short"]
+    list_filter = ["is_active"]
+    search_fields = ["name"]
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ["name", "meta_category", "manufacturing_name"]
+    list_display = ["name", "meta_category", "get_meta_product_amount", "manufacturing_name"]
     search_fields = ["name"]
 
 
@@ -32,6 +38,27 @@ class PriceAdmin(admin.ModelAdmin):
     search_fields = ["meta_product"]
 
 
+class WebsiteAdmin(admin.ModelAdmin):
+    list_display = ["id", "name", "url", "get_meta_product_amount", "country", "is_active"]
+    list_filter = ["is_active", "country"]
+    ordering = ["country"]
+    search_fields = ["name", "url", "country"]
+
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ["name", "get_meta_category_amount", "is_active"]
+    search_fields = ["name"]
+
+
+class MetaCategoryAdmin(admin.ModelAdmin):
+    list_display = ["name", "category", "get_product_amoun", "created_date"]
+    search_fields = ["name"]
+
+
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(MetaCategory, MetaCategoryAdmin)
+admin.site.register(Country, CountryAdmin)
+admin.site.register(Website, WebsiteAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(MetaProduct, MetaProductAdmin)
 admin.site.register(SpecValue, SpecValueAdmin)

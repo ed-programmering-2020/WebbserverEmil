@@ -1,4 +1,4 @@
-from categories.matching import specs
+from products.matching import specs
 
 
 class LaptopValues:

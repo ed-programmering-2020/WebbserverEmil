@@ -1,5 +1,5 @@
 from products.models import Product, SpecGroup, SpecValue
-from categories.matching.values import LaptopValues
+from products.matching.values import LaptopValues
 from collections import defaultdict
 import operator
 import re

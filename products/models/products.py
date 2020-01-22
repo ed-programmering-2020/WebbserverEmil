@@ -1,7 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.safestring import mark_safe
-from django.db import models
 from difflib import SequenceMatcher
+from django.db import models
 import importlib
 import json
 import uuid
@@ -12,10 +12,40 @@ def get_file_path(instance, filename):
     return "%s.%s" % (uuid.uuid4(), "jpg")
 
 
+class Country(models.Model):
+    id = models.AutoField(primary_key=True, blank=True)
+    name = models.CharField('name', max_length=64, blank=True)
+    currency = models.CharField('currency', max_length=64, blank=True)
+    currency_short = models.CharField('currency_short', max_length=16, blank=True)
+
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name_plural = 'Countries'
+
+    def __str__(self):
+        return "<Country %s>" % self.name
+
+
+class Website(models.Model):
+    id = models.AutoField(primary_key=True, blank=True)
+    name = models.CharField('name', max_length=128, blank=True)
+    url = models.CharField('url', max_length=256, blank=True)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
+
+    is_active = models.BooleanField(default=True)
+
+    def get_meta_product_amoun(self):
+        return self.meta_products.count()
+
+    def __str__(self):
+        return "<Website {} {} {}>".format(self.id, self.name, self.country.name)
+
+
 class Product(models.Model):
     id = models.AutoField(primary_key=True, blank=True)
     name = models.CharField('name', max_length=128, blank=True, null=True)
-    meta_category = models.ForeignKey("categories.MetaCategory", related_name="products", on_delete=models.CASCADE, blank=True, null=True)
+    meta_category = models.ForeignKey("products.MetaCategory", related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     manufacturing_name = models.CharField('manufacturing_name', max_length=128, blank=True, null=True)
 
     def most_frequent(self, List):
@@ -161,6 +191,9 @@ class Product(models.Model):
             return min(prices)
         return None
 
+    def get_meta_product_amount(self):
+        return self.meta_products.count()
+
     def __str__(self):
         return "<Product {}>".format(self.name)
 
@@ -173,7 +206,7 @@ class MetaProduct(models.Model):
     url = models.CharField('url', max_length=128, blank=True)
     image = models.ImageField(upload_to=get_file_path, blank=True, null=True)
     _specs = models.CharField("specs", max_length=4096, default=json.dumps([]))
-    host = models.ForeignKey("scraping.Website", related_name="meta_products", on_delete=models.CASCADE, null=True)
+    host = models.ForeignKey(Website, related_name="meta_products", on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(Product, related_name="meta_products", on_delete=models.CASCADE, null=True)
 
     def update(self, data):
