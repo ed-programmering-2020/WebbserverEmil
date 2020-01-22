@@ -133,7 +133,7 @@ class Product(models.Model):
 
                 updated_specs.append(spec)
 
-                if self not in spec_value.meta_products.all():
+                if self not in spec_value.products.all():
                     spec_value.products.add(self)
                     spec_value.save()
 
