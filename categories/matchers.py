@@ -147,8 +147,8 @@ class LaptopMatcher(BaseMatcher):
     def find_with_settings(self, all_products, settings):
         print("---")
         products_price_matched = self.find_with_price(all_products, settings["price"], True)
-
         print(products_price_matched)
+
         products_size_matched = self.find_with_size(products_price_matched, settings["size"])
         print(products_size_matched)
 
@@ -174,23 +174,16 @@ class LaptopMatcher(BaseMatcher):
 
     def find_with_size(self, products, size):
         min_size, max_size = size
-
-        try:
-            spec_groups = SpecGroup.objects.get(name="screen size").spec_groups.all()
-            spec_keys = [spec_group.key for spec_group in spec_groups]
-        except:
-            return None
+        spec_keys = SpecGroup.objects.get(name="screen size").spec_keys.all()
 
         checked_products = []
         for product in products:
             for key in spec_keys:
-                try:
-                    screen_size = product.spec_values.get(spec_key=SpecKey.objects.get(key=key))
-                    if min_size < screen_size.value < max_size:
-                        checked_products.append(product)
-                    break
-                except:
-                    pass
+                screen_size = product.spec_values.get(spec_key=key).value.split(" ")[0]
+
+                if min_size < screen_size < max_size:
+                    checked_products.append(product)
+                break
 
         return checked_products
 
