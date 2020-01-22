@@ -182,9 +182,10 @@ class LaptopMatcher(BaseMatcher, LaptopValues):
     def find_with_size(self, products, size):
         min_size, max_size = size
         spec_keys = SpecGroup.objects.get(name="screen size").spec_keys.all()
+        print("specs keys", spec_keys)
 
         checked_products = []
-        for product in products:
+        for product in products.all():
             for key in spec_keys:
                 try:
                     screen_size = product.spec_values.get(spec_key=key).value.split(" ")[0]
