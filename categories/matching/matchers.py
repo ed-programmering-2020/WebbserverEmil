@@ -186,7 +186,7 @@ class LaptopMatcher(BaseMatcher, LaptopValues):
 
         checked_products = []
         for product in products.all():
-            print("product", product)
+            print("product", product.spec_values)
             for key in spec_keys:
                 try:
                     print("bapp")
