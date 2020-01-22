@@ -3,12 +3,12 @@ from .models import Product, MetaProduct, SpecValue, SpecKey, SpecGroup, Price
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ["name", "meta_category"]
+    list_display = ["name", "meta_category", "manufacturing_name"]
     search_fields = ["name"]
 
 
 class MetaProductAdmin(admin.ModelAdmin):
-    list_display = ["name", "product", "manufacturing_name", "serve_admin_image"]
+    list_display = ["name", "product", "category", "manufacturing_name", "serve_admin_image"]
     search_fields = ["name"]
 
 
@@ -18,7 +18,7 @@ class SpecValueAdmin(admin.ModelAdmin):
 
 
 class SpecKeyAdmin(admin.ModelAdmin):
-    list_display = ["key", "spec_group"]
+    list_display = ["key", "spec_group", "category"]
     search_fields = ["key"]
 
 

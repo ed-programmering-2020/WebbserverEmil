@@ -134,7 +134,7 @@ class Product(models.Model):
                 updated_specs.append(spec)
 
                 if self not in spec_value.meta_products.all():
-                    spec_value.meta_products.add(self)
+                    spec_value.products.add(self)
                     spec_value.save()
 
                 # Delete non updated specs
@@ -246,7 +246,7 @@ class SpecKey(models.Model):
 
 
 class SpecValue(models.Model):
-    meta_products = models.ManyToManyField(MetaProduct, related_name="spec_values")
+    products = models.ManyToManyField(Product, related_name="spec_values")
     spec_key = models.ForeignKey(SpecKey, related_name="spec_values", on_delete=models.CASCADE, blank=True, null=True)
     value = models.CharField('value', max_length=128, blank=True)
 
