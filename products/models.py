@@ -146,7 +146,7 @@ class Product(models.Model):
                             spec_value.delete()
 
     def get_websites(self):
-        meta_products = [[mp.url, mp.get_price()] for mp in self.meta_products.all()]
+        meta_products = [[mp.url, mp.get_price()] for mp in self.meta_products.all() if mp.get_price()]
         return meta_products
 
     def get_image(self):
