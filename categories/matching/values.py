@@ -2,9 +2,8 @@ from categories.matching import specs
 
 
 class LaptopValues:
-    @staticmethod
-    def get_values(self):
-        return {
+    def __init__(self):
+        self.values = {
             "battery capacity": [],
             "processor": specs.processors,
             "graphics card": specs.graphics_cards,
@@ -15,10 +14,7 @@ class LaptopValues:
             "panel type": specs.panel_types,
             "refresh rate": []
         }
-
-    @staticmethod
-    def get_biases(self):
-        return {
+        self.biases = {
             "general": {
                 "battery capacity": 1,
                 "processor": 1,
@@ -42,10 +38,7 @@ class LaptopValues:
                 "refresh rate": 1
             }
         }
-
-    @staticmethod
-    def get_priority_groups(self):
-        return {
+        self.priority_groups = {
             "battery": ["battery capacity"],
             "performance": ["processor", "graphics card", "memory", "disk type"],
             "storage": ["storage size"],
