@@ -1,6 +1,5 @@
-from categories.matchers import LaptopMatcher
+from categories.matching.matchers import LaptopMatcher
 from categories.customizers import LaptopCustomizer
-from categories.values import LaptopValues
 from django.db import models
 
 
@@ -39,7 +38,7 @@ class MetaCategory(models.Model):
         verbose_name_plural = 'Meta categories'
 
 
-class Laptop(Category, LaptopMatcher, LaptopCustomizer, LaptopValues):
+class Laptop(Category, LaptopMatcher, LaptopCustomizer):
     def match(self, settings):
         all_products = self.get_all_products()
         return super().find_with_settings(all_products, settings)

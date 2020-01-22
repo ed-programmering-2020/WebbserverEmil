@@ -1,4 +1,4 @@
-from categories import specs
+from categories.matching import specs
 
 
 class LaptopValues:

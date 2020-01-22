@@ -1,4 +1,5 @@
-from products.models import Product, SpecGroup, SpecKey, SpecValue
+from products.models import Product, SpecGroup, SpecValue
+from categories.matching.values import LaptopValues
 from collections import defaultdict
 import operator
 import re
@@ -143,7 +144,7 @@ class BaseMatcher:
             return None
 
 
-class LaptopMatcher(BaseMatcher):
+class LaptopMatcher(BaseMatcher, LaptopValues):
     def find_with_settings(self, all_products, settings):
         print("---")
         products_price_matched = self.find_with_price(all_products, settings["price"], True)
