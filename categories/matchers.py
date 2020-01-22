@@ -179,11 +179,14 @@ class LaptopMatcher(BaseMatcher):
         checked_products = []
         for product in products:
             for key in spec_keys:
-                screen_size = product.spec_values.get(spec_key=key).value.split(" ")[0]
+                try:
+                    screen_size = product.spec_values.get(spec_key=key).value.split(" ")[0]
 
-                if min_size < screen_size < max_size:
-                    checked_products.append(product)
-                break
+                    if min_size < screen_size < max_size:
+                        checked_products.append(product)
+                    break
+                except SpecValue.DoesNotExist:
+                    pass
 
         return checked_products
 
