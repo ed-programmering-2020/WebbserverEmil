@@ -55,9 +55,7 @@ class Combiner:
         if meta_product.manufacturing_name:
             try:
                 meta_products = MetaProduct.objects.exclude(url=meta_product.url).filter(manufacturing_name=meta_product.manufacturing_name)
-                if len(meta_products) > 1:  # TODO if multiple check them with probability
-                    print("filter", meta_products.all())
-                return meta_product.first()
+                return meta_products.first()
             except MetaProduct.DoesNotExist:
                 return None
         else:
