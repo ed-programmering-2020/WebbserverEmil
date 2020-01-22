@@ -54,7 +54,10 @@ class Combiner:
     def match_with_manufacturing_name(self, meta_product):
         if meta_product.manufacturing_name:
             try:
-                return MetaProduct.objects.exclude(id=meta_product.id).get(manufacturing_name=meta_product.manufacturing_name)
+                meta_products = MetaProduct.objects.exclude(url=meta_product.url).filter(manufacturing_name=meta_product.manufacturing_name)
+                if len(meta_products) > 1:  # TODO if multiple check them with probability
+                    print("filter", meta_products.all())
+                return meta_product.first()
             except MetaProduct.DoesNotExist:
                 return None
         else:

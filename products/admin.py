@@ -8,7 +8,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 class MetaProductAdmin(admin.ModelAdmin):
-    list_display = ["name", "product", "serve_admin_image"]
+    list_display = ["name", "product", "manufacturing_name", "serve_admin_image"]
     search_fields = ["name"]
 
 
