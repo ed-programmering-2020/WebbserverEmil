@@ -10,7 +10,7 @@ import json
 
 
 def import_category(name):
-    name = "products.models.categories" + name
+    name = "products.models.categories." + name
     components = name.split('.')
     mod = __import__(components[0])
     for comp in components[1:]:
