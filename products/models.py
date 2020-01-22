@@ -151,7 +151,9 @@ class Product(models.Model):
 
     def get_price(self):
         prices = [mp.get_price() for mp in self.meta_products.all() if mp.get_price()]
-        return min(prices)
+        if len(prices) > 0:
+            return min(prices)
+        return None
 
     def __str__(self):
         return "<Product {}>".format(self.name)
