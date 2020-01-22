@@ -13,7 +13,7 @@ class BaseMatcher:
             valid_products = products.all()
             for product in products.all():
                 price = product.get_price()
-                if not low_price <= price <= high_price:
+                if not price or not low_price <= price <= high_price:
                     valid_products = valid_products.exclude(id=product.id)
 
             return valid_products
