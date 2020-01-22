@@ -119,31 +119,31 @@ class Product(models.Model):
 
                 # Get key
                 try:
-                    spec_key = SpecKey.objects.filter(key__iexact=key, category=category).first()
-                except ObjectDoesNotExist:
+                    spec_key = SpecKey.objects.get(key__iexact=key, category=category)
+                except SpecKey.DoesNotExist:
                     spec_key = SpecKey.objects.create(key=key, category=category)
                     spec_key.save()
 
                 # Get value
                 try:
                     spec_value = SpecValue.objects.get(value__iexact=value, spec_key=spec_key)
-                except ObjectDoesNotExist:
+                except SpecValue.DoesNotExist:
                     spec_value = SpecValue.objects.create(value=value, spec_key=spec_key)
                     spec_value.save()
 
                 updated_specs.append(spec)
 
-                if self not in spec.meta_products.all():
-                    spec.meta_products.add(self)
-                    spec.save()
+                if self not in spec_value.meta_products.all():
+                    spec_value.meta_products.add(self)
+                    spec_value.save()
 
                 # Delete non updated specs
-                for spec in self.specs.all():
-                    if spec not in updated_specs:
-                        spec.meta_products.remove(self)
+                for spec_value in self.spec_values.all():
+                    if spec_value not in updated_specs:
+                        spec_value.meta_products.remove(self)
 
-                        if spec.meta_products.count() == 0:
-                            spec.delete()
+                        if spec_value.meta_products.count() == 0:
+                            spec_value.delete()
 
     def get_websites(self):
         meta_products = [[mp.website, mp.get_price()] for mp in self.meta_products.all()]
