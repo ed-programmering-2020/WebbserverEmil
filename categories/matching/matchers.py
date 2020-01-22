@@ -145,6 +145,9 @@ class BaseMatcher:
 
 
 class LaptopMatcher(BaseMatcher, LaptopValues):
+    def __init__(self):
+        super().__init__()
+
     def find_with_settings(self, all_products, settings):
         print("---")
         products_price_matched = self.find_with_price(all_products, settings["price"], True)
