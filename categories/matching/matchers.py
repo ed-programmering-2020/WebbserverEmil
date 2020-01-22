@@ -221,6 +221,7 @@ class LaptopMatcher(BaseMatcher, LaptopValues):
 
     def sort_with_priorities(self, products_with_values, amount_of_products, top_products, priorities):
         sorted_products = defaultdict()
+        priority_groups = super().get_priority_groups()
 
         def save_value(id, key, product, products_list_length, i):
             product_id, __ = product
@@ -246,7 +247,7 @@ class LaptopMatcher(BaseMatcher, LaptopValues):
         for id, all_values in sorted_products.items():
             resulting_value = all_values["usage_value"]
 
-            for group, values in self.priority_groups.items():
+            for group, values in priority_groups.items():
                 key_value = 0
 
                 for key, value in all_values["values"].items():
