@@ -64,7 +64,7 @@ class Product(models.Model):
         # Update Meta Category
         category_name = self.most_frequent(categories)
         if category_name:
-            meta_category_model = importlib.import_module("categories.models").MetaCategory
+            meta_category_model = importlib.import_module("products.models").MetaCategory
 
             try:
                 meta_category = meta_category_model.objects.get(name=category_name)
