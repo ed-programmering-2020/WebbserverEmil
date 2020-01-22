@@ -35,9 +35,6 @@ class Website(models.Model):
 
     is_active = models.BooleanField(default=True)
 
-    def get_meta_product_amoun(self):
-        return self.meta_products.count()
-
     def __str__(self):
         return "<Website {} {} {}>".format(self.id, self.name, self.country.name)
 
@@ -190,9 +187,6 @@ class Product(models.Model):
         if len(prices) > 0:
             return min(prices)
         return None
-
-    def get_meta_product_amount(self):
-        return self.meta_products.count()
 
     def __str__(self):
         return "<Product {}>".format(self.name)

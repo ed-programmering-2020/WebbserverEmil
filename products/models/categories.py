@@ -18,9 +18,6 @@ class Category(models.Model):
 
         return all_products
 
-    def get_meta_category_amount(self):
-        return self.meta_categories.count()
-
     def __str__(self):
         return "<Category %s>" % self.name
 
@@ -32,9 +29,6 @@ class MetaCategory(models.Model):
     name = models.CharField('name', max_length=30, blank=True, null=True)
     category = models.ForeignKey(Category, related_name="meta_categories", on_delete=models.CASCADE, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
-
-    def get_product_amoun(self):
-        return self.products.count()
 
     def __str__(self):
         return "<MetaCategory %s>" % self.name

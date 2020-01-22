@@ -9,7 +9,7 @@ class CountryAdmin(admin.ModelAdmin):
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ["name", "meta_category", "get_meta_product_amount", "manufacturing_name"]
+    list_display = ["name", "meta_category", "manufacturing_name"]
     search_fields = ["name"]
 
 
@@ -39,19 +39,19 @@ class PriceAdmin(admin.ModelAdmin):
 
 
 class WebsiteAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "url", "get_meta_product_amount", "country", "is_active"]
+    list_display = ["id", "name", "url", "country", "is_active"]
     list_filter = ["is_active", "country"]
     ordering = ["country"]
     search_fields = ["name", "url", "country"]
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ["name", "get_meta_category_amount", "is_active"]
+    list_display = ["name", "is_active"]
     search_fields = ["name"]
 
 
 class MetaCategoryAdmin(admin.ModelAdmin):
-    list_display = ["name", "category", "get_product_amoun", "created_date"]
+    list_display = ["name", "category", "created_date"]
     search_fields = ["name"]
 
 
