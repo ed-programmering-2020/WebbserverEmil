@@ -160,7 +160,10 @@ class Product(models.Model):
 
                 updated_specs.append(spec)
 
-                if self not in spec_value.products.all():
+                # Add spec
+                try:
+                    self.spec_values.get(id=spec_value.id)
+                except SpecValue.DoesNotExist:
                     spec_value.products.add(self)
                     spec_value.save()
 

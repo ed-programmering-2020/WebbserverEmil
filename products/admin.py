@@ -20,7 +20,7 @@ class MetaProductAdmin(admin.ModelAdmin):
 
 class SpecValueAdmin(admin.ModelAdmin):
     list_display = ["value", "spec_key"]
-    search_fields = ["value", "spec_key"]
+    search_fields = ["value"]
 
 
 class SpecKeyAdmin(admin.ModelAdmin):
