@@ -20,7 +20,7 @@ class Category(models.Model):
 
     def product_count(self):
         total = 0
-        for meta_category in self.meta_categories:
+        for meta_category in self.meta_categories.all():
             total += meta_category.products.count()
 
         return total
