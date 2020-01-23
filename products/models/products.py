@@ -169,14 +169,6 @@ class Product(models.Model):
                     spec_value.products.add(self)
                     spec_value.save()
 
-                # Delete non updated specs
-                for spec_value in self.spec_values.all():
-                    if spec_value not in updated_specs:
-                        spec_value.products.remove(self)
-
-                        if spec_value.products.count() == 0:
-                            spec_value.delete()
-
     def get_websites(self):
         meta_products = [[mp.url, mp.get_price()] for mp in self.meta_products.all() if mp.get_price()]
         return meta_products
