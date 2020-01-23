@@ -46,7 +46,7 @@ class WebsiteAdmin(admin.ModelAdmin):
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ["name", "is_active"]
+    list_display = ["name", "product_count", "is_active"]
     search_fields = ["name"]
 
 
