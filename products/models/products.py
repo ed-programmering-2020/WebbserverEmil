@@ -158,8 +158,6 @@ class Product(models.Model):
                     spec_value = SpecValue.objects.create(value=value, spec_key=spec_key)
                     spec_value.save()
 
-                print("spec value", spec_value)
-
                 updated_specs.append(spec)
 
                 # Add spec

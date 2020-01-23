@@ -1,4 +1,4 @@
-from products.models import Product, SpecGroup, SpecValue
+from products.models import Product, SpecGroup, SpecValue, SpecKey
 from products.matching.values import LaptopValues
 from collections import defaultdict
 import operator
@@ -36,48 +36,57 @@ class BaseMatcher:
 
     def sort_with_values(self, products):
         sorted_products = defaultdict()
+
         for product in products:
-            specs = product.specs.all()
-            id = product.id
+            for spec_value in product.spec_values.all():
+                value = spec_value.value
 
-            for key, value in self.values.items():
-                sgc = SpecGroup.objects.get(name=key)
+                try:
+                    spec_key = spec_value.spec_key
+                    spec_group = spec_key.spec_group
+                    key = spec_key.key
 
-                spec_value = None
-                for spec in specs:
-                    if spec.spec_group and spec.spec_group.spec_group_collection and spec.spec_group.spec_group_collection == sgc:
-                        spec_value = spec.value
-                        break
+                    if spec_group:
+                        # Find spec group values
+                        spec_group_values = None
+                        for spec_group_name, values in self.values.items():
+                            if spec_group_name == spec_group.name:
+                                spec_group_values = values
+                                break
 
-                if not sorted_products[key]:
-                    sorted_products[key] = [(id, spec_value)]
-                else:
-                    for saved_index, saved_value in enumerate(sorted_products[key]):
-                        if type(saved_value) == list:
-                            saved_value = saved_value[0]
+                        # Rank value
+                        if spec_group_values:
+                            if not sorted_products[key]:
+                                sorted_products[key] = [(product.id, value)]
 
-                        saved_id, saved_spec_value = saved_value
-                        value_package = (id, spec_value)
-
-                        if value != []:
-                            saved_spec_value = self.check_text_value(saved_spec_value, value)
-                            spec_value = self.check_text_value(spec_value, value)
-                        else:
-                            saved_spec_value = re.sub(r'[^\d.]+', '', saved_spec_value)
-                            spec_value = re.sub(r'[^\d.]+', '', spec_value)
-
-                        if spec_value > saved_spec_value:
-                            sorted_products[key].insert(saved_index, value_package)
-                            break
-                        elif spec_value == saved_spec_value:
-                            if type(sorted_products[key][saved_index]) == list:
-                                sorted_products[key][saved_index].append(value_package)
                             else:
-                                sorted_products[key][saved_index] = [sorted_products[key][saved_index], value_package]
-                            break
-                        elif saved_index == (len(sorted_products[key]) - 1):
-                            sorted_products[key].append([value_package])
-                            break
+                                for i, saved_specs in enumerate(sorted_products[spec_key.key]):
+                                    saved_id, saved_value = saved_specs[0]
+                                    value_package = (product.id, value)
+
+                                    # Get value
+                                    if value != []:
+                                        saved_value = self.check_text_value(saved_value, spec_group_values)
+                                        value = self.check_text_value(value, spec_group_values)
+                                    else:
+                                        saved_value = re.sub(r'[^\d.]+', '', saved_value)
+                                        value = re.sub(r'[^\d.]+', '', value)
+
+                                    # Rank with value
+                                    if value > saved_value:
+                                        sorted_products[key].insert(i, value_package)
+                                        break
+                                    elif value == saved_value:
+                                        if type(sorted_products[key][i]) == list:
+                                            sorted_products[key][i].append(value_package)
+                                        else:
+                                            sorted_products[key][i] = [sorted_products[key][i], value_package]
+                                        break
+                                    elif i == (len(sorted_products[key]) - 1):
+                                        sorted_products[key].append([value_package])
+                                        break
+                except SpecKey.DoesNotExist:
+                    pass
 
         return sorted_products
 
@@ -155,8 +164,7 @@ class LaptopMatcher(BaseMatcher, LaptopValues):
 
         products_size_matched = self.find_with_size(products_price_matched, settings["size"])
         print(products_size_matched)
-        if len(products_size_matched) == 0:  # TODO REMOVE
-            return self.products_to_json(products_price_matched)
+        return self.products_to_json(products_price_matched)  # TODO REMOVE
 
         products_with_values = self.sort_with_values(products_size_matched)
         if not products_with_values:  # TODO REMOVE
