@@ -18,6 +18,13 @@ class Category(models.Model):
 
         return all_products
 
+    def product_count(self):
+        total = 0
+        for meta_category in self.meta_categories:
+            total += meta_category.products.count()
+
+        return total
+
     def __str__(self):
         return "<Category %s>" % self.name
 
