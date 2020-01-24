@@ -201,7 +201,7 @@ class LaptopMatcher(BaseMatcher, LaptopValues):
             for key in spec_keys:
                 try:
                     print("bapp")
-                    screen_size = spec_values.get(spec_key=key).value.split(" ")[0]
+                    screen_size = spec_values.filter(spec_key=key).first().value.split(" ")[0]
                     print(float(screen_size))
 
                     if min_size < float(screen_size) < max_size:
