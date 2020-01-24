@@ -1,4 +1,4 @@
-from products.models import Product, SpecGroup, SpecValue, SpecKey
+from products.models import Product, SpecGroup, SpecValue, SpecKey, Category
 from products.matching.values import LaptopValues
 from collections import defaultdict
 import operator
@@ -195,11 +195,13 @@ class LaptopMatcher(BaseMatcher, LaptopValues):
 
         checked_products = []
         for product in products.all():
-            print("product", product.spec_values)
+            spec_values = product.spec_values.all()
+
+            print("product", spec_values)
             for key in spec_keys:
                 try:
                     print("bapp")
-                    screen_size = product.spec_values.get(spec_key=key).value.split(" ")[0]
+                    screen_size = spec_values.get(spec_key=key).value.split(" ")[0]
                     print(float(screen_size))
 
                     if min_size < float(screen_size) < max_size:
