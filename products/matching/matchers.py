@@ -160,11 +160,10 @@ class LaptopMatcher(BaseMatcher, LaptopValues):
     def find_with_settings(self, all_products, settings):
         print("---")
         products_price_matched = self.find_with_price(all_products, settings["price"], True)
-        print(products_price_matched)
+        print("price", products_price_matched)
 
         products_size_matched = self.find_with_size(products_price_matched, settings["size"])
-        print(products_size_matched)
-        return self.products_to_json(products_price_matched)  # TODO REMOVE
+        print("size", products_size_matched)
 
         products_with_values = self.sort_with_values(products_size_matched)
         if not products_with_values:  # TODO REMOVE

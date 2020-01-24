@@ -208,6 +208,9 @@ class MetaProduct(models.Model):
         # Update internals
         specs = data.get("specs")
         if specs:
+            if len(specs) >= 32:
+                specs = specs[:32]
+
             self._specs = json.dumps(specs)
         self.save()
 
