@@ -1,4 +1,4 @@
-from products.models import Product, SpecGroup, SpecValue, SpecKey, Category
+from products.models import Product, SpecGroup, SpecValue, SpecKey
 from products.matching.values import LaptopValues
 from collections import defaultdict
 import operator
