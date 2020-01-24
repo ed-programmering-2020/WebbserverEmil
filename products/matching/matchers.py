@@ -200,13 +200,14 @@ class LaptopMatcher(BaseMatcher, LaptopValues):
             print("product", spec_values)
             for key in spec_keys:
                 try:
-                    print("bapp")
-                    screen_size = spec_values.filter(spec_key=key).first().value.split(" ")[0]
-                    print(float(screen_size))
+                    screen_size = spec_values.filter(spec_key=key).first()
+                    if screen_size:
+                        screen_size = screen_size.value.split(" ")[0]
 
-                    if min_size < float(screen_size) < max_size:
-                        checked_products.append(product)
-                    break
+                        if min_size < float(screen_size) < max_size:
+                            checked_products.append(product)
+
+                        break
                 except SpecValue.DoesNotExist:
                     pass
 
