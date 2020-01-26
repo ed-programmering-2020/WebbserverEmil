@@ -138,8 +138,7 @@ class Product(models.Model):
     def update_specs(self, specs_list):
         updated_specs = []
         category = self.meta_category.category
-        spec_values = self.spec_values.all()
-
+        
         for specs in specs_list:
             for spec in specs:
                 key = spec[0]
@@ -162,7 +161,7 @@ class Product(models.Model):
                     updated_specs.append(spec_value)
 
         # Delete old spec values
-        for spec_value in spec_values:
+        for spec_value in self.spec_values.all():
             if spec_value not in updated_specs:
                 if spec_value.products.count == 1:
                     spec_value.delete()
