@@ -70,7 +70,7 @@ class Combiner:
             price = meta_product.get_price()
             if price and min_price <= price <= max_price:
                 name_similarity = self.name_similarity(main_meta_product.name, meta_product.name)
-                parameter_similarity = self.parameter_similarity(main_meta_product.specs.all(), meta_product.specs.all())
+                parameter_similarity = self.parameter_similarity(main_meta_product.specs, meta_product.specs)
 
                 average_similarity = (name_similarity + parameter_similarity) / 2
                 meta_products_with_probability.append((average_similarity, meta_product))
@@ -119,13 +119,11 @@ class Combiner:
         combined_score = 0
         intersecting_params = 0
 
-        for second_param in second_params:
-            second_key = self.clean_string(second_param.key)
-            second_value = self.clean_string(second_param.value)
+        for second_key, second_value in second_params.items():
+            second_key, second_value = self.clean_string(second_key), self.clean_string(second_value)
 
-            for first_param in first_params:
-                first_key = self.clean_string(first_param.key)
-                first_value = self.clean_string(first_param.value)
+            for first_key, first_value in first_params.items():
+                first_key, first_value = self.clean_string(first_key), self.clean_string(first_value)
 
                 # Check if values match
                 if second_value in first_value or first_value in second_value:
