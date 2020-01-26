@@ -138,7 +138,7 @@ class Product(models.Model):
     def update_specs(self, specs_list):
         updated_specs = []
         category = self.meta_category.category
-        
+
         for specs in specs_list:
             for spec in specs:
                 key = spec[0]
@@ -209,6 +209,9 @@ class MetaProduct(models.Model):
         # Update internals
         specs = data.get("specs")
         if specs:
+            if len(specs) >= 32:
+                specs = specs[:32]
+
             self._specs = json.dumps(specs)
         self.save()
 
