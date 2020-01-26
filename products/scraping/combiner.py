@@ -2,7 +2,7 @@ from operator import itemgetter
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 from difflib import SequenceMatcher
-from products.models import MetaProduct, Product, Website
+from products.models import MetaProduct, Product, Website, SpecGroup
 import string
 
 
@@ -45,8 +45,8 @@ class Combiner:
 
     def find_matching_meta_product(self, meta_product):
         matching_meta_product = self.match_with_manufacturing_name(meta_product)
-        # if matching_meta_product is None:
-        #    matching_meta_product = self.match_with_probability(meta_product)
+        if matching_meta_product is None:
+           matching_meta_product = self.match_with_probability(meta_product)
 
         return matching_meta_product
 
@@ -127,7 +127,7 @@ class Combiner:
                 first_key = self.clean_string(first_param.key)
                 first_value = self.clean_string(first_param.value)
 
-                # Value match
+                # Check if values match
                 if second_value in first_value or first_value in second_value:
                     combined_score += 1
                     intersecting_params += 1
@@ -137,7 +137,10 @@ class Combiner:
                 key_similarity = SequenceMatcher(None, first_key, second_key).ratio()
                 value_similarity = SequenceMatcher(None, first_value, second_value).ratio()
 
-                if key_similarity >= 0.9 or value_similarity >= 0.9:
+                if value_similarity >= 0.9:
+                    intersecting_params += 1
+                    combined_score += 1
+                elif key_similarity >= 0.9:
                     intersecting_params += 1
                     break
 

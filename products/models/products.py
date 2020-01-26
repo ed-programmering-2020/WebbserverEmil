@@ -138,6 +138,7 @@ class Product(models.Model):
     def update_specs(self, specs_list):
         updated_specs = []
         category = self.meta_category.category
+        spec_values = self.spec_values.all()
 
         for specs in specs_list:
             for spec in specs:
@@ -153,21 +154,20 @@ class Product(models.Model):
 
                 # Get value
                 try:
-                    spec_value = SpecValue.objects.get(value__iexact=value, spec_key=spec_key)
+                    self.spec_values.get(value__iexact=value, spec_key=spec_key)
                 except SpecValue.DoesNotExist:
                     spec_value = SpecValue.objects.create(value=value, spec_key=spec_key)
-                    spec_value.save()
-
-                print("spec value", spec_value)
-
-                updated_specs.append(spec)
-
-                # Add spec
-                try:
-                    self.spec_values.get(id=spec_value.id)
-                except SpecValue.DoesNotExist:
                     spec_value.products.add(self)
                     spec_value.save()
+                    updated_specs.append(spec_value)
+
+        # Delete old spec values
+        for spec_value in spec_values:
+            if spec_value not in updated_specs:
+                if spec_value.products.count == 1:
+                    spec_value.delete()
+                else:
+                    spec_value.remove(self)
 
     def get_websites(self):
         meta_products = [[mp.url, mp.get_price()] for mp in self.meta_products.all() if mp.get_price()]
@@ -274,7 +274,7 @@ class SpecKey(models.Model):
     key = models.CharField('key', max_length=128, blank=True)
 
     def __str__(self):
-        return "<SpecKey %s>" % self.key
+        return "<SpecKey %s %s>" % (self.key, self.category)
 
 
 class SpecValue(models.Model):
