@@ -42,6 +42,7 @@ class Website(models.Model):
 class Product(models.Model):
     id = models.AutoField(primary_key=True, blank=True)
     name = models.CharField('name', max_length=128, blank=True, null=True)
+    price = models.IntegerField("price", blank=True, null=True)
     meta_category = models.ForeignKey("products.MetaCategory", related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     manufacturing_name = models.CharField('manufacturing_name', max_length=128, blank=True, null=True)
 
@@ -176,12 +177,6 @@ class Product(models.Model):
         images = [mp.image for mp in self.meta_products.all() if mp.image]
         if len(images) > 0:
             return images[0].url
-        return None
-
-    def get_price(self):
-        prices = [mp.get_price() for mp in self.meta_products.all() if mp.get_price()]
-        if len(prices) > 0:
-            return min(prices)
         return None
 
     def __str__(self):

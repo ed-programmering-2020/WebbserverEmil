@@ -13,7 +13,7 @@ class BaseMatcher:
         if strict:
             valid_products = products.all()
             for product in products.all():
-                price = product.get_price()
+                price = product.price
                 if not price or not low_price <= price <= high_price:
                     valid_products = valid_products.exclude(id=product.id)
 
@@ -166,23 +166,23 @@ class LaptopMatcher(BaseMatcher, LaptopValues):
         print("size", products_size_matched)
 
         products_with_values = self.sort_with_values(products_size_matched)
-        if not products_with_values:  # TODO REMOVE
-            return self.products_to_json(products_size_matched)
+        print("values", products_with_values)
 
-        print(products_with_values)
-        products_usage_sorted = self.sort_with_usage(products_with_values, len(products_size_matched),
-                                                     settings["usage"])
-        print(products_usage_sorted)
+        products_usage_sorted = self.sort_with_usage(products_with_values, len(products_size_matched), settings["usage"])
+        print("usage", products_usage_sorted)
+
         products_price_sorted = self.sort_with_price(products_usage_sorted)
-        print(products_price_sorted)
+        print("price", products_price_sorted)
 
         top_products = self.get_top_products(products_price_sorted)
-        print(top_products)
-        products_prioritization_sorted = self.sort_with_priorities(products_with_values, len(products_size_matched),
-                                                                   top_products, settings["priorities"])
-        print(products_prioritization_sorted)
+        print("top", top_products)
+
+        products_prioritization_sorted = self.sort_with_priorities(products_with_values, len(products_size_matched), top_products, settings["priorities"])
+        print("priorities", products_prioritization_sorted)
+
         ranked_products = products_prioritization_sorted.sort(key=operator.itemgetter(1), reverse=True)
-        print(ranked_products)
+        print("ranked", ranked_products)
+
         product_models = self.get_product_models(ranked_products)
         print(product_models)
 
