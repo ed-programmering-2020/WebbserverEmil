@@ -1,3 +1,5 @@
+import re
+
 processors = [
     '9980HK',
     '9880H',
@@ -1193,3 +1195,21 @@ disk_types = [
     "ssd",
     "hdd"
 ]
+
+
+class RefreshRate:
+    def __init__(self):
+        self.standard = 60
+
+    def process_value(self, value):
+        if not value:
+            return self.standard
+        else:
+            value = value.split(" ")[0]
+            value = re.sub("[^0-9]", "", value)
+            return value
+
+    def compare(self, first, second):
+        first, second = self.process_value(first), self.process_value(second)
+
+        return None

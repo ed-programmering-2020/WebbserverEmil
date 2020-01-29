@@ -1,17 +1,17 @@
-from products.matching import specs
+from products.matching import spec_evaluators
 
 
 class LaptopValues:
     def __init__(self):
         self.values = {
             "battery capacity": [],
-            "processor": specs.processors,
-            "graphics card": specs.graphics_cards,
+            "processor": spec_evaluators.processors,
+            "graphics card": spec_evaluators.graphics_cards,
             "memory": [],
-            "disk type": specs.disk_types,
+            "disk type": spec_evaluators.disk_types,
             "storage size": [],
             "resolution": [],
-            "panel type": specs.panel_types,
+            "panel type": spec_evaluators.panel_types,
             "refresh rate": []
         }
         self.biases = {

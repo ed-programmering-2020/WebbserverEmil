@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from products.models import SpecKey, SpecValue
 from django.utils.safestring import mark_safe
 from difflib import SequenceMatcher
 from django.db import models
@@ -12,31 +13,14 @@ def get_file_path(instance, filename):
     return "%s.%s" % (uuid.uuid4(), "jpg")
 
 
-class Country(models.Model):
-    id = models.AutoField(primary_key=True, blank=True)
-    name = models.CharField('name', max_length=64, blank=True)
-    currency = models.CharField('currency', max_length=64, blank=True)
-    currency_short = models.CharField('currency_short', max_length=16, blank=True)
-
-    is_active = models.BooleanField(default=True)
-
-    class Meta:
-        verbose_name_plural = 'Countries'
-
-    def __str__(self):
-        return "<Country %s>" % self.name
-
-
 class Website(models.Model):
     id = models.AutoField(primary_key=True, blank=True)
     name = models.CharField('name', max_length=128, blank=True)
     url = models.CharField('url', max_length=256, blank=True)
-    country = models.ForeignKey(Country, on_delete=models.CASCADE)
-
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return "<Website {} {} {}>".format(self.id, self.name, self.country.name)
+        return "<Website %s>" % self.name
 
 
 class Product(models.Model):
@@ -44,12 +28,26 @@ class Product(models.Model):
     name = models.CharField('name', max_length=128, blank=True, null=True)
     price = models.IntegerField("price", blank=True, null=True)
     meta_category = models.ForeignKey("products.MetaCategory", related_name="products", on_delete=models.CASCADE, blank=True, null=True)
-    manufacturing_name = models.CharField('manufacturing_name', max_length=128, blank=True, null=True)
+    manufacturing_name = models.CharField('manufacturing name', max_length=128, blank=True, null=True)
+
+    # Ranking
+    average_score = models.IntegerField("average score", null=True)
+    _scores = models.CharField("scores",  max_length=128, null=True)
+    is_ranked = models.BooleanField("is ranked", default=False)
+
+    @property
+    def scores(self):
+        return json.loads(self._scores)
+
+    @scores.setter
+    def scores(self, scores):
+        self._scores = json.dumps(scores)
 
     def most_frequent(self, List):
         return max(set(List), key=List.count) if List != [] else None
 
     def update(self):
+        # Gather meta data
         categories, names, prices, manufacturing_names, specs_list, important_words = [], [], [], [], [], []
         for meta_product in self.meta_products.all():
             names.append(meta_product.name)
@@ -80,12 +78,13 @@ class Product(models.Model):
 
             self.meta_category = meta_category
 
-            self.price = min(prices) if prices else None
-            self.manufacturing_name = self.most_frequent(manufacturing_names)
-            self.update_name(names)
-            if self.meta_category.category:
-                self.update_specs(specs_list)
-
+        # Update product
+        self.price = min(prices) if prices else None
+        self.manufacturing_name = self.most_frequent(manufacturing_names)
+        self.update_name(names)
+        self.is_ranked = False
+        if self.meta_category.category:
+            self.update_specs(specs_list)
         self.save()
 
     def update_name(self, names):
@@ -256,29 +255,3 @@ class Price(models.Model):
 
     def __str__(self):
         return "<Price %s %s>" % (self.price, self.date_seen)
-
-
-class SpecGroup(models.Model):
-    name = models.CharField('name', max_length=128, blank=True, null=True)
-
-    def __str__(self):
-        return "<SpecGroup %s>" % self.name
-
-
-class SpecKey(models.Model):
-    spec_group = models.ForeignKey(SpecGroup, related_name="spec_keys", on_delete=models.CASCADE, blank=True, null=True)
-    category = models.ForeignKey("products.Category", related_name="spec_keys", on_delete=models.CASCADE, blank=True, null=True)
-    key = models.CharField('key', max_length=128, blank=True)
-
-    def __str__(self):
-        return "<SpecKey %s %s>" % (self.key, self.category)
-
-
-class SpecValue(models.Model):
-    products = models.ManyToManyField(Product, related_name="spec_values")
-    spec_key = models.ForeignKey(SpecKey, related_name="spec_values", on_delete=models.CASCADE, blank=True, null=True)
-    value = models.CharField('value', max_length=128, blank=True)
-
-    def __str__(self):
-        return "<SpecValue %s>" % self.value
-

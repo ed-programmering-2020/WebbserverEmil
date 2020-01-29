@@ -2,7 +2,6 @@ from products.models import Product, SpecGroup, SpecValue, SpecKey
 from products.matching.values import LaptopValues
 from collections import defaultdict
 import operator
-import re
 
 
 class BaseMatcher:
@@ -18,198 +17,6 @@ class BaseMatcher:
                     valid_products = valid_products.exclude(id=product.id)
 
             return valid_products
-
-    def check_text_value(self, spec_value, value_list):
-        val = None
-        for sub_value in value_list:
-            if sub_value in spec_value:
-                val = sub_value
-                break
-
-        if val < 0:
-            val = 1
-
-        if val:
-            return value_list.index(val)
-        else:
-            return None
-
-    def sort_with_values(self, products):
-        sorted_products = defaultdict()
-
-        for product in products:
-            for spec_value in product.spec_values.all():
-                value = spec_value.value
-
-                try:
-                    spec_key = spec_value.spec_key
-                    spec_group = spec_key.spec_group
-                    key = spec_key.key
-
-                    if spec_group:
-                        # Find spec group values
-                        spec_group_values = None
-                        for spec_group_name, values in self.values.items():
-                            if spec_group_name == spec_group.name:
-                                spec_group_values = values
-                                break
-
-                        # Rank value
-                        if spec_group_values:
-                            if not sorted_products[key]:
-                                sorted_products[key] = [(product.id, value)]
-
-                            else:
-                                for i, saved_specs in enumerate(sorted_products[spec_key.key]):
-                                    saved_id, saved_value = saved_specs[0]
-                                    value_package = (product.id, value)
-
-                                    # Get value
-                                    if value != []:
-                                        saved_value = self.check_text_value(saved_value, spec_group_values)
-                                        value = self.check_text_value(value, spec_group_values)
-                                    else:
-                                        saved_value = re.sub(r'[^\d.]+', '', saved_value)
-                                        value = re.sub(r'[^\d.]+', '', value)
-
-                                    # Rank with value
-                                    if value > saved_value:
-                                        sorted_products[key].insert(i, value_package)
-                                        break
-                                    elif value == saved_value:
-                                        if type(sorted_products[key][i]) == list:
-                                            sorted_products[key][i].append(value_package)
-                                        else:
-                                            sorted_products[key][i] = [sorted_products[key][i], value_package]
-                                        break
-                                    elif i == (len(sorted_products[key]) - 1):
-                                        sorted_products[key].append([value_package])
-                                        break
-                except SpecKey.DoesNotExist:
-                    pass
-
-        return sorted_products
-
-    def sort_with_price(self, products):
-        sorted_products = {}
-
-        def divide_by_price(values):
-            id, price = values
-            id = str(id)
-            sorted_products[id] = sorted_products[id] / (price / 1000)
-
-        for values in products:
-            if type(values) == list:
-                for sub_values in values:
-                    divide_by_price(sub_values)
-            else:
-                divide_by_price(values)
-
-        return sorted_products
-
-    def get_top_products(self, products):
-        top_id, top_value = None, 0
-        for id, value in products.items():
-            if value > top_value:
-                top_value = value
-                top_id = id
-
-        top_products = {
-            top_id: top_value
-        }
-        for id, value in products.items():
-            if id != top_id and value >= (top_value * 0.9):
-                top_products[id] = value
-
-        return top_products
-
-    def get_product_models(self, products):
-        product_list = []
-        for product in products:
-            id, value = product
-
-            product_list.append(Product.objects.get(id=id))
-
-        return product_list
-
-    def match(self, settings):
-        raise NotImplementedError
-
-    def products_to_json(self, products):
-        if len(products) >= 1:
-            main_product = products[0]
-
-            alternative_products = None
-            if len(products) >= 4:
-                alternative_products = products[1:4]
-            elif len(products) > 1:
-                alternative_products = products[1:len(products)]
-
-            return {
-                "main": main_product,
-                "alternatives": alternative_products
-            }
-        else:
-            return None
-
-
-class LaptopMatcher(BaseMatcher, LaptopValues):
-    def __init__(self):
-        super().__init__()
-
-    def find_with_settings(self, all_products, settings):
-        print("---")
-        products_price_matched = self.find_with_price(all_products, settings["price"], True)
-        print("price", products_price_matched)
-
-        products_size_matched = self.find_with_size(products_price_matched, settings["size"])
-        print("size", products_size_matched)
-
-        products_with_values = self.sort_with_values(products_size_matched)
-        print("values", products_with_values)
-
-        products_usage_sorted = self.sort_with_usage(products_with_values, len(products_size_matched), settings["usage"])
-        print("usage", products_usage_sorted)
-
-        products_price_sorted = self.sort_with_price(products_usage_sorted)
-        print("price", products_price_sorted)
-
-        top_products = self.get_top_products(products_price_sorted)
-        print("top", top_products)
-
-        products_prioritization_sorted = self.sort_with_priorities(products_with_values, len(products_size_matched), top_products, settings["priorities"])
-        print("priorities", products_prioritization_sorted)
-
-        ranked_products = products_prioritization_sorted.sort(key=operator.itemgetter(1), reverse=True)
-        print("ranked", ranked_products)
-
-        product_models = self.get_product_models(ranked_products)
-        print(product_models)
-
-        return self.products_to_json(product_models)
-
-    def find_with_size(self, products, size):
-        min_size, max_size = size
-        spec_keys = SpecGroup.objects.get(name="screen size").spec_keys.all()
-
-        checked_products = []
-        for product in products.all():
-            spec_values = product.spec_values.all()
-
-            for key in spec_keys:
-                try:
-                    screen_size = spec_values.filter(spec_key=key).first()
-                    if screen_size:
-                        screen_size = screen_size.value.split(" ")[0]
-
-                        if min_size < float(screen_size) < max_size:
-                            checked_products.append(product)
-
-                        break
-                except SpecValue.DoesNotExist:
-                    pass
-
-        return checked_products
 
     def sort_with_usage(self, products, amount_of_products, usage):
         sorted_products = defaultdict()
@@ -278,3 +85,94 @@ class LaptopMatcher(BaseMatcher, LaptopValues):
             priority_sorted_products.append((id, resulting_value))
 
         return priority_sorted_products
+
+    def get_top_products(self, products):
+        top_id, top_value = None, 0
+        for id, value in products.items():
+            if value > top_value:
+                top_value = value
+                top_id = id
+
+        top_products = {
+            top_id: top_value
+        }
+        for id, value in products.items():
+            if id != top_id and value >= (top_value * 0.9):
+                top_products[id] = value
+
+        return top_products
+
+    def get_product_models(self, products):
+        product_list = []
+        for product in products:
+            id, value = product
+
+            product_list.append(Product.objects.get(id=id))
+
+        return product_list
+
+    def products_to_json(self, products):
+        if len(products) >= 1:
+            main_product = products[0]
+
+            alternative_products = None
+            if len(products) >= 4:
+                alternative_products = products[1:4]
+            elif len(products) > 1:
+                alternative_products = products[1:len(products)]
+
+            return {
+                "main": main_product,
+                "alternatives": alternative_products
+            }
+        else:
+            return None
+
+
+class LaptopMatcher(BaseMatcher, LaptopValues):
+    def __init__(self):
+        super().__init__()
+
+    def find_with_settings(self, all_products, settings):
+        print("---")
+        products_price_matched = self.find_with_price(all_products, settings["price"], True)
+        products_size_matched = self.find_with_size(products_price_matched, settings["size"])
+        print("price", products_price_matched)
+        print("size", products_size_matched)
+
+        products_usage_sorted = self.sort_with_usage(products_with_values, len(products_size_matched), settings["usage"])
+        top_products = self.get_top_products(products_price_sorted)
+        products_prioritization_sorted = self.sort_with_priorities(products_with_values, len(products_size_matched), top_products, settings["priorities"])
+        ranked_products = products_prioritization_sorted.sort(key=operator.itemgetter(1), reverse=True)
+        print("usage", products_usage_sorted)
+        print("top", top_products)
+        print("priorities", products_prioritization_sorted)
+        print("ranked", ranked_products)
+
+        product_models = self.get_product_models(ranked_products)
+        print(product_models)
+
+        return self.products_to_json(product_models)
+
+    def find_with_size(self, products, size):
+        min_size, max_size = size
+        spec_keys = SpecGroup.objects.get(name="screen size").spec_keys.all()
+
+        checked_products = []
+        for product in products.all():
+            spec_values = product.spec_values.all()
+
+            for key in spec_keys:
+                try:
+                    screen_size = spec_values.filter(spec_key=key).first()
+                    if screen_size:
+                        screen_size = screen_size.value.split(" ")[0]
+
+                        if min_size < float(screen_size) < max_size:
+                            checked_products.append(product)
+
+                        break
+                except SpecValue.DoesNotExist:
+                    pass
+
+        return checked_products
