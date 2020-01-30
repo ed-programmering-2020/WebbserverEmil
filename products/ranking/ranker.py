@@ -15,7 +15,7 @@ class Ranker:
 
         for category in Category.objects.all():
             for meta_category in category.meta_categories.all():
-                products |= meta_category.products
+                products |= meta_category.products.all()
 
         return products
 
