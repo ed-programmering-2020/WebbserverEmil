@@ -31,7 +31,7 @@ class Ranker:
                     spec_group = spec_key.spec_group
                     key = spec_key.key
 
-                    if spec_group:
+                    if spec_group and spec_group.rank_group:
                         value = spec_group.process_value(value)
 
                         if not sorted_products[key]:

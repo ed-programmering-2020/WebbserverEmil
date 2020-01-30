@@ -16,6 +16,7 @@ class SpecGroup(models.Model):
 class RefreshRate(SpecGroup):
     name = "refresh rate"
     standard = 60
+    rank_group = True
 
     def process_value(self, value):
         if not value:
