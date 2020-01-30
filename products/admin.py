@@ -23,10 +23,10 @@ class SpecKeyAdmin(admin.ModelAdmin):
 
 
 class SpecGroupAdmin(admin.ModelAdmin):
-    list_display = ["get_name"]
-    search_fields = ["get_name"]
+    list_display = ["name"]
+    search_fields = ["name"]
 
-    def get_name(self, obj):
+    def name(self, obj):
         return obj.name
 
 
