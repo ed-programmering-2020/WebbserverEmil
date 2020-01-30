@@ -5,8 +5,10 @@ import re
 
 class Ranker:
     def __init__(self):
-        self.products = self.get_products()
-        self.sort_products()
+        products = self.get_products()
+        value_sorted_products = self.sort_products(products)
+        price_sorted_products = self.sort_with_price(value_sorted_products)
+        self.save_products(value_sorted_products, price_sorted_products)
 
     def get_products(self):
         products = Product.objects.none()
@@ -17,33 +19,10 @@ class Ranker:
 
         return products
 
-    def check_text_value(self, spec_value, value_list):
-        val = None
-        for sub_value in value_list:
-            if sub_value in spec_value:
-                val = sub_value
-                break
-
-        if val < 0:
-            val = 1
-
-        if val:
-            return value_list.index(val)
-        else:
-            return None
-
-    def get_spec_group_value(self, name):
-        spec_group_values = None
-        for spec_group_name, values in self.values.items():
-            if spec_group_name == name:
-                spec_group_values = values
-                break
-        return spec_group_values
-
-    def sort_products(self):
+    def sort_products(self, products):
         sorted_products = defaultdict()
 
-        for product in self.products:
+        for product in products:
             for spec_value in product.spec_values.all():
                 value = spec_value.value
 
@@ -53,7 +32,7 @@ class Ranker:
                     key = spec_key.key
 
                     if spec_group:
-                        self.get_spec_group_value(spec_group.name)
+                        spec_group_values = self.get_spec_group_value(spec_group.name)
                         if spec_group_values:
                             if not sorted_products[key]:
                                 sorted_products[key] = [(product.id, value)]
@@ -106,5 +85,29 @@ class Ranker:
 
         return sorted_products
 
-    def save_scores(self):
-        pass
+    def check_text_value(self, spec_value, value_list):
+        val = None
+        for sub_value in value_list:
+            if sub_value in spec_value:
+                val = sub_value
+                break
+
+        if val < 0:
+            val = 1
+
+        if val:
+            return value_list.index(val)
+        else:
+            return None
+
+    def get_spec_group_value(self, name):
+        spec_group_values = None
+        for spec_group_name, values in self.values.items():
+            if spec_group_name == name:
+                spec_group_values = values
+                break
+        return spec_group_values
+
+    def save_products(self, value_sorted_products, price_sorted_products):
+        print(value_sorted_products)
+        print(price_sorted_products)
