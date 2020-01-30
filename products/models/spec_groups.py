@@ -3,8 +3,8 @@ import re
 
 
 class SpecGroup(models.Model):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *values):
+        super().__init__(values)
         self.short_name = "Base"
 
     def process_value(self, value):
@@ -21,8 +21,8 @@ class SpecGroup(models.Model):
 
 
 class RefreshRate(SpecGroup):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *values):
+        super().__init__(values)
         self.short_name = "RefreshRate"
         self.name = "refresh rate"
         self.standard = 60
