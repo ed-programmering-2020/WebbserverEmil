@@ -25,46 +25,33 @@ class Ranker:
         for product in products:
             for spec_value in product.spec_values.all():
                 value = spec_value.value
+                spec_key = spec_value.spec_key
 
-                try:
-                    spec_key = spec_value.spec_key
+                if spec_key:
                     spec_group = spec_key.spec_group
                     key = spec_key.key
 
                     if spec_group:
-                        spec_group_values = self.get_spec_group_value(spec_group.name)
-                        if spec_group_values:
-                            if not sorted_products[key]:
-                                sorted_products[key] = [(product.id, value)]
+                        value = spec_group.process_value(value)
 
-                            else:
-                                for i, saved_specs in enumerate(sorted_products[spec_key.key]):
-                                    saved_id, saved_value = saved_specs[0]
-                                    value_package = (product.id, value)
+                        if not sorted_products[key]:
+                            sorted_products[key] = [(product.id, value)]
 
-                                    # Get value
-                                    if value != []:
-                                        saved_value = self.check_text_value(saved_value, spec_group_values)
-                                        value = self.check_text_value(value, spec_group_values)
-                                    else:
-                                        saved_value = re.sub(r'[^\d.]+', '', saved_value)
-                                        value = re.sub(r'[^\d.]+', '', value)
+                        else:
+                            for i, saved_specs in enumerate(sorted_products[spec_key.key]):
+                                saved_id, saved_value = saved_specs[0]
+                                value_package = (product.id, value)
 
-                                    # Rank with value
-                                    if value > saved_value:
-                                        sorted_products[key].insert(i, value_package)
-                                        break
-                                    elif value == saved_value:
-                                        if type(sorted_products[key][i]) == list:
-                                            sorted_products[key][i].append(value_package)
-                                        else:
-                                            sorted_products[key][i] = [sorted_products[key][i], value_package]
-                                        break
-                                    elif i == (len(sorted_products[key]) - 1):
-                                        sorted_products[key].append([value_package])
-                                        break
-                except SpecKey.DoesNotExist:
-                    pass
+                                # Rank with value
+                                if spec_group.is_bigger(value, saved_value):
+                                    sorted_products[key].insert(i, value_package)
+                                    break
+                                elif spec_group.is_equal(value, saved_value):
+                                    sorted_products[key][i].append(value_package)
+                                    break
+                                elif i == (len(sorted_products[key]) - 1):
+                                    sorted_products[key].append([value_package])
+                                    break
 
         return sorted_products
 
@@ -99,14 +86,6 @@ class Ranker:
             return value_list.index(val)
         else:
             return None
-
-    def get_spec_group_value(self, name):
-        spec_group_values = None
-        for spec_group_name, values in self.values.items():
-            if spec_group_name == name:
-                spec_group_values = values
-                break
-        return spec_group_values
 
     def save_products(self, value_sorted_products, price_sorted_products):
         print(value_sorted_products)

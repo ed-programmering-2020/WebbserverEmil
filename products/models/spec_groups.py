@@ -3,15 +3,19 @@ import re
 
 
 class SpecGroup(models.Model):
-    pass
+    def process_value(self, value):
+        raise NotImplementedError
+
+    def is_bigger(self, first, second):
+        raise NotImplementedError
+
+    def is_equal(self, first, second):
+        raise NotImplementedError
 
 
 class RefreshRate(SpecGroup):
     name = "refresh rate"
-
-    def __init__(self):
-        super().__init__()
-        self.standard = 60
+    standard = 60
 
     def process_value(self, value):
         if not value:
@@ -21,10 +25,11 @@ class RefreshRate(SpecGroup):
             value = re.sub("[^0-9]", "", value)
             return value
 
-    def compare(self, first, second):
-        first, second = self.process_value(first), self.process_value(second)
+    def is_bigger(self, first, second):
+        return first > second
 
-        return None
+    def is_equal(self, first, second):
+        return first == second
 
 
 processors = [
