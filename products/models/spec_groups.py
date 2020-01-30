@@ -3,6 +3,10 @@ import re
 
 
 class SpecGroup(models.Model):
+    def __init__(self):
+        super().__init__()
+        self.short_name = "Base"
+
     def process_value(self, value):
         raise NotImplementedError
 
@@ -17,10 +21,12 @@ class SpecGroup(models.Model):
 
 
 class RefreshRate(SpecGroup):
-    short_name = "RefreshRate"
-    name = "refresh rate"
-    standard = 60
-    rank_group = True
+    def __init__(self):
+        super().__init__()
+        self.short_name = "RefreshRate"
+        self.name = "refresh rate"
+        self.standard = 60
+        self.rank_group = True
 
     def process_value(self, value):
         if not value:
