@@ -35,7 +35,6 @@ class PriceAdmin(admin.ModelAdmin):
 class WebsiteAdmin(admin.ModelAdmin):
     list_display = ["id", "name", "url", "is_active"]
     list_filter = ["is_active"]
-    ordering = ["country"]
     search_fields = ["name", "url"]
 
 
