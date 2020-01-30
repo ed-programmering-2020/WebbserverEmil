@@ -3,6 +3,8 @@ import re
 
 
 class SpecGroup(models.Model):
+    name = "base spec group"
+
     def process_value(self, value):
         raise NotImplementedError
 
