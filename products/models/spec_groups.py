@@ -12,8 +12,12 @@ class SpecGroup(models.Model):
     def is_equal(self, first, second):
         raise NotImplementedError
 
+    def __str__(self):
+        return "<SpecGroup %s>" % self.short_name
+
 
 class RefreshRate(SpecGroup):
+    short_name = "RefreshRate"
     name = "refresh rate"
     standard = 60
     rank_group = True
@@ -31,9 +35,6 @@ class RefreshRate(SpecGroup):
 
     def is_equal(self, first, second):
         return first == second
-
-    def __str__(self):
-        return "<RefreshRate>"
 
 
 processors = [
