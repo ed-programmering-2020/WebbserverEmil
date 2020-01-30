@@ -8,7 +8,8 @@ class Command(BaseCommand):
 
     def create_model_instance(self, model):
         if model.objects.count() == 0:
-            model.objects.create()
+            instance = model.objects.create()
+            print("created", instance)
 
     def create_spec_groups(self):
         self.create_model_instance(RefreshRate)
