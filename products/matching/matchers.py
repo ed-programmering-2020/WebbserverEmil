@@ -1,5 +1,5 @@
 from products.models import Product, SpecGroup, SpecValue, SpecKey
-from products.matching.values import LaptopValues
+from products.matching.weights import LaptopWeights
 from collections import defaultdict
 import operator
 
@@ -129,7 +129,7 @@ class BaseMatcher:
             return None
 
 
-class LaptopMatcher(BaseMatcher, LaptopValues):
+class LaptopMatcher(BaseMatcher, LaptopWeights):
     def __init__(self):
         super().__init__()
 

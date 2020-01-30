@@ -22,15 +22,27 @@ class Website(models.Model):
         return "<Website %s>" % self.name
 
 
+class MetaCategory(models.Model):
+    name = models.CharField('name', max_length=30, blank=True, null=True)
+    category = models.ForeignKey("products.Category", related_name="meta_categories", on_delete=models.CASCADE, null=True, blank=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "<MetaCategory %s>" % self.name
+
+    class Meta:
+        verbose_name_plural = 'Meta categories'
+
+
 class Product(models.Model):
     id = models.AutoField(primary_key=True, blank=True)
     name = models.CharField('name', max_length=128, blank=True, null=True)
-    price = models.IntegerField("price", blank=True, null=True)
-    meta_category = models.ForeignKey("products.MetaCategory", related_name="products", on_delete=models.CASCADE, blank=True, null=True)
+    price = models.PositiveIntegerField("price", blank=True, null=True)
+    meta_category = models.ForeignKey(MetaCategory, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     manufacturing_name = models.CharField('manufacturing name', max_length=128, blank=True, null=True)
 
     # Ranking
-    average_score = models.IntegerField("average score", null=True)
+    average_score = models.PositiveSmallIntegerField("average score", null=True)
     _scores = models.CharField("scores",  max_length=128, null=True)
     is_ranked = models.BooleanField("is ranked", default=False)
 
@@ -229,7 +241,7 @@ class MetaProduct(models.Model):
 
 class Price(models.Model):
     meta_product = models.ForeignKey(MetaProduct, related_name="price_history", on_delete=models.CASCADE)
-    _price = models.IntegerField(blank=True, null=True)
+    _price = models.PositiveIntegerField(blank=True, null=True)
     date_seen = models.DateTimeField(auto_now_add=True)
 
     @property
@@ -256,15 +268,8 @@ class Price(models.Model):
         return "<Price %s %s>" % (self.price, self.date_seen)
 
 
-class SpecGroup(models.Model):
-    name = models.CharField('name', max_length=128, blank=True, null=True)
-
-    def __str__(self):
-        return "<SpecGroup %s>" % self.name
-
-
 class SpecKey(models.Model):
-    spec_group = models.ForeignKey(SpecGroup, related_name="spec_keys", on_delete=models.CASCADE, blank=True, null=True)
+    spec_group = models.ForeignKey("products.SpecGroup", related_name="spec_keys", on_delete=models.CASCADE, blank=True, null=True)
     category = models.ForeignKey("products.Category", related_name="spec_keys", on_delete=models.CASCADE, blank=True, null=True)
     key = models.CharField('key', max_length=128, blank=True)
 
