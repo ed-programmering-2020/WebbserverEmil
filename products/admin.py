@@ -33,10 +33,10 @@ class PriceAdmin(admin.ModelAdmin):
 
 
 class WebsiteAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "url", "country", "is_active"]
-    list_filter = ["is_active", "country"]
+    list_display = ["id", "name", "url", "is_active"]
+    list_filter = ["is_active"]
     ordering = ["country"]
-    search_fields = ["name", "url", "country"]
+    search_fields = ["name", "url"]
 
 
 class CategoryAdmin(admin.ModelAdmin):
