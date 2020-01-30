@@ -1,11 +1,5 @@
 from django.contrib import admin
-from .models import Product, MetaProduct, SpecValue, SpecKey, SpecGroup, Price, Website, Country, Category, MetaCategory
-
-
-class CountryAdmin(admin.ModelAdmin):
-    list_display = ["name", "currency", "currency_short"]
-    list_filter = ["is_active"]
-    search_fields = ["name"]
+from .models import Product, MetaProduct, SpecValue, SpecKey, SpecGroup, Price, Website, Category, MetaCategory
 
 
 class ProductAdmin(admin.ModelAdmin):
@@ -57,7 +51,6 @@ class MetaCategoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(MetaCategory, MetaCategoryAdmin)
-admin.site.register(Country, CountryAdmin)
 admin.site.register(Website, WebsiteAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(MetaProduct, MetaProductAdmin)
