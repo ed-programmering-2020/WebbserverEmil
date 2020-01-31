@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, MetaProduct, SpecValue, SpecKey, SpecGroup, Price, Website, Category, MetaCategory
+from .models import Product, MetaProduct, SpecValue, SpecKey, Price, Website, Category, MetaCategory #, SpecGroup
 
 
 class ProductAdmin(admin.ModelAdmin):
