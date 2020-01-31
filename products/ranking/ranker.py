@@ -31,6 +31,9 @@ class Ranker:
                     key = spec_key.key
 
                     if spec_group and spec_group.rank_group:
+                        print(spec_group)
+                        print(type(spec_group))
+                        print(spec_group.__meta__)
                         value = spec_group.process_value(value)
 
                         if not sorted_products[key]:
@@ -45,9 +48,11 @@ class Ranker:
                                 if spec_group.is_bigger(value, saved_value):
                                     sorted_products[key].insert(i, value_package)
                                     break
+
                                 elif spec_group.is_equal(value, saved_value):
                                     sorted_products[key][i].append(value_package)
                                     break
+
                                 elif i == (len(sorted_products[key]) - 1):
                                     sorted_products[key].append([value_package])
                                     break
