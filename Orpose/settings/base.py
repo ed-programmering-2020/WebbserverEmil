@@ -12,8 +12,6 @@ STATICFILES_DIRS = [
     os.path.join(REACT_BUILD_DIR, 'static'),
     REACT_BUILD_DIR
 ]
-
-# Static
 STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
 

@@ -1,12 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
-from products.models.query import SubclassingQuerySet
 from django.db import models
 import re
-
-
-class SpecGroupManager(models.Manager):
-    def get_query_set(self):
-        return SubclassingQuerySet(self.model)
 
 
 class SpecGroup(models.Model):
@@ -14,14 +8,13 @@ class SpecGroup(models.Model):
     standard = models.CharField("standard", max_length=32, null=True)
     rank_group = models.BooleanField("rank group", default=False)
     content_type = models.ForeignKey(ContentType, editable=False, on_delete=models.SET_NULL, null=True)
-    objects = SpecGroupManager()
 
     def save(self, *args, **kwargs):
         if not self.content_type:
             self.content_type = ContentType.objects.get_for_model(self.__class__)
             super(SpecGroup, self).save(*args, **kwargs)
 
-    def as_leaf_class(self):
+    def as_inherited_model(self):
         content_type = self.content_type
         model = content_type.model_class()
         return model.objects.get(id=self.id)
@@ -31,8 +24,6 @@ class SpecGroup(models.Model):
 
 
 class RefreshRate(SpecGroup):
-    objects = SpecGroupManager()
-
     @classmethod
     def create(cls):
         return cls(name="RefreshRate", standard="60", rank_group=True).save()
