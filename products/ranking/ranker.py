@@ -60,11 +60,11 @@ class Ranker:
         sorted_products = {}
 
         for key, values in products.items():
-            for value in values:
-                print(value)
-                id, price = value
-                id = str(id)
-                sorted_products[id] = sorted_products[id] / (price / 1000)
+            for value_list in values:
+                for value in value_list:
+                    id, price = value
+                    id = str(id)
+                    sorted_products[id] = sorted_products[id] / (price / 1000)
 
         return sorted_products
 
