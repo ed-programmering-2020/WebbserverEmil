@@ -16,6 +16,11 @@ class SpecGroup(models.Model):
     content_type = models.ForeignKey(ContentType, editable=False, on_delete=models.SET_NULL, null=True)
     objects = SpecGroupManager()
 
+    def save(self, *args, **kwargs):
+        if not self.content_type:
+            self.content_type = ContentType.objects.get_for_model(self.__class__)
+            super(SpecGroup, self).save(*args, **kwargs)
+
     def as_leaf_class(self):
         content_type = self.content_type
         model = content_type.model_class()
