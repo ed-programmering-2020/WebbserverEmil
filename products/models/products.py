@@ -43,7 +43,7 @@ class Product(models.Model):
 
     # Ranking
     average_score = models.PositiveSmallIntegerField("average score", null=True)
-    _scores = models.CharField("scores",  max_length=128, null=True)
+    _scores = models.CharField("scores", default=json.dumps({}), max_length=128, null=True)
     is_ranked = models.BooleanField("is ranked", default=False)
 
     @property

@@ -5,9 +5,8 @@ from collections import defaultdict
 class Ranker:
     def __init__(self):
         products = self.get_products()
-        value_sorted_products = self.sort_products(products)
-        price_sorted_products = self.sort_with_price(value_sorted_products)
-        self.save_products(value_sorted_products, price_sorted_products)
+        sorted_products = self.sort_products(products)
+        self.save_products(sorted_products)
 
     def get_products(self):
         products = Product.objects.none()
@@ -56,18 +55,30 @@ class Ranker:
 
         return sorted_products
 
-    def sort_with_price(self, products):
+    def save_products(self, products):
         sorted_products = defaultdict()
-
         for key, values in products.items():
-            for value_list in values:
+            values_length = len(values)
+
+            for pos, value_list in enumerate(values):
                 for value in value_list:
                     id, price = value
                     id = str(id)
-                    sorted_products[id] = sorted_products[id] / (price / 1000)
+                    value = (pos / values_length) / price
 
-        return sorted_products
+                    if id not in sorted_products:
+                        sorted_products[id] = {key: value}
+                    else:
+                        sorted_products[id][key] = value
 
-    def save_products(self, value_sorted_products, price_sorted_products):
-        print(value_sorted_products)
-        print(price_sorted_products)
+        key_count = len(products)
+        for id, values in sorted_products.items():
+            product = Product.objects.get(id=id)
+            product.scores = values
+
+            average_score = 0
+            for key, score in values.items():
+                average_score += score / key_count
+
+            product.average_score = average_score
+            product.save()
