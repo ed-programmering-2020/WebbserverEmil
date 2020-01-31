@@ -34,6 +34,8 @@ class Ranker:
                         value = spec_group.process_value(value)
                         key = spec_group.name
 
+                        print(sorted_products)
+
                         if not sorted_products[key]:
                             sorted_products[key] = [(product.id, value)]
 
