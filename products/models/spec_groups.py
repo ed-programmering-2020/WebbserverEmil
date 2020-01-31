@@ -6,6 +6,7 @@ import re
 
 class SpecGroupManager(models.Manager):
     def get_query_set(self):
+        print(self.model)
         return SubclassingQuerySet(self.model)
 
 
@@ -23,7 +24,9 @@ class SpecGroup(models.Model):
 
     def as_leaf_class(self):
         content_type = self.content_type
+        print(content_type)
         model = content_type.model_class()
+        print(model)
         return model.objects.get(id=self.id)
 
     def __str__(self):
