@@ -37,7 +37,7 @@ class Ranker:
                         if key not in sorted_products:
                             sorted_products[key] = [(product.id, value)]
                         else:
-                            for i, saved_specs in enumerate(sorted_products[spec_key.key]):
+                            for i, saved_specs in enumerate(sorted_products[key]):
                                 saved_id, saved_value = saved_specs[0]
                                 value_package = (product.id, value)
 
