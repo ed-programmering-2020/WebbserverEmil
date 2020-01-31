@@ -34,14 +34,10 @@ class Ranker:
                         value = spec_group.process_value(value)
                         key = spec_group.name
 
-                        print(sorted_products)
-
                         if key not in sorted_products:
                             sorted_products[key] = [[(product.id, value)]]
                         else:
                             for i, saved_specs in enumerate(sorted_products[key]):
-
-                                print(saved_specs)
                                 saved_id, saved_value = saved_specs[0]
                                 value_package = [(product.id, value)]
 
@@ -63,17 +59,12 @@ class Ranker:
     def sort_with_price(self, products):
         sorted_products = {}
 
-        def divide_by_price(values):
-            id, price = values
-            id = str(id)
-            sorted_products[id] = sorted_products[id] / (price / 1000)
-
-        for values in products:
-            if type(values) == list:
-                for sub_values in values:
-                    divide_by_price(sub_values)
-            else:
-                divide_by_price(values)
+        for key, values in products.items():
+            for value in values:
+                print(value)
+                id, price = value
+                id = str(id)
+                sorted_products[id] = sorted_products[id] / (price / 1000)
 
         return sorted_products
 
