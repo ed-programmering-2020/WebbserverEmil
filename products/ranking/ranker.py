@@ -39,7 +39,7 @@ class Ranker:
                         else:
                             for i, saved_specs in enumerate(sorted_products[key]):
                                 saved_id, saved_value = saved_specs
-                                value_package = (product.id, value)
+                                value_package = [(product.id, value)]
 
                                 # Rank with value
                                 if spec_group.is_bigger(value, saved_value):
@@ -51,7 +51,7 @@ class Ranker:
                                     break
 
                                 elif i == (len(sorted_products[key]) - 1):
-                                    sorted_products[key].append([value_package])
+                                    sorted_products[key].append(value_package)
                                     break
 
         return sorted_products
