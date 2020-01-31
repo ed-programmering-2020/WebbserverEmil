@@ -17,7 +17,7 @@ class SpecGroup(models.Model):
     def as_inherited_model(self):
         content_type = self.content_type
         model = content_type.model_class()
-        return model.objects.get(id=self.id)
+        return model.objects.first()
 
     def __str__(self):
         return "<SpecGroup %s>" % self.name

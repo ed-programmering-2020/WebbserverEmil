@@ -28,11 +28,11 @@ class Ranker:
 
                 if spec_key:
                     spec_group = spec_key.spec_group
-                    key = spec_key.key
 
                     if spec_group and spec_group.rank_group:
                         spec_group = spec_group.as_inherited_model()
                         value = spec_group.process_value(value)
+                        key = spec_group.name
 
                         if not sorted_products[key]:
                             sorted_products[key] = [(product.id, value)]
