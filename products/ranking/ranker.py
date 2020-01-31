@@ -37,7 +37,7 @@ class Ranker:
                         print(sorted_products)
 
                         if key not in sorted_products:
-                            sorted_products[key] = [(product.id, value)]
+                            sorted_products[key] = [[(product.id, value)]]
                         else:
                             for i, saved_specs in enumerate(sorted_products[key]):
 
@@ -76,21 +76,6 @@ class Ranker:
                 divide_by_price(values)
 
         return sorted_products
-
-    def check_text_value(self, spec_value, value_list):
-        val = None
-        for sub_value in value_list:
-            if sub_value in spec_value:
-                val = sub_value
-                break
-
-        if val < 0:
-            val = 1
-
-        if val:
-            return value_list.index(val)
-        else:
-            return None
 
     def save_products(self, value_sorted_products, price_sorted_products):
         print(value_sorted_products)
