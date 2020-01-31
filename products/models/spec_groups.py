@@ -23,7 +23,7 @@ class SpecGroup(models.Model):
 class RefreshRate(SpecGroup):
     @classmethod
     def create(cls):
-        return cls(name="RefreshRate", standard="60", rank_group=True)
+        return cls(name="RefreshRate", standard="60", rank_group=True).save()
 
     def process_value(self, value):
         if not value:

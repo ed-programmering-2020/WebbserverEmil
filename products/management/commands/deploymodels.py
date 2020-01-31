@@ -8,7 +8,7 @@ class Command(BaseCommand):
 
     def create_model_instance(self, model):
         if model.objects.count() == 0:
-            instance = model.objects.create()
+            instance = model.create()
             print("created", instance)
 
     def handle(self, *args, **kwargs):

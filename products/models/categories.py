@@ -35,7 +35,7 @@ class Category(models.Model):
 class Laptop(Category, LaptopMatcher):
     @classmethod
     def create(cls):
-        return cls(name="Laptop")
+        return cls(name="Laptop").save()
 
     @staticmethod
     def get_recommendations(usage):
