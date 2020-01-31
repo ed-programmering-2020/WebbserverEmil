@@ -1,17 +1,28 @@
+from django.contrib.contenttypes.models import ContentType
+from products.models.query import SubclassingQuerySet
 from django.db import models
 import re
+
+
+class SpecGroupManager(models.Manager):
+    def get_query_set(self):
+        return SubclassingQuerySet(self.model)
 
 
 class SpecGroup(models.Model):
     name = models.CharField("name", max_length=32)
     standard = models.CharField("standard", max_length=32, null=True)
     rank_group = models.BooleanField("rank group", default=False)
+    content_type = models.ForeignKey(ContentType, editable=False, null=True)
+    objects = SpecGroupManager()
+
+    def as_leaf_class(self):
+        content_type = self.content_type
+        model = content_type.model_class()
+        return model.objects.get(id=self.id)
 
     def __str__(self):
         return "<SpecGroup %s>" % self.name
-
-    class Meta:
-        abstract = True
 
 
 class RefreshRate(SpecGroup):
