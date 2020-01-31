@@ -3,6 +3,8 @@ import re
 
 
 class SpecGroup(models.Model):
+    name = models.CharField("name", max_length=32)
+
     def process_value(self, value):
         raise NotImplementedError
 
@@ -13,11 +15,10 @@ class SpecGroup(models.Model):
         raise NotImplementedError
 
     def __str__(self):
-        return "<SpecGroup %s>" % self.short_name
+        return "<SpecGroup %s>" % self.name
 
 
 class RefreshRate(SpecGroup):
-    short_name = "RefreshRate"
     name = "refresh rate"
     standard = 60
     rank_group = True

@@ -6,18 +6,18 @@ from products.models.categories import Laptop
 class Command(BaseCommand):
     help = "Creates singular model instanced"
 
-    def create_model_instance(self, model):
+    def create_model_instance(self, name, model):
         if model.objects.count() == 0:
-            instance = model.objects.create()
+            instance = model.objects.create(name=name)
             print("created", instance)
 
-    def create_spec_groups(self):
-        self.create_model_instance(RefreshRate)
-
-    def create_categories(self):
-        self.create_model_instance(Laptop)
-
     def handle(self, *args, **kwargs):
-        self.create_spec_groups()
-        self.create_categories()
+        models = {
+            "RefreshRate": RefreshRate,
+            "Laptop": Laptop
+        }
+
+        for name, model in models.items():
+            self.create_model_instance(name, model)
+
         self.stdout.write(self.style.SUCCESS("Successfully deployed models"))

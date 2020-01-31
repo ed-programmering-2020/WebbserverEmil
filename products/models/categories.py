@@ -3,7 +3,7 @@ from django.db import models
 
 
 class Category(models.Model):
-    name = models.CharField('name', max_length=30, blank=True, null=True)
+    name = models.CharField('name', max_length=32)
     is_active = models.BooleanField(default=True)
 
     def get_all_products(self):
