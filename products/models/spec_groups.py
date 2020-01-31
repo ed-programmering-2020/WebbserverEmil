@@ -4,6 +4,8 @@ import re
 
 class SpecGroup(models.Model):
     name = models.CharField("name", max_length=32)
+    standard = models.CharField("standard", max_length=32, null=True)
+    rank_group = models.BooleanField("rank group", default=False)
 
     def process_value(self, value):
         raise NotImplementedError
@@ -19,13 +21,13 @@ class SpecGroup(models.Model):
 
 
 class RefreshRate(SpecGroup):
-    name = "refresh rate"
-    standard = 60
-    rank_group = True
+    @classmethod
+    def create(cls):
+        return cls(name="RefreshRate", standard="60", rank_group=True)
 
     def process_value(self, value):
         if not value:
-            return self.standard
+            return int(self.standard)
         else:
             value = value.split(" ")[0]
             value = re.sub("[^0-9]", "", value)
@@ -36,7 +38,6 @@ class RefreshRate(SpecGroup):
 
     def is_equal(self, first, second):
         return first == second
-
 
 processors = [
     '9980HK',

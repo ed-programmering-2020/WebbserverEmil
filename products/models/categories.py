@@ -33,6 +33,10 @@ class Category(models.Model):
 
 
 class Laptop(Category, LaptopMatcher):
+    @classmethod
+    def create(cls):
+        return cls(name="Laptop")
+
     @staticmethod
     def get_recommendations(usage):
         if usage == "general":
