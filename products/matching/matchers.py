@@ -1,5 +1,5 @@
 from products.models.products import Product, SpecValue
-from products.models.spec_groups import SpecGroup
+# from products.models.spec_groups import SpecGroup
 from products.matching.weights import LaptopWeights
 from collections import defaultdict
 import operator
