@@ -5,7 +5,7 @@ from django.db import models
 class SubclassingQuerySet(QuerySet):
     def __getitem__(self, k):
         result = super(SubclassingQuerySet, self).__getitem__(k)
-        if isinstance(result, models.Model) :
+        if isinstance(result, models.Model):
             return result.as_leaf_class()
         else:
             return result

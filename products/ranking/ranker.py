@@ -33,6 +33,8 @@ class Ranker:
                     if spec_group and spec_group.rank_group:
                         print(spec_group)
                         print(type(spec_group))
+                        print(spec_group.content_type)
+                        print(spec_group.as_leaf_class())
                         value = spec_group.process_value(value)
 
                         if not sorted_products[key]:
