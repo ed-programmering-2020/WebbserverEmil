@@ -1,7 +1,7 @@
 from django.db import models
 import re
 
-
+"""
 class SpecGroup(models.Model):
     id = models.AutoField(primary_key=True, blank=True)
 
@@ -1243,3 +1243,4 @@ disk_types = [
     "ssd",
     "hdd"
 ]
+"""

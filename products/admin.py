@@ -20,14 +20,14 @@ class SpecValueAdmin(admin.ModelAdmin):
 class SpecKeyAdmin(admin.ModelAdmin):
     list_display = ["key", "spec_group", "category"]
     search_fields = ["key"]
-
+"""
 
 class SpecGroupAdmin(admin.ModelAdmin):
     list_display = ["name", "id"]
 
     def name(self, obj):
         return obj.name
-
+"""
 
 class PriceAdmin(admin.ModelAdmin):
     list_display = ["price", "meta_product"]
@@ -57,5 +57,5 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(MetaProduct, MetaProductAdmin)
 admin.site.register(SpecValue, SpecValueAdmin)
 admin.site.register(SpecKey, SpecKeyAdmin)
-admin.site.register(SpecGroup, SpecGroupAdmin)
+# admin.site.register(SpecGroup, SpecGroupAdmin)
 admin.site.register(Price, PriceAdmin)
