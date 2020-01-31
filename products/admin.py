@@ -22,6 +22,11 @@ class SpecKeyAdmin(admin.ModelAdmin):
     search_fields = ["key"]
 
 
+class SpecGroupAdmin(admin.ModelAdmin):
+    list_display = ["name", "standard", "rank_group"]
+    search_fields = ["name"]
+
+
 class PriceAdmin(admin.ModelAdmin):
     list_display = ["price", "meta_product"]
     search_fields = ["meta_product"]
@@ -33,15 +38,22 @@ class WebsiteAdmin(admin.ModelAdmin):
     search_fields = ["name", "url"]
 
 
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ["name", "product_count", "is_active"]
+    search_fields = ["name"]
+
+
 class MetaCategoryAdmin(admin.ModelAdmin):
     list_display = ["name", "category", "created_date"]
     search_fields = ["name"]
 
 
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(MetaCategory, MetaCategoryAdmin)
 admin.site.register(Website, WebsiteAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(MetaProduct, MetaProductAdmin)
 admin.site.register(SpecValue, SpecValueAdmin)
 admin.site.register(SpecKey, SpecKeyAdmin)
+admin.site.register(SpecGroup, SpecGroupAdmin)
 admin.site.register(Price, PriceAdmin)

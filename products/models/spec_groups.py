@@ -13,7 +13,7 @@ class SpecGroup(models.Model):
     name = models.CharField("name", max_length=32)
     standard = models.CharField("standard", max_length=32, null=True)
     rank_group = models.BooleanField("rank group", default=False)
-    content_type = models.ForeignKey(ContentType, editable=False, null=True)
+    content_type = models.ForeignKey(ContentType, editable=False, on_delete=models.SET_NULL, null=True)
     objects = SpecGroupManager()
 
     def as_leaf_class(self):
