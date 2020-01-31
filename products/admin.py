@@ -23,7 +23,8 @@ class SpecKeyAdmin(admin.ModelAdmin):
 
 
 class SpecGroupAdmin(admin.ModelAdmin):
-    list_display = ["name", "id"]
+    list_display = ["name", "standard", "rank_group"]
+    search_fields = ["name"]
 
 
 class PriceAdmin(admin.ModelAdmin):
