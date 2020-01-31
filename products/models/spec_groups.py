@@ -24,7 +24,7 @@ class SpecGroup(models.Model):
     def __str__(self):
         return "<SpecGroup %s>" % self.short_name
 
-"""
+
 class RefreshRate(SpecGroup):
     def __init__(self, *values):
         super().__init__(values)
@@ -1243,4 +1243,3 @@ disk_types = [
     "ssd",
     "hdd"
 ]
-"""
