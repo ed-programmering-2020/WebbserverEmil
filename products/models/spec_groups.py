@@ -3,15 +3,6 @@ import re
 
 
 class SpecGroup(models.Model):
-    id = models.AutoField(primary_key=True, blank=True)
-
-    def __init__(self, *values):
-        super().__init__(values)
-        self.short_name = "Base"
-        self.name = "base"
-        self.standard = None
-        self.rank_group = False
-
     def process_value(self, value):
         raise NotImplementedError
 
@@ -26,12 +17,10 @@ class SpecGroup(models.Model):
 
 
 class RefreshRate(SpecGroup):
-    def __init__(self, *values):
-        super().__init__(values)
-        self.short_name = "RefreshRate"
-        self.name = "refresh rate"
-        self.standard = 60
-        self.rank_group = True
+    short_name = "RefreshRate"
+    name = "refresh rate"
+    standard = 60
+    rank_group = True
 
     def process_value(self, value):
         if not value:
