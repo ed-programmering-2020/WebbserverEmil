@@ -7,15 +7,6 @@ class SpecGroup(models.Model):
     standard = models.CharField("standard", max_length=32, null=True)
     rank_group = models.BooleanField("rank group", default=False)
 
-    def process_value(self, value):
-        raise NotImplementedError
-
-    def is_bigger(self, first, second):
-        raise NotImplementedError
-
-    def is_equal(self, first, second):
-        raise NotImplementedError
-
     def __str__(self):
         return "<SpecGroup %s>" % self.name
 

@@ -1,6 +1,5 @@
-from products.models import Category, Product, SpecKey
+from products.models import Category, Product
 from collections import defaultdict
-import re
 
 
 class Ranker:
