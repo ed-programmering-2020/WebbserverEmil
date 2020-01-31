@@ -18,7 +18,7 @@ class SpecValueAdmin(admin.ModelAdmin):
 
 
 class SpecKeyAdmin(admin.ModelAdmin):
-    list_display = ["key", "spec_group", "category"]
+    list_display = ["key", "category"] # SpecGroup
     search_fields = ["key"]
 """
 
