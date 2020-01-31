@@ -25,9 +25,6 @@ class SpecKeyAdmin(admin.ModelAdmin):
 class SpecGroupAdmin(admin.ModelAdmin):
     list_display = ["name", "id"]
 
-    def name(self, obj):
-        return obj.name
-
 
 class PriceAdmin(admin.ModelAdmin):
     list_display = ["price", "meta_product"]
