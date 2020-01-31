@@ -1,5 +1,5 @@
 from products.models.products import Product, SpecValue
-from products.models.spec_groups import SpecGroup
+from products.models.spec_groups import RefreshRate
 from products.matching.weights import LaptopWeights
 from collections import defaultdict
 import operator
@@ -157,7 +157,7 @@ class LaptopMatcher(BaseMatcher, LaptopWeights):
 
     def find_with_size(self, products, size):
         min_size, max_size = size
-        spec_keys = SpecGroup.objects.get(name="screen size").spec_keys.all()
+        # TODO FIX this -> spec_keys = SpecGroup.objects.get(name="screen size").spec_keys.all()
 
         checked_products = []
         for product in products.all():

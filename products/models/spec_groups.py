@@ -10,6 +10,9 @@ class SpecGroup(models.Model):
     def __str__(self):
         return "<SpecGroup %s>" % self.name
 
+    class Meta:
+        abstract = True
+
 
 class RefreshRate(SpecGroup):
     @classmethod
@@ -29,6 +32,7 @@ class RefreshRate(SpecGroup):
 
     def is_equal(self, first, second):
         return first == second
+
 
 processors = [
     '9980HK',
