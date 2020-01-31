@@ -34,7 +34,7 @@ class RefreshRate(SpecGroup):
         else:
             value = value.split(" ")[0]
             value = re.sub("[^0-9]", "", value)
-            return value
+            return int(value)
 
     def is_bigger(self, first, second):
         return first > second
