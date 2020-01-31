@@ -3,9 +3,14 @@ import re
 
 
 class SpecGroup(models.Model):
+    id = models.AutoField(primary_key=True, blank=True)
+
     def __init__(self, *values):
         super().__init__(values)
         self.short_name = "Base"
+        self.name = "base"
+        self.standard = None
+        self.rank_group = False
 
     def process_value(self, value):
         raise NotImplementedError

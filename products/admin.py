@@ -3,7 +3,7 @@ from .models import Product, MetaProduct, SpecValue, SpecKey, SpecGroup, Price, 
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ["name", "meta_category", "manufacturing_name"]
+    list_display = ["name", "price", "meta_category", "average_score", "_scores"]
     search_fields = ["name"]
 
 
@@ -23,7 +23,10 @@ class SpecKeyAdmin(admin.ModelAdmin):
 
 
 class SpecGroupAdmin(admin.ModelAdmin):
-    pass
+    list_display = ["name", "id"]
+
+    def name(self, obj):
+        return obj.name
 
 
 class PriceAdmin(admin.ModelAdmin):
