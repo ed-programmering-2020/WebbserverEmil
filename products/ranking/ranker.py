@@ -34,10 +34,14 @@ class Ranker:
                         value = spec_group.process_value(value)
                         key = spec_group.name
 
+                        print(sorted_products)
+
                         if key not in sorted_products:
                             sorted_products[key] = [(product.id, value)]
                         else:
                             for i, saved_specs in enumerate(sorted_products[key]):
+
+                                print(saved_specs)
                                 saved_id, saved_value = saved_specs[0]
                                 value_package = [(product.id, value)]
 
