@@ -57,7 +57,7 @@ class Ranker:
         return sorted_products
 
     def sort_with_price(self, products):
-        sorted_products = {}
+        sorted_products = defaultdict()
 
         for key, values in products.items():
             for value_list in values:
