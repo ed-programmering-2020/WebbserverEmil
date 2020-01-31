@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.models import ContentType
 from products.models.query import SubclassingQuerySet
 from django.db import models
 import re
@@ -12,7 +13,7 @@ class SpecGroup(models.Model):
     name = models.CharField("name", max_length=32)
     standard = models.CharField("standard", max_length=32, null=True)
     rank_group = models.BooleanField("rank group", default=False)
-    content_type = models.ForeignKey("django.contrib.contenttypes.ContentType", editable=False, on_delete=models.SET_NULL, null=True)
+    content_type = models.ForeignKey(ContentType, editable=False, on_delete=models.SET_NULL, null=True)
     objects = SpecGroupManager()
 
     def save(self, *args, **kwargs):
@@ -30,6 +31,8 @@ class SpecGroup(models.Model):
 
 
 class RefreshRate(SpecGroup):
+    objects = SpecGroupManager()
+
     @classmethod
     def create(cls):
         return cls(name="RefreshRate", standard="60", rank_group=True).save()
