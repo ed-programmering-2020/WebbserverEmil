@@ -15,8 +15,9 @@ class Collector:
         return BeautifulSoup(html_doc, "html.parser")
 
     def save_benchmarks(self, benchmarks, spec_group):
-        for i, processor in enumerate(benchmarks):
-            name, __ = processor
+        for i, benchmark in enumerate(benchmarks):
+            print(benchmark)
+            name, __ = benchmark
             score = len(benchmarks) - i
 
             try:
