@@ -16,7 +16,8 @@ class Collector:
 
     def save_benchmarks(self, benchmarks, spec_group):
         for i, benchmark in enumerate(benchmarks):
-            print(benchmark)
+            print(benchmark
+                  )
             name, __ = benchmark
             score = len(benchmarks) - i
 
@@ -52,7 +53,7 @@ class Collector:
         # Combine scores
         processors = []
         for name, scores in processor_scores.copy().items():
-            average_score = (scores[0] + scores[1]) / 2
+            average_score = scores[0] + scores[1]
             processor_package = (name, average_score)
 
             if len(processors) == 0:
@@ -85,8 +86,8 @@ class Collector:
                 name = name.get_text().strip().lower()
 
                 if "1060-" in name:
-                    name.replace("-", " ")
+                    name.replace("1060-", "1060 ")
 
                 graphics_card_scores[name] = score
 
-        self.save_benchmarks(graphics_cards, SpecGroup.objects.get(name="GraphicsCard"))
+        self.save_benchmarks(graphics_card_scores, SpecGroup.objects.get(name="GraphicsCard"))
