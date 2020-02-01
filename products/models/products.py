@@ -90,7 +90,10 @@ class Product(models.Model):
             self.meta_category = meta_category
 
         # Update product
-        self.price = min(prices) if prices else None
+        if prices:
+            if self.check_price_outlier(prices):
+                prices.remove(min(prices))
+            self.price = min(prices)
         self.manufacturing_name = self.most_frequent(manufacturing_names)
         self.update_name(names)
         self.is_ranked = False
@@ -179,9 +182,24 @@ class Product(models.Model):
                 else:
                     spec_value.remove(self)
 
+    def check_price_outlier(self, prices):
+        lowest_price = min(prices)
+        prices.remove(lowest_price)
+        return lowest_price >= (min(prices)/2)
+
     def get_websites(self):
-        meta_products = [[mp.url, mp.get_price()] for mp in self.meta_products.all() if mp.get_price()]
-        return meta_products
+        urls = []
+        prices = []
+        for meta_product in self.meta_products.all():
+            urls.append(meta_product.url)
+            prices.append(meta_product.get_price())
+
+        if self.check_price_outlier(prices):
+            i = prices.index(min(prices))
+            urls.pop(i)
+            prices.pop(i)
+
+        return list(zip(urls, prices))
 
     def get_image(self):
         images = [mp.image for mp in self.meta_products.all() if mp.image]

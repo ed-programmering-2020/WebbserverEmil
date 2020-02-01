@@ -23,7 +23,7 @@ class SpecKeyAdmin(admin.ModelAdmin):
 
 
 class SpecGroupAdmin(admin.ModelAdmin):
-    list_display = ["name", "standard", "rank_group"]
+    list_display = ["name", "rank_group"]
     search_fields = ["name"]
 
 

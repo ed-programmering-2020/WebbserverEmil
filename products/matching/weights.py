@@ -2,7 +2,7 @@ class LaptopWeights:
     def __init__(self):
         self.usages = {
             "general": {
-                "battery capacity": 1,
+                "battery time": 1,
                 "weight": 1,
                 "processor": 1,
                 "graphics card": 1,
@@ -14,7 +14,7 @@ class LaptopWeights:
                 "refresh rate": 1
             },
             "gaming": {
-                "battery capacity": 1,
+                "battery time": 1,
                 "weight": 1,
                 "processor": 1,
                 "graphics card": 1,
@@ -28,7 +28,7 @@ class LaptopWeights:
         }
         self.priority_groups = {
             "weight": ["weight"],
-            "battery": ["battery capacity"],
+            "battery": ["battery time"],
             "performance": ["processor", "graphics card", "memory", "disk type"],
             "storage": ["storage size"],
             "screen": ["resolution", "panel type", "refresh rate"]

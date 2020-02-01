@@ -41,7 +41,7 @@ class Ranker:
                                 value_package = (product.id, value)
 
                                 # Rank with value
-                                if spec_group.is_bigger(value, saved_value):
+                                if spec_group.is_greater(value, saved_value):
                                     sorted_products[key].insert(i, [value_package])
                                     break
 
