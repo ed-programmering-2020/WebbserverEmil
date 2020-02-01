@@ -28,7 +28,7 @@ class BenchmarkAdmin(admin.ModelAdmin):
 
 
 class SpecGroupAdmin(admin.ModelAdmin):
-    list_display = ["name", "verbose_nam", "rank_group"]
+    list_display = ["name", "verbose_name", "rank_group"]
     search_fields = ["name"]
 
 
