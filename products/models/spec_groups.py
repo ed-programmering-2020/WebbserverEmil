@@ -111,7 +111,7 @@ class Resolution(SpecGroup):
         elif len(numbers) == 1:
             return numbers[0]
         else:
-            return None
+            return 0
 
 
 class StorageSize(SpecGroup):
