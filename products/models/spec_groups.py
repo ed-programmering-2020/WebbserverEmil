@@ -108,7 +108,7 @@ class Resolution(SpecGroup):
         numbers = re.findall(r'\d+', value)
         if len(numbers) >= 2:
             return numbers[1]
-        elif len(numbers) == 0:
+        elif len(numbers) == 1:
             return numbers[0]
         else:
             return None
