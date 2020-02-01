@@ -109,7 +109,8 @@ class Resolution(SpecGroup):
         if len(numbers) >= 2:
             return numbers[1]
         else:
-            return numbers[0]
+            print(numbers)
+            return 0
 
 
 class StorageSize(SpecGroup):
