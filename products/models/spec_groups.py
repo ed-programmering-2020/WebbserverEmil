@@ -6,7 +6,7 @@ import re
 
 class SpecGroup(models.Model):
     name = models.CharField("name", max_length=32)
-    verbose_name = models.CharField("verbose name", max_length=32)
+    verbose_name = models.CharField("verbose name", max_length=32, null=True)
     rank_group = models.BooleanField("rank group", default=False)
     content_type = models.ForeignKey(ContentType, editable=False, on_delete=models.SET_NULL, null=True)
 
