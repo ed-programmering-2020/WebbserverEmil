@@ -107,9 +107,9 @@ class Resolution(SpecGroup):
     def process_value(self, value):
         numbers = re.findall(r'\d+', value)
         if len(numbers) >= 2:
-            return numbers[1]
+            return int(numbers[1])
         elif len(numbers) == 1:
-            return numbers[0]
+            return int(numbers[0])
         else:
             return 0
 
