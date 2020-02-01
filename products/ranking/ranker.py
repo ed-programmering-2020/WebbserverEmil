@@ -75,13 +75,14 @@ class Ranker:
             product = Product.objects.get(id=id)
             price = product.price
 
-            scores = defaultdict()
-            average_score = 0
-            for key, value in values.items():
-                score = value / price
-                scores[key] = score
-                average_score += score / key_count
+            if price:
+                scores = defaultdict()
+                average_score = 0
+                for key, value in values.items():
+                    score = value / price
+                    scores[key] = score
+                    average_score += score / key_count
 
-            product.scores = scores
-            product.average_score = average_score
-            product.save()
+                product.scores = scores
+                product.average_score = average_score
+                product.save()
