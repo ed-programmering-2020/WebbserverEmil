@@ -23,7 +23,7 @@ class SpecKeyAdmin(admin.ModelAdmin):
 
 
 class BenchmarkAdmin(admin.ModelAdmin):
-    list_display = ["name", "score"]
+    list_display = ["name", "score", "spec_group"]
     search_fields = ["name"]
 
 

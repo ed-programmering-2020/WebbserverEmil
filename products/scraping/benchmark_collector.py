@@ -16,8 +16,6 @@ class Collector:
 
     def save_benchmarks(self, benchmarks, spec_group):
         for i, benchmark in enumerate(benchmarks):
-            print(benchmark
-                  )
             name, __ = benchmark
             score = len(benchmarks) - i
 

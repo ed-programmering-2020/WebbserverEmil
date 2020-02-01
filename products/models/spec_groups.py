@@ -12,10 +12,13 @@ class SpecGroup(models.Model):
     def process_number(self, value):
         value = value.split(" ")[0]
         value = re.sub("[^0-9]", "", value)
+        value = value.replace(" ", "")
         return int(value)
 
     def process_text(self, value):
-        return value.lower()
+        value = value.lower()
+        value = re.sub('[^A-Za-z0-9 ]+', '', value)
+        return value
 
     def process_benchmark(self, value):
         text = value.lower()
@@ -102,7 +105,7 @@ class Resolution(SpecGroup):
         return cls(name="Resolution", rank_group=True).save()
 
     def process_value(self, value):
-        numbers = [int(s) for s in value.split() if s.isdigit()]
+        numbers = [int(s) for s in value.split(" ") if s.isdigit()]
         if len(numbers) >= 2:
             return numbers[1]
         else:
@@ -125,7 +128,7 @@ class StorageSize(SpecGroup):
 
 
 class DiskType(SpecGroup):
-    types = ["ssd", "hdd"]
+    types = ["ssd", "hdd", "emmc"]
 
     @classmethod
     def create(cls):
@@ -185,7 +188,10 @@ class Weight(SpecGroup):
         return cls(name="Weight", rank_group=True).save()
 
     def process_value(self, value):
-        return self.process_number(value)
+        number = self.process_number(value)
+        if " g" in value:
+            number = number / 1000
+        return number
 
     def is_greater(self, first, second):
         return first < second
