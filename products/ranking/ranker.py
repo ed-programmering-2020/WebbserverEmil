@@ -61,10 +61,9 @@ class Ranker:
             values_length = len(values)
 
             for pos, value_list in enumerate(values):
-                for value in value_list:
-                    id, price = value
+                for id, value in value_list:
                     id = str(id)
-                    value = (pos / values_length) / price
+                    value = pos / values_length
 
                     if id not in sorted_products:
                         sorted_products[id] = {key: value}
@@ -74,11 +73,15 @@ class Ranker:
         key_count = len(products)
         for id, values in sorted_products.items():
             product = Product.objects.get(id=id)
-            product.scores = values
+            price = product.price
 
+            scores = defaultdict()
             average_score = 0
-            for key, score in values.items():
+            for key, value in values.items():
+                score = value / price
+                scores[key] = score
                 average_score += score / key_count
 
+            product.scores = scores
             product.average_score = average_score
             product.save()
