@@ -6,6 +6,7 @@ import re
 
 class SpecGroup(models.Model):
     name = models.CharField("name", max_length=32)
+    verbose_name = models.CharField("verbose name", max_length=32)
     rank_group = models.BooleanField("rank group", default=False)
     content_type = models.ForeignKey(ContentType, editable=False, on_delete=models.SET_NULL, null=True)
 
@@ -74,7 +75,7 @@ class Benchmark(models.Model):
 class RefreshRate(SpecGroup):
     @classmethod
     def create(cls):
-        return cls(name="RefreshRate", rank_group=True).save()
+        return cls(name="RefreshRate", verbose_name="refresh rate", rank_group=True).save()
 
     def process_value(self, value):
         return self.process_number(value)
@@ -85,7 +86,7 @@ class PanelType(SpecGroup):
 
     @classmethod
     def create(cls):
-        return cls(name="PanelType", rank_group=True).save()
+        return cls(name="PanelType", verbose="panel type", rank_group=True).save()
 
     def process_value(self, value):
         return self.process_text(value)
@@ -102,7 +103,7 @@ class PanelType(SpecGroup):
 class Resolution(SpecGroup):
     @classmethod
     def create(cls):
-        return cls(name="Resolution", rank_group=True).save()
+        return cls(name="Resolution", verbose_name="resolution", rank_group=True).save()
 
     def process_value(self, value):
         numbers = re.findall(r'\d+', value)
@@ -117,7 +118,7 @@ class Resolution(SpecGroup):
 class StorageSize(SpecGroup):
     @classmethod
     def create(cls):
-        return cls(name="StorageSize", rank_group=True).save()
+        return cls(name="StorageSize", verbose_name="storage size", rank_group=True).save()
 
     def process_value(self, value):
         value.lower()
@@ -134,7 +135,7 @@ class DiskType(SpecGroup):
 
     @classmethod
     def create(cls):
-        return cls(name="DiskType", rank_group=True).save()
+        return cls(name="DiskType", verbose_name="disk type", rank_group=True).save()
 
     def process_value(self, value):
         return self.process_text(value)
@@ -151,7 +152,7 @@ class DiskType(SpecGroup):
 class Memory(SpecGroup):
     @classmethod
     def create(cls):
-        return cls(name="Memory", rank_group=True).save()
+        return cls(name="Memory", verbose_name="memory", rank_group=True).save()
 
     def process_value(self, value):
         return self.process_number(value)
@@ -160,7 +161,7 @@ class Memory(SpecGroup):
 class GraphicsCard(SpecGroup):
     @classmethod
     def create(cls):
-        return cls(name="GraphicsCard", rank_group=True).save()
+        return cls(name="GraphicsCard", verbose_name="graphics card", rank_group=True).save()
 
     def process_value(self, value):
         return self.process_benchmark(value)
@@ -169,7 +170,7 @@ class GraphicsCard(SpecGroup):
 class Processor(SpecGroup):
     @classmethod
     def create(cls):
-        return cls(name="Processor", rank_group=True).save()
+        return cls(name="Processor", verbose_name="processor", rank_group=True).save()
 
     def process_value(self, value):
         return self.process_benchmark(value)
@@ -178,7 +179,7 @@ class Processor(SpecGroup):
 class BatteryTime(SpecGroup):
     @classmethod
     def create(cls):
-        return cls(name="BatteryTime", rank_group=True).save()
+        return cls(name="BatteryTime", verbose_name="battery time", rank_group=True).save()
 
     def process_value(self, value):
         return self.process_number(value)
@@ -187,7 +188,7 @@ class BatteryTime(SpecGroup):
 class Weight(SpecGroup):
     @classmethod
     def create(cls):
-        return cls(name="Weight", rank_group=True).save()
+        return cls(name="Weight", verbose_name="weight", rank_group=True).save()
 
     def process_value(self, value):
         number = self.process_number(value)

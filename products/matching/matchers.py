@@ -1,5 +1,5 @@
 from products.models.products import Product, SpecValue
-from products.models.spec_groups import RefreshRate
+from products.models.spec_groups import ScreenSize
 from products.matching.weights import LaptopWeights
 from collections import defaultdict
 import operator
@@ -19,31 +19,14 @@ class BaseMatcher:
 
             return valid_products
 
-    def sort_with_usage(self, products, amount_of_products, usage):
+    def sort_with_usage(self, products, usage):
         sorted_products = defaultdict()
+        for product in products:
+            scores = 0
+            for key, score in product.scores.items():
+                scores += self.usages[usage][key] * int(score)
 
-        def get_value(products_list_length, key, product, i_inverse):
-            id, __ = product
-            id = str(id)
-
-            result = self.biases[usage][key] * ((amount_of_products / products_list_length) * i_inverse)
-
-            if id in sorted_products.keys():
-                sorted_products[id] = sorted_products[id] + result
-            else:
-                sorted_products[id] = result
-
-        for key, products_list in products.items():
-            products_list_length = len(products_list)
-
-            for i, product in enumerate(products_list):
-                i_inverse = products_list_length - i
-
-                if type(product) == list:
-                    for sub_product in product:
-                        get_value(products_list_length, key, sub_product, i_inverse)
-                else:
-                    get_value(products_list_length, key, product, i_inverse)
+            sorted_products[product.id] = scores
 
         return sorted_products
 
@@ -136,14 +119,14 @@ class LaptopMatcher(BaseMatcher, LaptopWeights):
 
     def find_with_settings(self, all_products, settings):
         print("---")
-        products_price_matched = self.find_with_price(all_products, settings["price"], True)
+        products_price_matched = self.find_with_price(all_products, settings["price"])
         products_size_matched = self.find_with_size(products_price_matched, settings["size"])
         print("price", products_price_matched)
         print("size", products_size_matched)
 
-        products_usage_sorted = self.sort_with_usage(products_with_values, len(products_size_matched), settings["usage"])
-        top_products = self.get_top_products(products_price_sorted)
-        products_prioritization_sorted = self.sort_with_priorities(products_with_values, len(products_size_matched), top_products, settings["priorities"])
+        products_usage_sorted = self.sort_with_usage(products_size_matched, settings["usage"])
+        top_products = self.get_top_products(products_usage_sorted)
+        products_prioritization_sorted = self.sort_with_priorities(top_products, top_products, settings["priorities"])
         ranked_products = products_prioritization_sorted.sort(key=operator.itemgetter(1), reverse=True)
         print("usage", products_usage_sorted)
         print("top", top_products)
@@ -157,7 +140,7 @@ class LaptopMatcher(BaseMatcher, LaptopWeights):
 
     def find_with_size(self, products, size):
         min_size, max_size = size
-        # TODO FIX this -> spec_keys = SpecGroup.objects.get(name="screen size").spec_keys.all()
+        spec_keys = ScreenSize.objects.first().spec_keys.all()
 
         checked_products = []
         for product in products.all():

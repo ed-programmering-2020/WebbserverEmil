@@ -21,37 +21,38 @@ class Ranker:
         sorted_products = defaultdict()
 
         for product in products:
-            for spec_value in product.spec_values.all():
-                value = spec_value.value
-                spec_key = spec_value.spec_key
+            if not product.is_ranked:
+                for spec_value in product.spec_values.all():
+                    value = spec_value.value
+                    spec_key = spec_value.spec_key
 
-                if spec_key:
-                    spec_group = spec_key.spec_group
+                    if spec_key:
+                        spec_group = spec_key.spec_group
 
-                    if spec_group and spec_group.rank_group:
-                        spec_group = spec_group.as_inherited_model()
-                        value = spec_group.process_value(value)
-                        key = spec_group.name
+                        if spec_group and spec_group.rank_group:
+                            spec_group = spec_group.as_inherited_model()
+                            value = spec_group.process_value(value)
+                            key = spec_group.verbose_name
 
-                        if key not in sorted_products:
-                            sorted_products[key] = [[(product.id, value)]]
-                        else:
-                            for i, saved_specs in enumerate(sorted_products[key]):
-                                saved_id, saved_value = saved_specs[0]
-                                value_package = (product.id, value)
+                            if key not in sorted_products:
+                                sorted_products[key] = [[(product.id, value)]]
+                            else:
+                                for i, saved_specs in enumerate(sorted_products[key]):
+                                    saved_id, saved_value = saved_specs[0]
+                                    value_package = (product.id, value)
 
-                                # Rank with value
-                                if spec_group.is_greater(value, saved_value):
-                                    sorted_products[key].insert(i, [value_package])
-                                    break
+                                    # Rank with value
+                                    if spec_group.is_greater(value, saved_value):
+                                        sorted_products[key].insert(i, [value_package])
+                                        break
 
-                                elif spec_group.is_equal(value, saved_value):
-                                    sorted_products[key][i].append(value_package)
-                                    break
+                                    elif spec_group.is_equal(value, saved_value):
+                                        sorted_products[key][i].append(value_package)
+                                        break
 
-                                elif i == (len(sorted_products[key]) - 1):
-                                    sorted_products[key].append([value_package])
-                                    break
+                                    elif i == (len(sorted_products[key]) - 1):
+                                        sorted_products[key].append([value_package])
+                                        break
 
         return sorted_products
 
@@ -85,4 +86,5 @@ class Ranker:
 
                 product.scores = scores
                 product.average_score = average_score
+                product.is_ranked = True
                 product.save()
