@@ -106,13 +106,12 @@ class Resolution(SpecGroup):
 
     def process_value(self, value):
         numbers = re.findall(r'\d+', value)
-
-        print(value, numbers)
         if len(numbers) >= 2:
             return numbers[1]
-        else:
-            print(numbers)
+        elif len(numbers) == 0:
             return numbers[0]
+        else:
+            return None
 
 
 class StorageSize(SpecGroup):
