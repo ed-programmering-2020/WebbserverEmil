@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from products.models.spec_groups import RefreshRate, ScreenSize
+from products.models.spec_groups import RefreshRate, PanelType, ScreenSize
 from products.models.categories import Laptop
 
 
@@ -14,6 +14,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         models = [
             RefreshRate,
+            PanelType,
             ScreenSize,
             Laptop
         ]
