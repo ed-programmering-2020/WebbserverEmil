@@ -74,7 +74,7 @@ class Collector:
     def collect_graphics_cards(self):
         url = "https://benchmarks.ul.com/compare/best-gpus"
         soup = self.get_soup(url)
-        graphics_card_scores = defaultdict()
+        graphics_card_scores = []
 
         # Get all scores
         graphics_cards = soup.find("tbody").find_all("tr")
@@ -84,10 +84,10 @@ class Collector:
 
             if name:
                 name = name.get_text().strip().lower()
-
                 if "1060-" in name:
                     name.replace("1060-", "1060 ")
 
-                graphics_card_scores[name] = score
+                graphics_card_package = (name, score)
+                graphics_card_scores.append(graphics_card_package)
 
         self.save_benchmarks(graphics_card_scores, SpecGroup.objects.get(name="GraphicsCard"))
