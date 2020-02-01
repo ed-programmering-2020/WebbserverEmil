@@ -106,10 +106,10 @@ class Resolution(SpecGroup):
 
     def process_value(self, value):
         numbers = []
-        for value in value.split("x"):
-            value = value.replace(" ", "")
-            if value.isdigit():
-                numbers.append(int(value))
+        for val in value.split("x"):
+            val = val.replace(" ", "")
+            if val.isdigit():
+                numbers.append(int(val))
 
         print(value, numbers)
         if len(numbers) >= 2:
