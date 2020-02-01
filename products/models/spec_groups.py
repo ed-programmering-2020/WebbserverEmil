@@ -105,13 +105,13 @@ class Resolution(SpecGroup):
         return cls(name="Resolution", rank_group=True).save()
 
     def process_value(self, value):
-        numbers = [int(s) for s in value.split(" ") if s.isdigit()]
+        numbers = [int(s.strip()) for s in value.split("x") if s.isdigit()]
         print(value, numbers)
         if len(numbers) >= 2:
             return numbers[1]
         else:
             print(numbers)
-            return 0
+            return numbers[0]
 
 
 class StorageSize(SpecGroup):
