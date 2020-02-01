@@ -9,6 +9,20 @@ class SpecGroup(models.Model):
     rank_group = models.BooleanField("rank group", default=False)
     content_type = models.ForeignKey(ContentType, editable=False, on_delete=models.SET_NULL, null=True)
 
+    def process_number(self, value):
+        value = value.split(" ")[0]
+        value = re.sub("[^0-9]", "", value)
+        return int(value)
+
+    def process_text(self, value):
+        return value.lower()
+
+    def get_rank(self, value):
+        for i, panel_type in enumerate(self.types):
+            if panel_type in value:
+                return i
+        return 0
+
     def save(self, *args, **kwargs):
         if not self.content_type:
             self.content_type = ContentType.objects.get_for_model(self.__class__)
@@ -32,15 +46,47 @@ class RefreshRate(SpecGroup):
         if not value:
             return int(self.standard)
         else:
-            value = value.split(" ")[0]
-            value = re.sub("[^0-9]", "", value)
-            return int(value)
+            return self.process_number(value)
 
     def is_bigger(self, first, second):
         return first > second
 
     def is_equal(self, first, second):
         return first == second
+
+
+class PanelType(SpecGroup):
+    types = ["ips", "va", "tn"]
+
+    @classmethod
+    def create(cls):
+        return cls(name="PanelType", standard="tn", rank_group=True).save()
+
+    def process_value(self, value):
+        if not value:
+            return self.standard
+        else:
+            return self.process_text(value)
+
+    def is_bigger(self, first, second):
+        first, second = self.get_rank(first), self.get_rank(second)
+        return first > second
+
+    def is_equal(self, first, second):
+        first, second = self.get_rank(first), self.get_rank(second)
+        return first == second
+
+
+class ScreenSize(SpecGroup):
+    @classmethod
+    def create(cls):
+        return cls(name="ScreenSize", rank_group=False).save()
+
+    def process_value(self, value):
+        if not value:
+            return None
+        else:
+            return self.process_number(value)
 
 
 processors = [
@@ -1226,12 +1272,6 @@ graphics_cards = [
     "Adreno 200",
 
     "Mali-200",
-]
-
-panel_types = [
-    "ips",
-    "va",
-    "tn"
 ]
 
 disk_types = [

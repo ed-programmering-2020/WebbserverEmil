@@ -3,6 +3,7 @@ class LaptopWeights:
         self.usages = {
             "general": {
                 "battery capacity": 1,
+                "weight": 1,
                 "processor": 1,
                 "graphics card": 1,
                 "memory": 1,
@@ -14,6 +15,7 @@ class LaptopWeights:
             },
             "gaming": {
                 "battery capacity": 1,
+                "weight": 1,
                 "processor": 1,
                 "graphics card": 1,
                 "memory": 1,
@@ -25,6 +27,7 @@ class LaptopWeights:
             }
         }
         self.priority_groups = {
+            "weight": ["weight"],
             "battery": ["battery capacity"],
             "performance": ["processor", "graphics card", "memory", "disk type"],
             "storage": ["storage size"],
