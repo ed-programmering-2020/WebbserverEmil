@@ -1,5 +1,4 @@
 from django.contrib.contenttypes.models import ContentType
-from products.models import Benchmark
 from difflib import SequenceMatcher
 from django.db import models
 import re
@@ -61,6 +60,12 @@ class SpecGroup(models.Model):
 
     def __str__(self):
         return "<SpecGroup %s>" % self.name
+
+
+class Benchmark(models.Model):
+    name = models.CharField("name", max_length=32)
+    score = models.PositiveSmallIntegerField("score")
+    spec_group = models.ForeignKey(SpecGroup, on_delete=models.SET_NULL)
 
 
 class RefreshRate(SpecGroup):
