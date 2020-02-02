@@ -62,7 +62,7 @@ class SpecGroup(models.Model):
 
 
 class Benchmark(models.Model):
-    name = models.CharField("name", max_length=32)
+    name = models.CharField("name", max_length=64)
     score = models.PositiveSmallIntegerField("score")
     spec_group = models.ForeignKey(SpecGroup, on_delete=models.SET_NULL, null=True)
 
