@@ -1,10 +1,10 @@
 from django.core.management.base import BaseCommand
-from products.ranking.ranker import Ranker
+from products.scraping.benchmark_collector import Collector
 
 
 class Command(BaseCommand):
-    help = "Update the product rankings"
+    help = "Update the benchmarks"
 
     def handle(self, *args, **kwargs):
-        Ranker()
+        Collector()
         self.stdout.write(self.style.SUCCESS("Successfully updated product rankings"))

@@ -1,7 +1,7 @@
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAdminUser
 from products.serializers import ProductSerializer
-from products.scraping.combiner import Combiner
+from products.scraping.product_combiner import Combiner
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from products.models import Product

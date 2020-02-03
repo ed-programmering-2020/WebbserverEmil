@@ -1,5 +1,5 @@
 from products.models.products import Product, SpecValue
-from products.models.spec_groups import SpecGroup
+from products.models.spec_groups import ScreenSize
 from products.matching.weights import LaptopWeights
 from collections import defaultdict
 import operator
@@ -19,56 +19,45 @@ class BaseMatcher:
 
             return valid_products
 
-    def sort_with_usage(self, products, amount_of_products, usage):
+    def sort(self, products, usage, priorities):
         sorted_products = defaultdict()
+        for product in products:
+            usage_score = 0
+            group_scores = defaultdict()
 
-        def get_value(products_list_length, key, product, i_inverse):
-            id, __ = product
-            id = str(id)
+            #
+            for key, score in product.scores.items():
+                priority_group = None
+                for group, priorities in self.priority_groups.items():
+                    for priority in priorities:
+                        if key == priority:
+                            priority_group = group
+                            break
 
-            result = self.biases[usage][key] * ((amount_of_products / products_list_length) * i_inverse)
-
-            if id in sorted_products.keys():
-                sorted_products[id] = sorted_products[id] + result
-            else:
-                sorted_products[id] = result
-
-        for key, products_list in products.items():
-            products_list_length = len(products_list)
-
-            for i, product in enumerate(products_list):
-                i_inverse = products_list_length - i
-
-                if type(product) == list:
-                    for sub_product in product:
-                        get_value(products_list_length, key, sub_product, i_inverse)
+                usage_score += self.usages[usage][key] * int(score)
+                priority_score = self.priorities[key] * int(score)
+                if priority_group in group_scores:
+                    group_scores[priority_group].append(priority_score)
                 else:
-                    get_value(products_list_length, key, product, i_inverse)
+                    group_scores[priority_group] = [priority_score]
 
-        return sorted_products
 
-    def sort_with_priorities(self, products_with_values, amount_of_products, top_products, priorities):
-        sorted_products = defaultdict()
 
-        def save_value(id, key, product, products_list_length, i):
-            product_id, __ = product
+            sorted_products[product.id] = {"usage": usage_score, "priority": priority_score}
 
-            if product_id == id:
-                i_inverse = products_list_length - i
-                result = ((amount_of_products / products_list_length) * i_inverse)
-                sorted_products[id]["values"][key] = result
-
-        for id, value in top_products.items():
+        for id, value in products.items():
             sorted_products[id] = {"usage_value": value, "values": {}}
+
             for key, products_list in products_with_values.items():
                 products_list_length = len(products_list)
 
                 for i, product in enumerate(products_list):
-                    if type(product) == list:
-                        for sub_product in product:
-                            save_value(id, key, sub_product, products_list_length, i)
-                    else:
-                        save_value(id, key, product, products_list_length, i)
+                    product_id, __ = product
+
+                    if product_id == id:
+                        i_inverse = products_list_length - i
+                        result = ((amount_of_products / products_list_length) * i_inverse)
+                        sorted_products[id]["values"][key] = result
 
         priority_sorted_products = []
         for id, all_values in sorted_products.items():
@@ -85,7 +74,8 @@ class BaseMatcher:
 
             priority_sorted_products.append((id, resulting_value))
 
-        return priority_sorted_products
+
+        return sorted_products
 
     def get_top_products(self, products):
         top_id, top_value = None, 0
@@ -135,29 +125,25 @@ class LaptopMatcher(BaseMatcher, LaptopWeights):
         super().__init__()
 
     def find_with_settings(self, all_products, settings):
-        print("---")
-        products_price_matched = self.find_with_price(all_products, settings["price"], True)
+        # Filter products
+        products_price_matched = self.find_with_price(all_products, settings["price"])
         products_size_matched = self.find_with_size(products_price_matched, settings["size"])
         print("price", products_price_matched)
         print("size", products_size_matched)
 
-        products_usage_sorted = self.sort_with_usage(products_with_values, len(products_size_matched), settings["usage"])
-        top_products = self.get_top_products(products_price_sorted)
-        products_prioritization_sorted = self.sort_with_priorities(products_with_values, len(products_size_matched), top_products, settings["priorities"])
-        ranked_products = products_prioritization_sorted.sort(key=operator.itemgetter(1), reverse=True)
-        print("usage", products_usage_sorted)
-        print("top", top_products)
-        print("priorities", products_prioritization_sorted)
+        # Sort products
+        products_sorted = self.sort_with_usage(products_size_matched, settings["usage"], settings["priorities"])
+        top_products = self.get_top_products(products_sorted)
+        ranked_products = top_products.sort(key=operator.itemgetter(1), reverse=True)
         print("ranked", ranked_products)
 
+        # Retrieve & return products
         product_models = self.get_product_models(ranked_products)
-        print(product_models)
-
         return self.products_to_json(product_models)
 
     def find_with_size(self, products, size):
         min_size, max_size = size
-        spec_keys = SpecGroup.objects.get(name="screen size").spec_keys.all()
+        spec_keys = ScreenSize.objects.first().spec_keys.all()
 
         checked_products = []
         for product in products.all():

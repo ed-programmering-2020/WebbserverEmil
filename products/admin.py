@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, MetaProduct, SpecValue, SpecKey, SpecGroup, Price, Website, Category, MetaCategory
+from .models import Product, MetaProduct, SpecValue, SpecKey, SpecGroup, Price, Website, Category, MetaCategory, Benchmark
 
 
 class ProductAdmin(admin.ModelAdmin):
@@ -22,8 +22,13 @@ class SpecKeyAdmin(admin.ModelAdmin):
     search_fields = ["key"]
 
 
+class BenchmarkAdmin(admin.ModelAdmin):
+    list_display = ["name", "score", "spec_group"]
+    search_fields = ["name"]
+
+
 class SpecGroupAdmin(admin.ModelAdmin):
-    list_display = ["name", "standard", "rank_group"]
+    list_display = ["name", "verbose_name", "rank_group"]
     search_fields = ["name"]
 
 
@@ -55,5 +60,6 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(MetaProduct, MetaProductAdmin)
 admin.site.register(SpecValue, SpecValueAdmin)
 admin.site.register(SpecKey, SpecKeyAdmin)
+admin.site.register(Benchmark, BenchmarkAdmin)
 admin.site.register(SpecGroup, SpecGroupAdmin)
 admin.site.register(Price, PriceAdmin)
