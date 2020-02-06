@@ -34,13 +34,13 @@ class BaseMatcher:
 
 
                 usage_score += self.usages[usage][key] * int(score)
-                priority_score += self.priorities[]
+                # priority_score += self.priorities[]
 
             sorted_products[product.id] = {"usage": usage_score, "priority": priority_score}
 
         for id, value in products.items():
             sorted_products[id] = {"usage_value": value, "values": {}}
-
+            """
             for key, products_list in products_with_values.items():
                 products_list_length = len(products_list)
 
@@ -51,6 +51,7 @@ class BaseMatcher:
                         i_inverse = products_list_length - i
                         result = ((amount_of_products / products_list_length) * i_inverse)
                         sorted_products[id]["values"][key] = result
+                        """
 
         priority_sorted_products = []
         for id, all_values in sorted_products.items():
