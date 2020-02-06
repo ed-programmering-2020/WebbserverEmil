@@ -29,7 +29,8 @@ class BaseMatcher:
 
 
                 priority = None
-                for group, priorities in self.priority_groups.items()
+                for group, priorities in self.priority_groups.items():
+                    pass
 
 
                 usage_score += self.usages[usage][key] * int(score)
