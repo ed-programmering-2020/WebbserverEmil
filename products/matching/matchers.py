@@ -137,7 +137,7 @@ class LaptopMatcher(BaseMatcher, LaptopWeights):
         ranked_products = top_products.sort(key=operator.itemgetter(1), reverse=True)
         print("ranked", ranked_products)
 
-        # Retrieve & return products
+        # Retrieave & return products
         product_models = self.get_product_models(ranked_products)
         return self.products_to_json(product_models)
 
