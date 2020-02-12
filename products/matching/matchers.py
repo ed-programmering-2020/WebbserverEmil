@@ -19,35 +19,28 @@ class BaseMatcher:
 
             return valid_products
 
-    def sort(self, products, usage, priorities):
+    def sort_with_usage(self, products, usage):
         sorted_products = defaultdict()
         for product in products:
             usage_score = 0
-            group_scores = defaultdict()
+            priority_score = 0
 
-            #
             for key, score in product.scores.items():
-                priority_group = None
+
+
+                priority = None
                 for group, priorities in self.priority_groups.items():
-                    for priority in priorities:
-                        if key == priority:
-                            priority_group = group
-                            break
+                    pass
+
 
                 usage_score += self.usages[usage][key] * int(score)
-                priority_score = self.priorities[key] * int(score)
-                if priority_group in group_scores:
-                    group_scores[priority_group].append(priority_score)
-                else:
-                    group_scores[priority_group] = [priority_score]
-
-
+                # priority_score += self.priorities[]
 
             sorted_products[product.id] = {"usage": usage_score, "priority": priority_score}
 
         for id, value in products.items():
             sorted_products[id] = {"usage_value": value, "values": {}}
-
+            """
             for key, products_list in products_with_values.items():
                 products_list_length = len(products_list)
 
@@ -58,6 +51,7 @@ class BaseMatcher:
                         i_inverse = products_list_length - i
                         result = ((amount_of_products / products_list_length) * i_inverse)
                         sorted_products[id]["values"][key] = result
+                        """
 
         priority_sorted_products = []
         for id, all_values in sorted_products.items():
@@ -132,7 +126,7 @@ class LaptopMatcher(BaseMatcher, LaptopWeights):
         print("size", products_size_matched)
 
         # Sort products
-        products_sorted = self.sort_with_usage(products_size_matched, settings["usage"], settings["priorities"])
+        products_sorted = self.sort_with_usage(products_size_matched, settings["usage"])
         top_products = self.get_top_products(products_sorted)
         ranked_products = top_products.sort(key=operator.itemgetter(1), reverse=True)
         print("ranked", ranked_products)

@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import InfoPanel
+from .models import Feedback
 
 
-class InfoPanelAdmin(admin.ModelAdmin):
-    list_display = ["name", "is_first"]
-    list_filter = ["is_first"]
-    search_fields = ["name"]
+class FeedbackAdmin(admin.ModelAdmin):
+    list_display = ["message", "creation_date"]
+    search_fields = ["message"]
+    ordering = ["creation_date"]
 
 
-admin.site.register(InfoPanel, InfoPanelAdmin)
+admin.site.register(Feedback, FeedbackAdmin)

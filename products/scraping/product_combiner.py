@@ -12,6 +12,8 @@ class Combiner:
         self.files_dict = files_dict
 
         for product_data in self.data_list:
+            product_data["price"] = int(product_data["price"])
+
             if product_data["price"] <= 100000:
                 meta_product = self.create_or_get_meta_product(product_data)
                 meta_product.update(product_data)

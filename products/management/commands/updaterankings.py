@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from products.ranking.ranker import Ranker
+from products.matching.ranker import Ranker
 
 
 class Command(BaseCommand):

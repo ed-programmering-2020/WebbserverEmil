@@ -11,7 +11,7 @@ import os
 urlpatterns = [
     path("clone-of-erik/", admin.site.urls),
     path("api/", include("products.urls")),
-    path("api/content/", include("content.urls")),
+    path("api/", include("content.urls")),
     path("api/auth/", include("users.urls")),
     re_path(r"^sitemap.xml$", TemplateView.as_view(template_name=os.path.join(settings.BASE_DIR, "static", "sitemap.xml"), content_type="application/xml")),
     re_path(r"^robots.txt$", TemplateView.as_view(template_name=os.path.join(settings.BASE_DIR, "static", "robots.txt"), content_type="text/plain")),
