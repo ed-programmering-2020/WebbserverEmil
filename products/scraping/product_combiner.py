@@ -12,20 +12,20 @@ class Combiner:
         self.files_dict = files_dict
 
         for product_data in self.data_list:
-            product_data["price"] = int(product_data["price"])
+            meta_product = self.create_or_get_meta_product(product_data)
+            meta_product.update(product_data)
+            price = meta_product.get_price()
+            if price and price <= 100000:
+                meta_product.delete()
 
-            if product_data["price"] <= 100000:
-                meta_product = self.create_or_get_meta_product(product_data)
-                meta_product.update(product_data)
+            matching_meta_product = self.find_matching_meta_product(meta_product)
+            if matching_meta_product:
+                product = self.combine_meta_products(meta_product, matching_meta_product)
+            else:
+                product = meta_product.product
 
-                matching_meta_product = self.find_matching_meta_product(meta_product)
-                if matching_meta_product:
-                    product = self.combine_meta_products(meta_product, matching_meta_product)
-                else:
-                    product = meta_product.product
-
-                if product:
-                    product.update()
+            if product:
+                product.update()
 
     def create_or_get_meta_product(self, data):
         url = data.get("link")
