@@ -13,8 +13,12 @@ import operator
 
 
 class BaseMatcher:
-    def find_with_price(self, products, value_range, strict=True):
-        low_price, high_price = value_range
+    """Base class for the different category matching classes"""
+
+    def find_with_price(self, products, price_range, strict=True):
+        """Filters out products which is not in the price range"""
+
+        low_price, high_price = price_range
         low_price -= 1
 
         if strict:
@@ -26,8 +30,19 @@ class BaseMatcher:
 
             return valid_products
 
-    def sort_with_usage(self, products, usage):
-        sorted_products = defaultdict()
+    def get_priority_group(self, key_priority):
+        """Gets the group which a priority belong to"""
+
+        for group, priorities in self.priority_groups.items():
+            for priority in priorities:
+                if key_priority == priority:
+                    return group
+        return None
+
+    def sort_with_bias(self, products, usage):
+        """Sorts the products based on usage and priority bias"""
+
+        sorted_products = []
         for product in products:
             usage_score = 0
             priority_score = 0
@@ -95,6 +110,8 @@ class BaseMatcher:
         return top_products
 
     def get_product_models(self, products):
+        """Gets the models of products with id contained in the products parameter"""
+
         product_list = []
         for product in products:
             id, value = product
@@ -122,15 +139,10 @@ class BaseMatcher:
 
 
 class LaptopMatcher(BaseMatcher, LaptopWeights):
-    def __init__(self):
-        super().__init__()
+    """Matcher class for the laptop model"""
 
-    def find_with_settings(self, all_products, settings):
-        # Filter products
-        products_price_matched = self.find_with_price(all_products, settings["price"])
-        products_size_matched = self.find_with_size(products_price_matched, settings["size"])
-        print("price", products_price_matched)
-        print("size", products_size_matched)
+    def match(self, all_products, settings):
+        """Matches the user with products based on their preferences/settings"""
 
         # Sort products
         products_sorted = self.sort_with_usage(products_size_matched, settings["usage"])
@@ -143,6 +155,8 @@ class LaptopMatcher(BaseMatcher, LaptopWeights):
         return self.products_to_json(product_models)
 
     def find_with_size(self, products, size):
+        """Filters out the products which are not inside the size range"""
+
         min_size, max_size = size
         spec_keys = ScreenSize.objects.first().spec_keys.all()
 
