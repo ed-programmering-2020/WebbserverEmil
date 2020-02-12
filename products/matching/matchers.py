@@ -1,3 +1,10 @@
+"""Matcher classes for category models
+
+This module contains the matcher classes which contain all of the
+methods required for matching products for the different category models.
+
+"""
+
 from products.models.products import Product, SpecValue
 from products.models.spec_groups import ScreenSize
 from products.matching.weights import LaptopWeights
