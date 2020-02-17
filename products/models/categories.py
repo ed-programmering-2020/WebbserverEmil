@@ -54,4 +54,4 @@ class Laptop(Category, LaptopMatcher):
 
     def match(self, settings):
         all_products = self.get_all_products()
-        return super().find_with_settings(all_products, settings)
+        return super().match(all_products, settings)
