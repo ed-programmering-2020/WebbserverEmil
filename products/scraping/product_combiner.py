@@ -68,15 +68,17 @@ class Combiner:
         meta_products_with_probability = []
 
         for meta_product in meta_products.iterator():
-            min_price, max_price = self.acceptable_price_span(main_meta_product)
+            price_range = self.acceptable_price_span(main_meta_product)
+            if price_range:
+                min_price, max_price = price_range
 
-            price = meta_product.get_price()
-            if price and min_price <= price <= max_price:
-                name_similarity = self.name_similarity(main_meta_product.name, meta_product.name)
-                parameter_similarity = self.parameter_similarity(main_meta_product.get_specs(), meta_product.get_specs())
+                price = meta_product.get_price()
+                if price and min_price <= price <= max_price:
+                    name_similarity = self.name_similarity(main_meta_product.name, meta_product.name)
+                    parameter_similarity = self.parameter_similarity(main_meta_product.get_specs(), meta_product.get_specs())
 
-                average_similarity = (name_similarity + parameter_similarity) / 2
-                meta_products_with_probability.append((average_similarity, meta_product))
+                    average_similarity = (name_similarity + parameter_similarity) / 2
+                    meta_products_with_probability.append((average_similarity, meta_product))
 
         # Return top meta product that is over the threshold
         if len(meta_products_with_probability) != 0:
@@ -92,6 +94,11 @@ class Combiner:
         else:
             price = meta_product.get_price()
 
+        # When no price is acquired return None
+        if not price:
+            return None
+
+        # Return price range
         min_price = price / 2.5
         max_price = price * 2.5
         return min_price, max_price
