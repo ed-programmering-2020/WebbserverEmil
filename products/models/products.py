@@ -90,7 +90,7 @@ class Product(models.Model):
             self.meta_category = meta_category
 
         # Update product
-        if prices:
+        if len(prices) > 0:
             if self.check_price_outlier(prices):
                 prices.remove(min(prices))
             self.price = min(prices)
