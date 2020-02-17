@@ -11,6 +11,8 @@ class Combiner:
         self.data_list = data_list
         self.files_dict = files_dict
 
+        print(len(self.data_list))
+
         for product_data in self.data_list:
             meta_product = self.create_or_get_meta_product(product_data)
             meta_product.update(product_data)
