@@ -17,7 +17,7 @@ class Combiner:
             meta_product = self.create_or_get_meta_product(product_data)
             meta_product.update(product_data)
             price = meta_product.get_price()
-            if price and price <= 100000:
+            if price and price >= 100000:
                 meta_product.delete()
 
             matching_meta_product = self.find_matching_meta_product(meta_product)
