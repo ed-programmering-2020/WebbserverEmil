@@ -90,7 +90,7 @@ class Product(models.Model):
             self.meta_category = meta_category
 
         # Update product
-        if len(prices) > 0:
+        if len(prices) > 1:
             if self.check_price_outlier(prices):
                 prices.remove(min(prices))
             self.price = min(prices)
@@ -185,7 +185,11 @@ class Product(models.Model):
     def check_price_outlier(self, prices):
         lowest_price = min(prices)
         prices.remove(lowest_price)
-        return lowest_price >= (min(prices)/2)
+
+        if len(prices) > 0:
+            return lowest_price >= (min(prices)/2)
+        else:
+            return True
 
     def get_websites(self):
         urls = []
