@@ -61,7 +61,9 @@ class Combiner:
     def match_with_manufacturing_name(self, meta_product):
         if meta_product.manufacturing_name:
             try:
-                meta_products = MetaProduct.objects.exclude(url=meta_product.url).filter(manufacturing_name=meta_product.manufacturing_name)
+                meta_products = MetaProduct.objects\
+                    .exclude(id=meta_product.id)\
+                    .filter(manufacturing_name=meta_product.manufacturing_name)
                 return meta_products.first()
             except MetaProduct.DoesNotExist:
                 return None
