@@ -2,6 +2,7 @@ from operator import itemgetter
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 from difflib import SequenceMatcher
+from django.db.models import Q
 from products.models import MetaProduct, Product, Website, SpecGroup
 import string
 
@@ -33,14 +34,16 @@ class Combiner:
         url = data.get("link")
         filename = data.get("image")
         image = self.files_dict.get(filename) if filename else None
+        host = Website.objects.get(name=data.get("website"))
+        name = data.get("title")
 
         try:
-            meta_product = MetaProduct.objects.get(url=url)
+            meta_product = MetaProduct.objects.filter(Q(url=url) | Q(name=name)).get(host=host)
         except MetaProduct.DoesNotExist:
             meta_product = MetaProduct(
-                name=data.get("title"),
+                name=name,
                 url=url,
-                host=Website.objects.get(name=data.get("website")),
+                host=host,
                 image=image,
                 category=data.get("category"),
                 manufacturing_name=data.get("manufacturing_name")
