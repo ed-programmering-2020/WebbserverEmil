@@ -90,10 +90,10 @@ class Product(models.Model):
             self.meta_category = meta_category
 
         # Update product
-        if len(prices) >= 2:
-            if self.check_price_outlier(prices):
-                prices.remove(min(prices))
+        if self.check_price_outlier(prices):
+            prices.remove(min(prices))
 
+        if not len(prices) == 0:
             self.price = min(prices)
 
         self.manufacturing_name = self.most_frequent(manufacturing_names)
