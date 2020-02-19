@@ -239,7 +239,7 @@ class MetaProduct(models.Model):
             if len(specs) >= 32:
                 specs = specs[:32]
 
-            self._specs = json.dumps(specs)
+            self._specs = json.dump(specs)
         self.save()
 
     def get_price(self):
@@ -250,7 +250,7 @@ class MetaProduct(models.Model):
         return None
 
     def get_specs(self):
-        return json.loads(self._specs)
+        return json.load(self._specs)
 
     def serve_admin_image(self):
         return mark_safe('<img src="/media/%s" height="50" />' % self.image)

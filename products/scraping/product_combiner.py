@@ -12,8 +12,6 @@ class Combiner:
         self.data_list = data_list
         self.files_dict = files_dict
 
-        print(len(self.data_list))
-
         for product_data in self.data_list:
             meta_product = self.create_or_get_meta_product(product_data)
             meta_product.update(product_data)
@@ -35,18 +33,20 @@ class Combiner:
         filename = data.get("image")
         image = self.files_dict.get(filename) if filename else None
         host = Website.objects.get(name=data.get("website"))
-        name = data.get("title")
+        manufacturing_name = data.get("manufacturing_name")
 
         try:
-            meta_product = MetaProduct.objects.filter(Q(url=url) | Q(name=name)).get(host=host)
+            meta_product = MetaProduct.objects\
+                .filter(Q(url=url) | Q(manufacturing_name=manufacturing_name))\
+                .get(host=host)
         except MetaProduct.DoesNotExist:
             meta_product = MetaProduct(
-                name=name,
+                name=data.get("title"),
                 url=url,
                 host=host,
                 image=image,
                 category=data.get("category"),
-                manufacturing_name=data.get("manufacturing_name")
+                manufacturing_name=manufacturing_name
             )
  
         return meta_product
