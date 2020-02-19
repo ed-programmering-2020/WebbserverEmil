@@ -236,10 +236,12 @@ class MetaProduct(models.Model):
         # Update internals
         specs = data.get("specs")
         if specs:
-            if len(specs) >= 32:
-                specs = specs[:32]
+            specs_str = json.dumps(specs)
+            while len(specs_str) > 4096:
+                specs = specs[:-1]
+                specs_str = json.dumps(specs)
 
-            self._specs = json.dumps(specs)
+            self._specs = specs_str
         self.save()
 
     def get_price(self):
