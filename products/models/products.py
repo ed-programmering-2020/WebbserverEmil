@@ -90,15 +90,18 @@ class Product(models.Model):
             self.meta_category = meta_category
 
         # Update product
-        if len(prices) > 1:
+        if len(prices) >= 2:
             if self.check_price_outlier(prices):
                 prices.remove(min(prices))
+
             self.price = min(prices)
+
         self.manufacturing_name = self.most_frequent(manufacturing_names)
         self.update_name(names)
         self.is_ranked = False
-        if self.meta_category.category:
+        if self.meta_category and self.meta_category.category:
             self.update_specs(specs_list)
+
         self.save()
 
     def update_name(self, names):
@@ -231,6 +234,7 @@ class MetaProduct(models.Model):
         self.save()
         price_obj = Price(meta_product=self)
         price_obj.price = data.get("price")
+        print("price", data.get("price"))
         price_obj.save()
 
         # Update internals

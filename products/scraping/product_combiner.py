@@ -46,21 +46,21 @@ class Combiner:
                 category=data.get("category"),
                 manufacturing_name=manufacturing_name
             )
- 
+
         return meta_product
 
     def find_matching_meta_product(self, meta_product):
         matching_meta_product = self.match_with_manufacturing_name(meta_product)
         if matching_meta_product is None:
-           matching_meta_product = self.match_with_probability(meta_product)
+            matching_meta_product = self.match_with_probability(meta_product)
 
         return matching_meta_product
 
     def match_with_manufacturing_name(self, meta_product):
         if meta_product.manufacturing_name:
             try:
-                meta_products = MetaProduct.objects\
-                    .exclude(id=meta_product.id)\
+                meta_products = MetaProduct.objects \
+                    .exclude(id=meta_product.id) \
                     .filter(manufacturing_name=meta_product.manufacturing_name)
                 return meta_products.first()
             except MetaProduct.DoesNotExist:
@@ -80,7 +80,8 @@ class Combiner:
                 price = meta_product.get_price()
                 if price and min_price <= price <= max_price:
                     name_similarity = self.name_similarity(main_meta_product.name, meta_product.name)
-                    parameter_similarity = self.parameter_similarity(main_meta_product.get_specs(), meta_product.get_specs())
+                    parameter_similarity = self.parameter_similarity(main_meta_product.get_specs(),
+                                                                     meta_product.get_specs())
 
                     average_similarity = (name_similarity + parameter_similarity) / 2
                     meta_products_with_probability.append((average_similarity, meta_product))
@@ -94,14 +95,15 @@ class Combiner:
 
     def acceptable_price_span(self, meta_product):
         if meta_product.product:
-            prices = [meta_product.get_price() for meta_product in meta_product.product.meta_products.all()]
+            prices = [meta_product.get_price() for meta_product in meta_product.product.meta_products.all() if meta_product.get_price()]
+            if len(prices) == 0:
+                return None
+
             price = sum(prices) / len(prices)
         else:
             price = meta_product.get_price()
-
-        # When no price is acquired return None
-        if not price:
-            return None
+            if not price:
+                return None
 
         # Return price range
         min_price = price / 2.5
@@ -195,4 +197,3 @@ class Combiner:
 
         product.save()
         return product
-
