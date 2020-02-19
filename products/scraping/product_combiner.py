@@ -36,7 +36,8 @@ class Combiner:
         manufacturing_name = data.get("manufacturing_name")
 
         try:
-            meta_product = MetaProduct.objects.get(url=url)
+            meta_product = MetaProduct.objects\
+                .filter(Q(url=url) | Q(manufacturing_name=manufacturing_name), Q(host=host)).first()
         except MetaProduct.DoesNotExist:
             meta_product = MetaProduct(
                 name=data.get("title"),
