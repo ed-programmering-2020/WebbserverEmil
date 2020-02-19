@@ -35,10 +35,10 @@ class Combiner:
         host = Website.objects.get(name=data.get("website"))
         manufacturing_name = data.get("manufacturing_name")
 
-        try:
-            meta_product = MetaProduct.objects\
-                .filter(Q(url=url) | Q(manufacturing_name=manufacturing_name), Q(host=host)).first()
-        except MetaProduct.DoesNotExist:
+        meta_product = MetaProduct.objects.filter(Q(url=url) |
+                                                  Q(manufacturing_name=manufacturing_name),
+                                                  Q(host=host)).first()
+        if not meta_product:
             meta_product = MetaProduct(
                 name=data.get("title"),
                 url=url,
