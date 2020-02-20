@@ -186,13 +186,10 @@ class Product(models.Model):
                     spec_value.remove(self)
 
     def check_price_outlier(self, prices):
-        lowest_price = min(prices)
-        prices.remove(lowest_price)
-
-        if len(prices) > 0:
-            return lowest_price >= (min(prices)/2)
-        else:
-            return True
+        sorted_prices = sorted(prices)
+        relative_min_price = sorted_prices[1] / 2
+        
+        return sorted_prices[0] >= relative_min_price
 
     def get_websites(self):
         urls = []
