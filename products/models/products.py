@@ -129,14 +129,16 @@ class Product(models.Model):
                     if word != other_word:
                         if SequenceMatcher(None, other_word, word).ratio() >= 0.9:
                             length = len(words[word])
-                            other_length = len(words[other_word])
+                            other_word = words.get(other_word, None)
+                            if not other_word:
+                                other_length = len(other_word)
 
-                            if length >= other_length:
-                                words.pop(other_word, None)
-                                removed_words.append(other_word)
-                            else:
-                                words.pop(word, None)
-                                removed_words.append(word)
+                                if length >= other_length:
+                                    words.pop(other_word, None)
+                                    removed_words.append(other_word)
+                                else:
+                                    words.pop(word, None)
+                                    removed_words.append(word)
 
         calc_words = {word: (sum(p) / len(p)) for (word, p) in words.items()}
         sorted_words = sorted(calc_words.items(), key=lambda kv: kv[1])
@@ -188,7 +190,7 @@ class Product(models.Model):
     def check_price_outlier(self, prices):
         sorted_prices = sorted(prices)
         relative_min_price = sorted_prices[1] / 2
-        
+
         return sorted_prices[0] >= relative_min_price
 
     def get_websites(self):
