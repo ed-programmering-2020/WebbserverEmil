@@ -20,7 +20,7 @@ class ProductAdmin(admin.ModelAdmin):
 class MetaProductAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {
-            "fields": ["name", "manufacturing_name", "serve_url", "host"]
+            "fields": ["name", "manufacturing_name", "url", "host"]
         }),
         ("Advanced options", {
             "classes": ["collapse"],
@@ -35,7 +35,7 @@ class MetaProductAdmin(admin.ModelAdmin):
         "serve_admin_image",
     ]
 
-    search_fields = ["name"]
+    search_fields = ["name", "manufacturing_name"]
 
     def serve_url(self, obj):
         return mark_safe('<a href="%s" target="_blank">go to</a>' % obj.url)
