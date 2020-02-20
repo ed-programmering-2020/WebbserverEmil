@@ -185,7 +185,7 @@ class Product(models.Model):
                 if spec_value.products.count == 1:
                     spec_value.delete()
                 else:
-                    spec_value.remove(self)
+                    spec_value.products.remove(self)
 
     def check_price_outlier(self, prices):
         sorted_prices = sorted(prices)
