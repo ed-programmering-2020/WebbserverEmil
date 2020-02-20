@@ -104,6 +104,7 @@ class LaptopMatcher(BaseMatcher, LaptopWeights):
 
                         if min_size < screen_size < max_size:
                             checked_products.append(product)
+                            print(screen_size, product)
 
                         break
                 except SpecValue.DoesNotExist:
