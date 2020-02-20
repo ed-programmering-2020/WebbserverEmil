@@ -5,26 +5,37 @@ from django.contrib import admin
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None, {
+            "fields": ["name", "price", "meta_category", "manufacturing_name"]
+        }),
+        ("scores", {
+            "fields": ["average_score", "_scores"]
+        }),
+        ("Advanced options", {
+            "fields": ["is_ranked"]
+        })
+    ]
+
     list_display = [
         "name",
         "price",
         "meta_category",
         "average_score",
-        "_scores",
-        "id"
     ]
-    search_fields = ["name"]
+
+    search_fields = ["name", "manufacturing_name"]
 
 
 @admin.register(MetaProduct)
 class MetaProductAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {
-            "fields": ["name", "manufacturing_name", "url", "host"]
+            "fields": ["name", "manufacturing_name", "url", "category"]
         }),
         ("Advanced options", {
             "classes": ["collapse"],
-            "fields": ["_specs"]
+            "fields": ["_specs", "product", "host"]
         })
     ]
 
