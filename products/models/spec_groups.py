@@ -12,7 +12,7 @@ class SpecGroup(models.Model):
 
     def process_number(self, value):
         value = value.split(" ")[0]
-        value = re.sub("\D", "", value)
+        value = re.sub("[^0-9]", "", value)
         value = value.replace(" ", "")
         return int(value)
 
@@ -201,5 +201,9 @@ class ScreenSize(SpecGroup):
         return cls(name="ScreenSize", rank_group=False).save()
 
     def process_value(self, value):
-        return self.process_number(value)
+        value = value.split(" ")[0]
+        value = ''.join(i for i in value if not i.isalpha())
+        value = value.split('"')[0]
+
+        return float(value)
 
