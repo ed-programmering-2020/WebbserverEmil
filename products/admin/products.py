@@ -20,11 +20,11 @@ class ProductAdmin(admin.ModelAdmin):
 class MetaProductAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {
-            "fields": ["name", "manufacturing_name", "view_url", "host"]
+            "fields": ["name", "manufacturing_name", "serve_url", "host"]
         }),
         ("Advanced options", {
             "classes": ["collapse"],
-            "fields": ["view_specs"]
+            "fields": ["_specs"]
         })
     ]
 
@@ -38,7 +38,7 @@ class MetaProductAdmin(admin.ModelAdmin):
     search_fields = ["name"]
 
     def serve_url(self, obj):
-        return mark_safe('<a href="%s" target="_blank">source</a>' % obj.url)
+        return mark_safe('<a href="%s" target="_blank">go to</a>' % obj.url)
     serve_url.short_description = 'Url'
     serve_url.allow_tags = True
 
@@ -47,11 +47,9 @@ class MetaProductAdmin(admin.ModelAdmin):
     serve_admin_image.short_description = 'Image'
     serve_admin_image.allow_tags = True
 
-    def view_specs(self, obj):
-        return obj.specs
-
     def view_price(self, obj):
         return obj.get_price()
+    view_price.short_descriptions = "Price"
 
 
 @admin.register(SpecValue)

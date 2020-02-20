@@ -232,7 +232,6 @@ class MetaProduct(models.Model):
         self.save()
         price_obj = Price(meta_product=self)
         price_obj.price = data.get("price")
-        print("price", data.get("price"))
         price_obj.save()
 
         # Update internals
