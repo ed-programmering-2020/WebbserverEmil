@@ -101,10 +101,11 @@ class LaptopMatcher(BaseMatcher, LaptopWeights):
                     screen_size = spec_values.filter(spec_key=key).first()
                     if screen_size:
                         screen_size = screen_size_group.process_value(screen_size.value)
+                        print(screen_size)
 
                         if min_size < screen_size < max_size:
                             checked_products.append(product)
-                            print(screen_size, product)
+                            print(product)
 
                         break
                 except SpecValue.DoesNotExist:
