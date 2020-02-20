@@ -31,10 +31,9 @@ class MetaProductAdmin(admin.ModelAdmin):
     list_display = [
         "serve_admin_image",
         "name",
-        "view_price",
         "manufacturing_name",
-        "category",
-        "product",
+        "view_price",
+        "serve_url",
         "id"
     ]
 
