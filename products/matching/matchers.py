@@ -38,7 +38,7 @@ class BaseMatcher:
                     return group
         return None
 
-    def sort_with_bias(self, products, usage):
+    def sort_with_bias(self, products, usage, priorities):
         """Sorts the products based on usage and priority bias"""
 
         sorted_products = []
@@ -50,7 +50,7 @@ class BaseMatcher:
                 priority_group = self.get_priority_group(key)
 
                 usage_score += self.usages[usage][key] * score
-                priority_score += self.priorities[priority_group] * score
+                priority_score += priorities[priority_group] * score
 
             sorted_products.append({"id": product.id, "usage": usage_score, "priority": priority_score})
 
@@ -80,7 +80,7 @@ class LaptopMatcher(BaseMatcher, LaptopWeights):
 
         price_matched = self.find_with_price(all_products, settings["price"])
         size_matched = self.find_with_size(price_matched, settings["size"])
-        bias_sorted = self.sort_with_bias(size_matched, settings["usage"])
+        bias_sorted = self.sort_with_bias(size_matched, settings["usage"], settings["priorities"])
         models = self.get_product_models(bias_sorted)
 
         return models
