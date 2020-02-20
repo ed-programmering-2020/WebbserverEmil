@@ -12,7 +12,7 @@ class SpecGroup(models.Model):
 
     def process_number(self, value):
         value = value.split(" ")[0]
-        value = re.sub("[^0-9]", "", value)
+        value = re.sub("\D", "", value)
         value = value.replace(" ", "")
         return int(value)
 
