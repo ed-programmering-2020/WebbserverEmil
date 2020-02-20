@@ -65,9 +65,9 @@ class BaseMatcher:
 
         product_list = []
         for product in products:
-            id, value = product
-
-            product_list.append(Product.objects.get(id=id))
+            product_id = product["id"]
+            product_instance = Product.objects.get(id=product_id)
+            product_list.append(product_instance)
 
         return product_list
 
