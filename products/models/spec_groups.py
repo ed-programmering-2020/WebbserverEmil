@@ -202,3 +202,4 @@ class ScreenSize(SpecGroup):
 
     def process_value(self, value):
         return self.process_number(value)
+

@@ -89,7 +89,8 @@ class LaptopMatcher(BaseMatcher, LaptopWeights):
         """Filters out the products which are not inside the size range"""
 
         min_size, max_size = size
-        spec_keys = ScreenSize.objects.first().spec_keys.all()
+        screen_size_group = ScreenSize.objects.first()
+        spec_keys = screen_size_group.spec_keys.all()
 
         checked_products = []
         for product in products.all():
@@ -99,9 +100,9 @@ class LaptopMatcher(BaseMatcher, LaptopWeights):
                 try:
                     screen_size = spec_values.filter(spec_key=key).first()
                     if screen_size:
-                        screen_size = screen_size.value.split(" ")[0]
+                        screen_size = screen_size_group.process_value(screen_size.value)
 
-                        if min_size < float(screen_size) < max_size:
+                        if min_size < screen_size < max_size:
                             checked_products.append(product)
 
                         break
