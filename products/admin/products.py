@@ -45,7 +45,7 @@ class MetaProductAdmin(admin.ModelAdmin):
     serve_url.short_description = 'Url'
     serve_url.allow_tags = True
 
-    def serve_admin_image(self):
+    def serve_admin_image(self, obj):
         return mark_safe('<img src="/media/%s" height="50" />' % self.image)
     serve_admin_image.short_description = 'Image'
     serve_admin_image.allow_tags = True
