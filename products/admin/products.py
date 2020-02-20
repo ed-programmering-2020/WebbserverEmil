@@ -1,5 +1,6 @@
-from django.contrib import admin
 from products.models import Product, MetaProduct, SpecValue, SpecKey, Price, Website, MetaCategory
+from django.utils.safestring import mark_safe
+from django.contrib import admin
 
 
 @admin.register(Product)
@@ -17,30 +18,37 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(MetaProduct)
 class MetaProductAdmin(admin.ModelAdmin):
-    fields = [
-        [
-            "name",
-            "manufacturing_name"
-        ], [
-            "view_url",
-            "host",
-        ], 
+    fieldsets = [
+        (None, {
+            "fields": ["name", "manufacturing_name" "view_url", "host"]
+        }),
+        ("Advanced options", {
+            "classes": ["collapse"],
+            "fields": ["specs"]
+        })
     ]
+
     list_display = [
+        "serve_admin_image",
         "name",
         "view_price",
         "manufacturing_name",
-        "serve_admin_image",
         "category",
         "product",
         "id"
     ]
+
     search_fields = ["name"]
 
+    def serve_url(self, obj):
+        return mark_safe('<a href="%s">source</a>' % obj.url)
+    serve_url.short_description = 'Url'
+    serve_url.allow_tags = True
 
-
-    def view_url(self, obj):
-        return "<a href=%s>source</a>" % obj.url
+    def serve_admin_image(self):
+        return mark_safe('<img src="/media/%s" height="50" />' % self.image)
+    serve_admin_image.short_description = 'Image'
+    serve_admin_image.allow_tags = True
 
     def view_price(self, obj):
         return obj.get_price()

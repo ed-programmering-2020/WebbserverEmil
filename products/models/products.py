@@ -1,5 +1,4 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.safestring import mark_safe
 from difflib import SequenceMatcher
 from django.db import models
 import importlib
@@ -257,11 +256,6 @@ class MetaProduct(models.Model):
 
     def get_specs(self):
         return json.loads(self._specs)
-
-    def serve_admin_image(self):
-        return mark_safe('<img src="/media/%s" height="50" />' % self.image)
-    serve_admin_image.short_description = 'Image'
-    serve_admin_image.allow_tags = True
 
     def __str__(self):
         return "<MetaProduct {} {} {}>".format(self.name, self.category, self.get_price())
