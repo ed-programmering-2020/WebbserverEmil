@@ -6,13 +6,14 @@ from django.contrib import admin
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {
-            "fields": ["name", "price", "meta_category", "manufacturing_name"]
+        ("Product", {
+            "fields": ["name", "manufacturing_name", "price", "meta_category"]
         }),
-        ("scores", {
-            "fields": ["average_score", "_scores"]
+        ("Scores", {
+            "readonly_fields": ["average_score", "_scores"]
         }),
         ("Advanced options", {
+            "classes": ["collapse"],
             "fields": ["is_ranked"]
         })
     ]
@@ -34,13 +35,13 @@ class ProductAdmin(admin.ModelAdmin):
 
     def view_meta_product_count(self, obj):
         return obj.meta_products.count()
-    view_meta_product_count.short_description = "Meta-product count"
+    view_meta_product_count.short_description = "Meta-products"
 
 
 @admin.register(MetaProduct)
 class MetaProductAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {
+        ("Meta-product", {
             "fields": ["name", "manufacturing_name", "url", "category"]
         }),
         ("Advanced options", {
@@ -69,7 +70,7 @@ class MetaProductAdmin(admin.ModelAdmin):
     serve_image.allow_tags = True
 
     def view_price(self, obj):
-        return obj.get_price()
+        return "%s kr" % obj.get_price()
     view_price.short_description = "Price"
 
 
