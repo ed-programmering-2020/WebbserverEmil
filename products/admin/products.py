@@ -5,11 +5,13 @@ from django.contrib import admin
 
 class MetaProductInline(admin.TabularInline):
     model = MetaProduct
-    exclude = ["_specs", "host"]
+    exclude = ["manufacturing_name", "_specs", "host", "image"]
+    extra = 0
 
 
 class SpecValueInline(admin.TabularInline):
     model = Product.spec_values.through
+    extra = 0
 
 
 @admin.register(Product)
