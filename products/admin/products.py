@@ -46,7 +46,7 @@ class MetaProductAdmin(admin.ModelAdmin):
         }),
         ("More", {
             "classes": ["collapse"],
-            "fields": ["_specs", "product", "host"]
+            "fields": ["serve_spec_list", "product", "host"]
         })
     ]
 
