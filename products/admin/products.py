@@ -1,5 +1,5 @@
 from products.models import Product, MetaProduct, SpecValue, SpecKey, Price, Website, MetaCategory
-from .admin import get_image_tag, get_url_tag
+from .tags import get_image_tag, get_url_tag, get_spec_list_tag
 from django.contrib import admin
 
 
@@ -10,9 +10,9 @@ class ProductAdmin(admin.ModelAdmin):
             "fields": ["name", "manufacturing_name", "price", "meta_category"]
         }),
         ("Scores", {
-            "readonly_fields": ["average_score", "_scores"]
+            "readonly_field": ["average_score", "_scores"]
         }),
-        ("Advanced options", {
+        ("More", {
             "classes": ["collapse"],
             "fields": ["is_ranked"]
         })
@@ -44,7 +44,7 @@ class MetaProductAdmin(admin.ModelAdmin):
         ("Meta-product", {
             "fields": ["name", "manufacturing_name", "url", "category"]
         }),
-        ("Advanced options", {
+        ("More", {
             "classes": ["collapse"],
             "fields": ["_specs", "product", "host"]
         })
@@ -68,6 +68,11 @@ class MetaProductAdmin(admin.ModelAdmin):
         return get_image_tag(obj.image)
     serve_image.short_description = 'Image'
     serve_image.allow_tags = True
+
+    def serve_spec_list(self, obj):
+        return get_spec_list_tag(obj.get_specs())
+    serve_spec_list.short_description = "specifications"
+    serve_spec_list.allow_tags = True
 
     def view_price(self, obj):
         return "%s kr" % obj.get_price()
