@@ -1,5 +1,5 @@
 from products.models import Product, MetaProduct, SpecValue, SpecKey, Price, Website, MetaCategory
-from .tags import get_image_tag, get_url_tag, get_spec_list_tag
+from .tags import get_image_tag, get_url_tag
 from django.contrib import admin
 
 
@@ -14,7 +14,7 @@ class ProductAdmin(admin.ModelAdmin):
         }),
         ("More", {
             "classes": ["collapse"],
-            "fields": ["is_ranked", "specs", "meta_products"]
+            "fields": ["specs", "meta_products"]
         })
     ]
 
