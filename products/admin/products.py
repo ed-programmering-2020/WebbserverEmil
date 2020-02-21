@@ -38,8 +38,15 @@ class ProductAdmin(admin.ModelAdmin):
     view_meta_product_count.short_description = "Meta-products"
 
 
+def serve_spec_list(obj):
+    return get_spec_list_tag(obj.get_specs())
+serve_spec_list.short_description = "specifications"
+serve_spec_list.allow_tags = True
+
+
 @admin.register(MetaProduct)
 class MetaProductAdmin(admin.ModelAdmin):
+
     fieldsets = [
         ("Meta-product", {
             "fields": ["name", "manufacturing_name", "url", "category"]
@@ -69,10 +76,7 @@ class MetaProductAdmin(admin.ModelAdmin):
     serve_image.short_description = 'Image'
     serve_image.allow_tags = True
 
-    def serve_spec_list(self, obj):
-        return get_spec_list_tag(obj.get_specs())
-    serve_spec_list.short_description = "specifications"
-    serve_spec_list.allow_tags = True
+
 
     def view_price(self, obj):
         return "%s kr" % obj.get_price()
