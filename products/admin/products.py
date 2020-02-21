@@ -20,7 +20,6 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = [
         "name",
         "price",
-        "meta_category",
         "average_score",
         "view_meta_product_count",
         "serve_image"
@@ -29,7 +28,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ["name", "manufacturing_name"]
 
     def serve_image(self, obj):
-        return get_image_tag(obj.get_image())
+        return get_image_tag(obj.get_image(), complete=True)
     serve_image.short_description = 'Image'
     serve_image.allow_tags = True
 
@@ -71,7 +70,7 @@ class MetaProductAdmin(admin.ModelAdmin):
 
     def view_price(self, obj):
         return obj.get_price()
-    view_price.short_descriptions = "Price"
+    view_price.short_description = "Price"
 
 
 @admin.register(SpecValue)
