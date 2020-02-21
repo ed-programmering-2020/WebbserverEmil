@@ -7,6 +7,6 @@ def get_url_tag(url):
 
 def get_image_tag(image, complete=False):
     if complete is False:
-        image = "/media/" + image
-    
+        image = "/media/" + image.url
+
     return mark_safe('<img src="%s" height="50" />' % image)
