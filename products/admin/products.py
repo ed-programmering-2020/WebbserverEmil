@@ -16,7 +16,7 @@ class SpecValueInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    fields = ["name", "manufacturing_name", "price", "meta_category", ["average_score", "_scores"]]
+    fields = ["name", "manufacturing_name", "price", "meta_category", "average_score", "_scores"]
     inlines = [MetaProductInline, SpecValueInline]
 
     list_display = [
