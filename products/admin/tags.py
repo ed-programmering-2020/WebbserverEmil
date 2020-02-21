@@ -15,7 +15,7 @@ def get_spec_list_tag(spec_list):
     for specs in spec_list:
         tags += "<ul>"
         for spec in specs:
-            tags += "<li>%s: %s</li>" % spec
+            tags += "<li><p style='font-weight: bold;'>%s</p> %s</li>" % spec
         tags += "</ul>"
 
     return mark_safe(tags)
