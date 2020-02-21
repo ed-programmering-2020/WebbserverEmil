@@ -10,7 +10,7 @@ class ProductAdmin(admin.ModelAdmin):
             "fields": ["name", "manufacturing_name", "price", "meta_category"]
         }),
         ("Scores", {
-            "readonly_field": ["average_score", "_scores"]
+            "fields": ["average_score", "_scores"]
         }),
         ("More", {
             "classes": ["collapse"],
