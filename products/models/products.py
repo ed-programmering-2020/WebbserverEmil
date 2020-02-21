@@ -30,7 +30,7 @@ class MetaCategory(models.Model):
         return "<MetaCategory %s>" % self.name
 
     class Meta:
-        verbose_name_plural = 'Meta categories'
+        verbose_name_plural = 'Meta-categories'
 
 
 class Product(models.Model):
@@ -258,6 +258,9 @@ class MetaProduct(models.Model):
 
     def __str__(self):
         return "<MetaProduct {} {} {}>".format(self.name, self.category, self.get_price())
+
+    class Meta:
+        verbose_name_plural = 'Meta-products'
 
 
 class Price(models.Model):

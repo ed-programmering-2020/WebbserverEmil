@@ -1,5 +1,5 @@
 from products.models import Product, MetaProduct, SpecValue, SpecKey, Price, Website, MetaCategory
-from django.utils.safestring import mark_safe
+from .admin import get_image_tag, get_url_tag
 from django.contrib import admin
 
 
@@ -22,9 +22,20 @@ class ProductAdmin(admin.ModelAdmin):
         "price",
         "meta_category",
         "average_score",
+        "view_meta_product_count",
+        "serve_image"
     ]
 
     search_fields = ["name", "manufacturing_name"]
+
+    def serve_image(self, obj):
+        return get_image_tag(obj.get_image())
+    serve_image.short_description = 'Image'
+    serve_image.allow_tags = True
+
+    def view_meta_product_count(self, obj):
+        return obj.meta_products.count()
+    view_meta_product_count.short_description = "Meta-product count"
 
 
 @admin.register(MetaProduct)
@@ -43,20 +54,20 @@ class MetaProductAdmin(admin.ModelAdmin):
         "name",
         "view_price",
         "serve_url",
-        "serve_admin_image",
+        "serve_image",
     ]
 
     search_fields = ["name", "manufacturing_name"]
 
     def serve_url(self, obj):
-        return mark_safe('<a href="%s" target="_blank">go to</a>' % obj.url)
+        return get_url_tag(obj.url)
     serve_url.short_description = 'Url'
     serve_url.allow_tags = True
 
-    def serve_admin_image(self, obj):
-        return mark_safe('<img src="/media/%s" height="50" />' % obj.image)
-    serve_admin_image.short_description = 'Image'
-    serve_admin_image.allow_tags = True
+    def serve_image(self, obj):
+        return get_image_tag(obj.image)
+    serve_image.short_description = 'Image'
+    serve_image.allow_tags = True
 
     def view_price(self, obj):
         return obj.get_price()
