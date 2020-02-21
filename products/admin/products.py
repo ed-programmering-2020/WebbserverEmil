@@ -3,6 +3,10 @@ from .tags import get_image_tag, get_url_tag
 from django.contrib import admin
 
 
+class MetaProductInline(admin.TabularInline):
+    model = MetaProduct
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -14,7 +18,7 @@ class ProductAdmin(admin.ModelAdmin):
         }),
         ("More", {
             "classes": ["collapse"],
-            "fields": ["specs", "meta_products"]
+            "inlines": [MetaProductInline]
         })
     ]
 
@@ -42,11 +46,11 @@ class ProductAdmin(admin.ModelAdmin):
 class MetaProductAdmin(admin.ModelAdmin):
     fieldsets = [
         ("Meta-product", {
-            "fields": [["name", "manufacturing_name"], "url", "category"]
+            "fields": ["name", "manufacturing_name", "url", "category", "_specs"]
         }),
         ("More", {
             "classes": ["collapse"],
-            "fields": ["_specs", "product", "host"]
+            "fields": ["product", "host"]
         })
     ]
 
