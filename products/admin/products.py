@@ -28,7 +28,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ["name", "manufacturing_name"]
 
     def serve_image(self, obj):
-        return get_image_tag(obj.get_image(), complete=True)
+        return get_image_tag(obj.get_image())
     serve_image.short_description = 'Image'
     serve_image.allow_tags = True
 
