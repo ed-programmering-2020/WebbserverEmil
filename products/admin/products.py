@@ -5,24 +5,17 @@ from django.contrib import admin
 
 class MetaProductInline(admin.TabularInline):
     model = MetaProduct
+    exclude = ["_specs", "host"]
+
+
+class SpecValueInline(admin.TabularInline):
+    model = SpecValue
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    fieldsets = [
-        ("Product", {
-            "fields": ["name", "manufacturing_name", "price", "meta_category"]
-        }),
-        ("Scores", {
-            "fields": ["average_score", "_scores"]
-        }),
-        ("More", {
-            "classes": ["collapse"],
-            "fields": []
-        })
-    ]
-
-    inlines = [MetaProductInline]
+    fields = ["name", "manufacturing_name", "price", "meta_category", ["average_score", "_scores"]]
+    inlines = [MetaProductInline, SpecValueInline]
 
     list_display = [
         "name",
@@ -47,7 +40,7 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(MetaProduct)
 class MetaProductAdmin(admin.ModelAdmin):
     fieldsets = [
-        ("Meta-product", {
+        (None, {
             "fields": ["name", "manufacturing_name", "url", "category", "_specs"]
         }),
         ("More", {

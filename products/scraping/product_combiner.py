@@ -74,23 +74,24 @@ class Combiner:
         meta_products_with_probability = []
 
         for meta_product in meta_products.iterator():
-            price_range = self.acceptable_price_span(main_meta_product)
-            if price_range:
-                min_price, max_price = price_range
+            if not meta_product.manufacturing_name:
+                price_range = self.acceptable_price_span(main_meta_product)
+                if price_range:
+                    min_price, max_price = price_range
 
-                price = meta_product.get_price()
-                if price and min_price <= price <= max_price:
-                    name_similarity = self.name_similarity(main_meta_product.name, meta_product.name)
-                    parameter_similarity = self.parameter_similarity(main_meta_product.get_specs(),
-                                                                     meta_product.get_specs())
+                    price = meta_product.get_price()
+                    if price and min_price <= price <= max_price:
+                        name_similarity = self.name_similarity(main_meta_product.name, meta_product.name)
+                        parameter_similarity = self.parameter_similarity(main_meta_product.get_specs(),
+                                                                         meta_product.get_specs())
 
-                    average_similarity = (name_similarity + parameter_similarity) / 2
-                    meta_products_with_probability.append((average_similarity, meta_product))
+                        average_similarity = (name_similarity + parameter_similarity) / 2
+                        meta_products_with_probability.append((average_similarity, meta_product))
 
         # Return top meta product that is over the threshold
         if len(meta_products_with_probability) != 0:
             top_meta_product = max(meta_products_with_probability, key=itemgetter(0))
-            return top_meta_product[1] if top_meta_product[0] >= 0.8 else None
+            return top_meta_product[1] if top_meta_product[0] >= 0.95 else None
         else:
             return None
 
