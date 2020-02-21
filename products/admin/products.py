@@ -9,7 +9,7 @@ class MetaProductInline(admin.TabularInline):
 
 
 class SpecValueInline(admin.TabularInline):
-    model = SpecValue
+    model = Product.spec_values.through
 
 
 @admin.register(Product)

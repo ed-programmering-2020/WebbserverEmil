@@ -74,7 +74,7 @@ class Combiner:
         meta_products_with_probability = []
 
         for meta_product in meta_products.iterator():
-            if not meta_product.manufacturing_name:
+            if not meta_product.manufacturing_name or not main_meta_product.manufacturing_name:
                 price_range = self.acceptable_price_span(main_meta_product)
                 if price_range:
                     min_price, max_price = price_range
