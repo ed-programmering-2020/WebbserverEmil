@@ -18,9 +18,11 @@ class ProductAdmin(admin.ModelAdmin):
         }),
         ("More", {
             "classes": ["collapse"],
-            "inlines": [MetaProductInline]
+            "fields": []
         })
     ]
+
+    inlines = [MetaProductInline]
 
     list_display = [
         "name",
