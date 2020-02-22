@@ -212,7 +212,7 @@ class Product(models.Model):
     def get_image(self):
         images = [mp.image for mp in self.meta_products.all() if mp.image]
         if len(images) > 0:
-            return images[0]
+            return images[0].url
         return None
 
     def __str__(self):
