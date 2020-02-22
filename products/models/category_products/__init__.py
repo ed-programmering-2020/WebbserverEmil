@@ -1,2 +1,2 @@
 from .base import *
-from .laptop import *
+from .laptops import *

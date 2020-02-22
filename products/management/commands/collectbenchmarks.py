@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from products.views.scraping.benchmark_collector import Collector
+from products.scraping import Collector
 
 
 class Command(BaseCommand):
