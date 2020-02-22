@@ -1,4 +1,4 @@
-from .base import BaseCategoryProduct
+"""from .base import BaseCategoryProduct
 
 
 class Laptop(BaseCategoryProduct):
@@ -9,4 +9,4 @@ class Laptop(BaseCategoryProduct):
     # processor: Model
     # weight: DecimalField
 
-    # Ranking
+    # Ranking"""
