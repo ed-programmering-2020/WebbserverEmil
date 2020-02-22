@@ -36,8 +36,12 @@ class MatchAPI(generics.GenericAPIView):
             #         serialized_alternatives.append(ProductSerializer(product).data)
 
             print("here")
+
+            top_product = products[0]
+            serialized_product = ProductSerializer(top_product).data
+
             return Response({
-                "main": ProductSerializer(products[0]).data,
+                "main": serialized_product,
             })
         else:
             return Response({"main": None})
