@@ -58,10 +58,6 @@ class SpecificationAlternativeName(models.Model):
 
 
 class RefreshRate(BaseSpecification):
-    @classmethod
-    def create(cls):
-        return cls(name="RefreshRate", verbose_name="refresh rate", rank_group=True).save()
-
     def process_value(self, value):
         return self.process_number(value)
 
@@ -71,10 +67,6 @@ class RefreshRate(BaseSpecification):
 
 class PanelType(BaseSpecification):
     types = ["ips", "va", "tn"]
-
-    @classmethod
-    def create(cls):
-        return cls(name="PanelType", verbose="panel type", rank_group=True).save()
 
     def process_value(self, value):
         return self.process_text(value)
@@ -98,10 +90,6 @@ class PanelType(BaseSpecification):
 
 
 class Resolution(BaseSpecification):
-    @classmethod
-    def create(cls):
-        return cls(name="Resolution", verbose_name="resolution", rank_group=True).save()
-
     def process_value(self, value):
         numbers = re.findall(r'\d+', value)
         if len(numbers) >= 2:
@@ -116,10 +104,6 @@ class Resolution(BaseSpecification):
 
 
 class StorageSize(BaseSpecification):
-    @classmethod
-    def create(cls):
-        return cls(name="StorageSize", verbose_name="storage size", rank_group=True).save()
-
     def process_value(self, value):
         value.lower()
         number = int(value.split(" ")[0])
@@ -141,10 +125,6 @@ class StorageSize(BaseSpecification):
 class DiskType(BaseSpecification):
     types = ["ssd", "hdd", "emmc"]
 
-    @classmethod
-    def create(cls):
-        return cls(name="DiskType", verbose_name="disk type", rank_group=True).save()
-
     def process_value(self, value):
         return self.process_text(value)
 
@@ -161,10 +141,6 @@ class DiskType(BaseSpecification):
 
 
 class Memory(BaseSpecification):
-    @classmethod
-    def create(cls):
-        return cls(name="Memory", verbose_name="memory", rank_group=True).save()
-
     def process_value(self, value):
         return self.process_number(value)
 
@@ -173,10 +149,6 @@ class Memory(BaseSpecification):
 
 
 class GraphicsCard(BaseSpecification):
-    @classmethod
-    def create(cls):
-        return cls(name="GraphicsCard", verbose_name="graphics card", rank_group=True).save()
-
     def process_value(self, value):
         return self.process_benchmark(value)
 
@@ -185,10 +157,6 @@ class GraphicsCard(BaseSpecification):
 
 
 class Processor(BaseSpecification):
-    @classmethod
-    def create(cls):
-        return cls(name="Processor", verbose_name="processor", rank_group=True).save()
-
     def process_value(self, value):
         return self.process_benchmark(value)
 
@@ -197,10 +165,6 @@ class Processor(BaseSpecification):
 
 
 class BatteryTime(BaseSpecification):
-    @classmethod
-    def create(cls):
-        return cls(name="BatteryTime", verbose_name="battery time", rank_group=True).save()
-
     def process_value(self, value):
         return self.process_number(value)
 
@@ -209,10 +173,6 @@ class BatteryTime(BaseSpecification):
 
 
 class Weight(BaseSpecification):
-    @classmethod
-    def create(cls):
-        return cls(name="Weight", verbose_name="weight", rank_group=True).save()
-
     def process_value(self, value):
         number = self.process_number(value)
         if " g" in value:
@@ -227,10 +187,6 @@ class Weight(BaseSpecification):
 
 
 class ScreenSize(BaseSpecification):
-    @classmethod
-    def create(cls):
-        return cls(name="ScreenSize", rank_group=False).save()
-
     def process_value(self, value):
         value = value.split(" ")[0]
         value = ''.join(i for i in value if not i.isalpha())
