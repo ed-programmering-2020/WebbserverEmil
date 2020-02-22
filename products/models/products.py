@@ -12,9 +12,9 @@ class Product(models.Model):
     image = models.ImageField(upload_to=get_file_path, blank=True, null=True)
     host = models.ForeignKey("products.website", related_name="meta_products", on_delete=models.CASCADE, null=True)
     _specs = models.CharField("specifications", max_length=4096, default=json.dumps([]))
-    category_product = models.ForeignKey("products.BaseCategoryProduct",
-                                         related_name="products",
-                                         on_delete=models.CASCADE)
+    # category_product = models.ForeignKey("products.BaseCategoryProduct",
+    #                                      related_name="products",
+    #                                      on_delete=models.CASCADE)
 
     def update(self, data):
         price_obj = Price(meta_product=self)
