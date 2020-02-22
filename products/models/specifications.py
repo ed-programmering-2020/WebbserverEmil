@@ -1,14 +1,12 @@
-from django.contrib.contenttypes.models import ContentType
-from difflib import SequenceMatcher
+from .polymorphism import PolymorphicModel
 from django.db import models
 import re
 
 
-class SpecGroup(models.Model):
+class BaseSpecification(PolymorphicModel):
     name = models.CharField("name", max_length=32)
     verbose_name = models.CharField("verbose name", max_length=32, null=True)
-    rank_group = models.BooleanField("rank group", default=False)
-    content_type = models.ForeignKey(ContentType, editable=False, on_delete=models.SET_NULL, null=True)
+    score = models.DecimalField("score", max_digits=9, decimal_places=9, null=True)
 
     def process_number(self, value):
         value = value.split(" ")[0]
@@ -40,12 +38,6 @@ class SpecGroup(models.Model):
         else:
             return 0
 
-    def get_rank(self, value):
-        for i, panel_type in enumerate(self.types):
-            if panel_type in value:
-                return i
-        return 0
-
     def is_greater(self, first, second):
         return first > second
 
@@ -57,17 +49,15 @@ class SpecGroup(models.Model):
         model = content_type.model_class()
         return model.objects.first()
 
-    def __str__(self):
-        return "<SpecGroup %s>" % self.name
+
+class SpecificationAlternativeName(models.Model):
+    name = models.CharField("name", max_length=32)
+    specification = models.ForeignKey("products.base_specification",
+                                      related_name="alternative_names",
+                                      on_delete=models.CASCADE)
 
 
-class Benchmark(models.Model):
-    name = models.CharField("name", max_length=64)
-    score = models.PositiveSmallIntegerField("score")
-    spec_group = models.ForeignKey(SpecGroup, on_delete=models.SET_NULL, null=True)
-
-
-class RefreshRate(SpecGroup):
+class RefreshRate(BaseSpecification):
     @classmethod
     def create(cls):
         return cls(name="RefreshRate", verbose_name="refresh rate", rank_group=True).save()
@@ -75,8 +65,11 @@ class RefreshRate(SpecGroup):
     def process_value(self, value):
         return self.process_number(value)
 
+    def display_value(self, value):
+        return "%s Hz" % value
 
-class PanelType(SpecGroup):
+
+class PanelType(BaseSpecification):
     types = ["ips", "va", "tn"]
 
     @classmethod
@@ -86,6 +79,12 @@ class PanelType(SpecGroup):
     def process_value(self, value):
         return self.process_text(value)
 
+    def get_rank(self, value):
+        for i, panel_type in enumerate(self.types):
+            if panel_type in value:
+                return i
+        return 0
+
     def is_greater(self, first, second):
         first, second = self.get_rank(first), self.get_rank(second)
         return first > second
@@ -94,8 +93,11 @@ class PanelType(SpecGroup):
         first, second = self.get_rank(first), self.get_rank(second)
         return first == second
 
+    def display_value(self, value):
+        return value.capitalize()
 
-class Resolution(SpecGroup):
+
+class Resolution(BaseSpecification):
     @classmethod
     def create(cls):
         return cls(name="Resolution", verbose_name="resolution", rank_group=True).save()
@@ -109,8 +111,11 @@ class Resolution(SpecGroup):
         else:
             return 0
 
+    def display_value(self, value):
+        return "%sp" % value
 
-class StorageSize(SpecGroup):
+
+class StorageSize(BaseSpecification):
     @classmethod
     def create(cls):
         return cls(name="StorageSize", verbose_name="storage size", rank_group=True).save()
@@ -124,8 +129,16 @@ class StorageSize(SpecGroup):
 
         return number
 
+    def display_value(self, value):
+        if value >= 1024:
+            to_display = "%s Tb" % round(value / 1024, 1)
+        else:
+            to_display = "%s Gb" % value
 
-class DiskType(SpecGroup):
+        return to_display
+
+
+class DiskType(BaseSpecification):
     types = ["ssd", "hdd", "emmc"]
 
     @classmethod
@@ -143,8 +156,11 @@ class DiskType(SpecGroup):
         first, second = self.get_rank(first), self.get_rank(second)
         return first == second
 
+    def display_value(self, value):
+        return value.capitalize()
 
-class Memory(SpecGroup):
+
+class Memory(BaseSpecification):
     @classmethod
     def create(cls):
         return cls(name="Memory", verbose_name="memory", rank_group=True).save()
@@ -152,8 +168,11 @@ class Memory(SpecGroup):
     def process_value(self, value):
         return self.process_number(value)
 
+    def display_value(self, value):
+        return "%s Gb" % value
 
-class GraphicsCard(SpecGroup):
+
+class GraphicsCard(BaseSpecification):
     @classmethod
     def create(cls):
         return cls(name="GraphicsCard", verbose_name="graphics card", rank_group=True).save()
@@ -161,8 +180,11 @@ class GraphicsCard(SpecGroup):
     def process_value(self, value):
         return self.process_benchmark(value)
 
+    def display_value(self, value):
+        return value
 
-class Processor(SpecGroup):
+
+class Processor(BaseSpecification):
     @classmethod
     def create(cls):
         return cls(name="Processor", verbose_name="processor", rank_group=True).save()
@@ -170,8 +192,11 @@ class Processor(SpecGroup):
     def process_value(self, value):
         return self.process_benchmark(value)
 
+    def display_value(self, value):
+        return value
 
-class BatteryTime(SpecGroup):
+
+class BatteryTime(BaseSpecification):
     @classmethod
     def create(cls):
         return cls(name="BatteryTime", verbose_name="battery time", rank_group=True).save()
@@ -179,8 +204,11 @@ class BatteryTime(SpecGroup):
     def process_value(self, value):
         return self.process_number(value)
 
+    def display_value(self, value):
+        return value
 
-class Weight(SpecGroup):
+
+class Weight(BaseSpecification):
     @classmethod
     def create(cls):
         return cls(name="Weight", verbose_name="weight", rank_group=True).save()
@@ -194,8 +222,11 @@ class Weight(SpecGroup):
     def is_greater(self, first, second):
         return first < second
 
+    def display_value(self, value):
+        return "%s kg" % value
 
-class ScreenSize(SpecGroup):
+
+class ScreenSize(BaseSpecification):
     @classmethod
     def create(cls):
         return cls(name="ScreenSize", rank_group=False).save()
@@ -206,4 +237,9 @@ class ScreenSize(SpecGroup):
         value = value.split('"')[0]
 
         return float(value)
+
+    def display_value(self, value):
+        return '%s"' % value
+
+
 
