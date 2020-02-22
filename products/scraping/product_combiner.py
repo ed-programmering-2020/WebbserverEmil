@@ -3,11 +3,12 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 from difflib import SequenceMatcher
 from django.db.models import Q
-from products.models import MetaProduct, Product, Website, SpecKey
+# from products.models import MetaProduct, Product, Website, SpecKey
 import string
 
 
 class Combiner:
+    """
     def __init__(self, data_list, files_dict):
         self.data_list = data_list
         self.files_dict = files_dict
@@ -182,3 +183,4 @@ class Combiner:
 
         product.save()
         return product
+"""
