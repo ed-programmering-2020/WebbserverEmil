@@ -11,7 +11,7 @@ class Product(models.Model):
     url = models.CharField('url', max_length=128, blank=True)
     image = models.ImageField(upload_to=get_file_path, blank=True, null=True)
     host = models.ForeignKey("products.website", related_name="meta_products", on_delete=models.CASCADE, null=True)
-    category_product = models.ForeignKey("products.base_category_product",
+    category_product = models.ForeignKey("products.base_category_products",
                                          related_name="products",
                                          on_delete=models.CASCADE)
 

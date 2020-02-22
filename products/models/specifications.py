@@ -52,7 +52,7 @@ class BaseSpecification(PolymorphicModel):
 
 class SpecificationAlternativeName(models.Model):
     name = models.CharField("name", max_length=32)
-    specification = models.ForeignKey("products.base_specification",
+    specification = models.ForeignKey("products.base_specifications",
                                       related_name="alternative_names",
                                       on_delete=models.CASCADE)
 
