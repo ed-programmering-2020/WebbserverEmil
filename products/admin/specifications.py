@@ -6,7 +6,13 @@ from products.models import BaseSpecification, SpecificationAlternativeName
 class BaseSpecificationAdmin(admin.ModelAdmin):
     list_display = ["name"]
 
+    class Meta:
+        verbose_name_plural = "Specifications"
+
 
 @admin.register(SpecificationAlternativeName)
 class SpecificationAlternativeNameAdmin(admin.ModelAdmin):
     list_display = ["name"]
+
+    class Meta:
+        verbose_name_plural = "Alternative specification names"
