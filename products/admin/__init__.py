@@ -1,12 +1,4 @@
-"""
-from .categories import Category
-from .spec_groups import SpecGroup, Benchmark
-from .products import \
-    ProductAdmin, \
-    MetaProductAdmin, \
-    SpecValueAdmin,\
-    SpecKeyAdmin,\
-    PriceAdmin, \
-    WebsiteAdmin,\
-    MetaCategoryAdmin
-"""
+from .category_products import LaptopAdmin
+from .specifications import SpecificationAlternativeNameAdmin, BaseSpecificationAdmin
+from .products import ProductAdmin, PriceAdmin
+from .websites import WebsiteAdmin
