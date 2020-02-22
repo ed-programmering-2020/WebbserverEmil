@@ -1,7 +1,7 @@
-# from ..polymorphism import PolymorphicModel
+from ..polymorphism import PolymorphicModel
 from collections import defaultdict
 from django.db import models
-"""
+
 
 class BaseCategoryProduct(PolymorphicModel):
     name = models.CharField('name', max_length=128)
@@ -162,4 +162,4 @@ class BaseCategoryProduct(PolymorphicModel):
 class CategoryAlternativeName(models.Model):
     name = models.CharField("name", max_length=32)
     category_product = models.ForeignKey(BaseCategoryProduct, related_name="alternative_names", on_delete=models.CASCADE)
-"""
+

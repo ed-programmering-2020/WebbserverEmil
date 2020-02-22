@@ -1,8 +1,8 @@
-# from .polymorphism import PolymorphicModel
+from .polymorphism import PolymorphicModel
 from django.db import models
 import re
 
-"""
+
 class BaseSpecification(PolymorphicModel):
     name = models.CharField("name", max_length=32)
     verbose_name = models.CharField("verbose name", max_length=32, null=True)
@@ -196,6 +196,6 @@ class ScreenSize(BaseSpecification):
 
     def display_value(self, value):
         return '%s"' % value
-"""
+
 
 
