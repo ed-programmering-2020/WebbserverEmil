@@ -5,7 +5,7 @@ from .tags import get_image_tag
 
 class BaseCategoryProductAdmin(admin.ModelAdmin):
     # Edit page
-    fields = ["name", "manufacturing_name", "price"]
+    fields = ["name", "manufacturing_name"]
     readonly_fields = ["score"]
 
     # List page
