@@ -1,3 +1,4 @@
+"""
 from .categories import Category
 from .spec_groups import SpecGroup, Benchmark
 from .products import \
@@ -8,3 +9,4 @@ from .products import \
     PriceAdmin, \
     WebsiteAdmin,\
     MetaCategoryAdmin
+"""
