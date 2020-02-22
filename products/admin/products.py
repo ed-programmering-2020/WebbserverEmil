@@ -5,28 +5,32 @@ from django.contrib import admin
 
 class MetaProductInline(admin.TabularInline):
     model = MetaProduct
-    exclude = ["manufacturing_name", "_specs", "host", "image"]
     extra = 0
+    verbose_name = "Meta-product"
+    verbose_name_plural = "Meta-products"
+
+    exclude = ["manufacturing_name", "_specs", "host", "image"]
+    classes = ["collapse"]
 
 
 class SpecValueInline(admin.TabularInline):
     model = Product.spec_values.through
     extra = 0
+    verbose_name = "Spec-value"
+    verbose_name_plural = "Specifications"
+
+    classes = ["collapse"]
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    fields = ["name", "manufacturing_name", "price", "meta_category", "average_score", "_scores"]
+    # Edit page
+    fields = ["name", "manufacturing_name", "price", "meta_category"]
+    readonly_fields = ["average_score", "_scores"]
     inlines = [MetaProductInline, SpecValueInline]
 
-    list_display = [
-        "name",
-        "price",
-        "average_score",
-        "view_meta_product_count",
-        "serve_image"
-    ]
-
+    # List page
+    list_display = ["name", "price", "average_score", "view_meta_product_count", "serve_image"]
     search_fields = ["name", "manufacturing_name"]
 
     def serve_image(self, obj):

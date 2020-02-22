@@ -284,7 +284,7 @@ class Price(models.Model):
 
         if price != "" and price != None:
             price = int(re.sub("\D", "", str(price)))
-            self._price = None if price >= 10 ** 6 else price
+            self._price = None if price >= 1000000 else price
         else:
             self._price = None
 
@@ -307,4 +307,4 @@ class SpecValue(models.Model):
     value = models.CharField('value', max_length=128, blank=True)
 
     def __str__(self):
-        return "<SpecValue %s>" % self.value
+        return "<SpecValue %s %s>" % (self.value, self.spec_key)

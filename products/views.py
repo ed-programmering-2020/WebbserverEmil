@@ -27,12 +27,15 @@ class MatchAPI(generics.GenericAPIView):
         settings = json.loads(request.GET["settings"])
         products = category.match(settings)
 
+        print("bapp")
+
         if products:
             # serialized_alternatives = []
             # if products["alternatives"]:
             #     for product in products["alternatives"]:
             #         serialized_alternatives.append(ProductSerializer(product).data)
 
+            print("here")
             return Response({
                 "main": ProductSerializer(products[0]).data,
             })
