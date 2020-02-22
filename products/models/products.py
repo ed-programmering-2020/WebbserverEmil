@@ -34,16 +34,19 @@ class MetaCategory(models.Model):
 
 
 class Product(models.Model):
-    id = models.AutoField(primary_key=True, blank=True)
+    # Identification
     name = models.CharField('name', max_length=128, blank=True, null=True)
-    price = models.PositiveIntegerField("price", blank=True, null=True)
-    meta_category = models.ForeignKey(MetaCategory, related_name="products", on_delete=models.CASCADE, blank=True, null=True)
     manufacturing_name = models.CharField('manufacturing name', max_length=128, blank=True, null=True)
 
     # Ranking
+    price = models.PositiveIntegerField("price", blank=True, null=True)
     average_score = models.DecimalField("average score", max_digits=9, decimal_places=9, null=True)
     _scores = models.CharField("scores", default=json.dumps({}), max_length=512, null=True)
     is_ranked = models.BooleanField("is ranked", default=False)
+
+    # Info
+    meta_category = models.ForeignKey(MetaCategory, related_name="products", on_delete=models.CASCADE, blank=True,
+                                      null=True)
 
     @property
     def scores(self):
