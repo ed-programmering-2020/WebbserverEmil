@@ -1,10 +1,13 @@
 from ..polymorphism import PolymorphicModel
+from ..specifications import AlternativeSpecificationName, SpecificationType
+from difflib import SequenceMatcher
 from collections import defaultdict
 from django.db import models
 
 
 class BaseCategoryProduct(PolymorphicModel):
     name = models.CharField('name', max_length=128)
+    manufacturing_name = models.CharField("manufacturing name", max_length=128)
     score = models.DecimalField("score", max_digits=9, decimal_places=9, null=True)
     is_active = models.BooleanField(default=True)
     is_ranked = models.BooleanField("is ranked", default=False)
@@ -15,11 +18,11 @@ class BaseCategoryProduct(PolymorphicModel):
     def update(self):
         # Gather meta data
         data = defaultdict(default_factory=[])
-        for meta_product in self.meta_products.all():
-            data["names"].append(meta_product.name)
-            data["specifications"].append(meta_product.get_specs())
-            data["manufacturing_names"].append(meta_product.manufacturing_name)
-            data["prices"].append( meta_product.get_price())
+        for product in self.products.all():
+            data["names"].append(product.name)
+            data["specifications"].append(product.get_specs())
+            data["manufacturing_names"].append(product.manufacturing_name)
+            data["prices"].append(product.get_price())
 
         # Update product
         if len(data["prices"]) >= 2:
@@ -91,8 +94,6 @@ class BaseCategoryProduct(PolymorphicModel):
 
     def update_specs(self, specs_list):
         updated_specs = []
-        category = self.meta_category.category
-
         for specs in specs_list:
             for spec in specs:
                 key = spec[0]
@@ -100,20 +101,13 @@ class BaseCategoryProduct(PolymorphicModel):
 
                 # Create/get spec key
                 try:
-                    spec_key = SpecKey.objects.get(key__iexact=key, category=category)
-                except SpecKey.DoesNotExist:
-                    spec_key = SpecKey.objects.create(key=key, category=category)
-                    spec_key.save()
+                    alternative_specification_name = AlternativeSpecificationName.objects.get(name__iexact=key)
 
-                # Create/get if it belongs to spec group
-                spec_group = spec_key.spec_group
-                if spec_group:
-                    for existing_spec_value in self.spec_values.all():
-                        if existing_spec_value.spec_key.spec_group.id == spec_group.id:
-                            break
+                    # Create/get if it belongs to spec group
+                    specification_type = alternative_specification_name.specification_type
+                    if specification_type:
+                        specification_model = specification_type.get_specification_model()
 
-                    else:
-                        # Create/get spec value
                         value = spec_group.process_value(value)
 
                         try:
@@ -124,13 +118,8 @@ class BaseCategoryProduct(PolymorphicModel):
                             spec_value.save()
                             updated_specs.append(spec_value)
 
-        # Delete old spec values
-        for spec_value in self.spec_values.all():
-            if spec_value not in updated_specs:
-                if spec_value.products.count == 1:
-                    spec_value.delete()
-                else:
-                    spec_value.products.remove(self)
+                except AlternativeSpecificationName.DoesNotExist:
+                    AlternativeSpecificationName.objects.create(name=key)
 
     def check_price_outlier(self, prices):
         sorted_prices = sorted(prices)

@@ -1,32 +1,34 @@
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
+from rest_framework import generics
 from operator import itemgetter
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 from difflib import SequenceMatcher
 from django.db.models import Q
-# from products.models import MetaProduct, Product, Website, SpecKey
+from products.models import Product, Website, BaseCategoryProduct
 import string
+import json
 
 
-class Combiner:
-    """
-    def __init__(self, data_list, files_dict):
-        self.data_list = data_list
-        self.files_dict = files_dict
+class ProductsAPI(generics.GenericAPIView):
+    permission_classes = [IsAdminUser]
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request, *args, **kwargs):
+        self.data_list = json.loads(request.data.get("products"))
+        self.files_list = request.FILES
 
         for product_data in self.data_list:
-            # Create/get and update meta product
             meta_product = self.create_or_get_meta_product(product_data)
-            meta_product.update(product_data)
-            price = meta_product.get_price()
-            if price and price >= 100000:
-                meta_product.delete()
 
             # Get matching meta-product/product
-            matching_meta_product = self.get_matching_meta_product(meta_product)
+            matching_meta_product = self.find_matching_product(meta_product)
             if matching_meta_product:
                 product = self.combine_meta_products(meta_product, matching_meta_product)
             else:
-                matching_product = self.get_matching_product(meta_product)
+                matching_product = self.find_matching_category_product(meta_product)
 
                 if matching_product:
                     meta_product.product = matching_product
@@ -37,18 +39,19 @@ class Combiner:
             if product:
                 product.update()
 
+        return Response({})
+
     def create_or_get_meta_product(self, data):
         url = data.get("link")
-        filename = data.get("image")
-        image = self.files_dict.get(filename) if filename else None
         host = Website.objects.get(name=data.get("website"))
         manufacturing_name = data.get("manufacturing_name")
 
-        meta_product = MetaProduct.objects.filter(Q(url=url) |
-                                                  Q(manufacturing_name=manufacturing_name),
-                                                  Q(host=host)).first()
-        if not meta_product:
-            meta_product = MetaProduct(
+        # Create/get product
+        product = Product.objects.filter(Q(url=url) | Q(manufacturing_name=manufacturing_name), Q(host=host)).first()
+        if not product:
+            filename = data.get("image")
+            image = self.files_dict.get(filename) if filename else None
+            product = Product(
                 name=data.get("title"),
                 url=url,
                 host=host,
@@ -56,22 +59,27 @@ class Combiner:
                 category=data.get("category"),
                 manufacturing_name=manufacturing_name
             )
+            product.specifications = data.get("specs")
 
-        return meta_product
+        # Overall update
+        product.price = data.get("price")
+        product.save()
 
-    def get_matching_meta_product(self, meta_product):
+        return product
+
+    def find_matching_product(self, meta_product):
         if meta_product.manufacturing_name:
             try:
-                return MetaProduct.objects \
+                return Product.objects \
                     .exclude(id=meta_product.id) \
                     .get(manufacturing_name=meta_product.manufacturing_name)
-            except MetaProduct.DoesNotExist:
+            except Product.DoesNotExist:
                 return None
         else:
             return None
 
-    def get_matching_product(self, meta_product):
-        products = Product.objects.all()
+    def find_matching_category_product(self, meta_product):
+        products = BaseCategoryProduct.objects.all()
         matching_products = []
 
         price = meta_product.get_price()
@@ -183,4 +191,3 @@ class Combiner:
 
         product.save()
         return product
-"""
