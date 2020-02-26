@@ -30,6 +30,8 @@ class Product(models.Model):
     def price(self, price):
         price_instance = Price(product=self)
         price_instance.value = price
+
+        self.save()
         price_instance.save()
 
     @property
