@@ -6,9 +6,14 @@ class PolymorphicManager(models.Manager):
     def get_queryset(self):
         model_instance = super().get_queryset()
 
-        inherited_model = model_instance.first().get_model()
-        inherited_model_instance = inherited_model.objects.get(id=model_instance.id)
-        return inherited_model_instance
+        first_model_instance = model_instance.first()
+        if first_model_instance:
+            inherited_model = first_model_instance.get_model()
+            inherited_model_instance = inherited_model.objects.get(id=model_instance.id)
+
+            return inherited_model_instance
+        else:
+            return None
 
 
 class PolymorphicModel(models.Model):
