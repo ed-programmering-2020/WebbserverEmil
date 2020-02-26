@@ -123,7 +123,7 @@ class BaseSpecification(PolymorphicModel):
                         processed_value = temporary_model_instance.value
 
                         try:
-                            specification = specification_model.get(_value=processed_value)
+                            specification = specification_model.inherited_objects.get(_value=processed_value)
                         except specification_model.DoesNotExist:
                             specification = specification_model.objects.create(_value=processed_value, specification_type=specification_type)
                             specification.save()
