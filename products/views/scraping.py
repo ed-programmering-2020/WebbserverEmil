@@ -17,11 +17,11 @@ class ProductsAPI(generics.GenericAPIView):
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request, *args, **kwargs):
-        self.data_list = json.loads(request.data.get("products"))
-        self.files_list = request.FILES
+        data_list = json.loads(request.data.get("products"))
+        files_list = request.FILES
 
-        for product_data in self.data_list:
-            product = self.create_or_get_product(product_data)
+        for product_data in data_list:
+            product = self.create_or_get_product(product_data, files_list)
 
             # Get matching meta-product/product
             matching_product = self.find_matching_product(product)
@@ -41,7 +41,7 @@ class ProductsAPI(generics.GenericAPIView):
 
         return Response({})
 
-    def create_or_get_product(self, data):
+    def create_or_get_product(self, data, files_dict):
         url = data.get("link")
         host = Website.objects.get(name=data.get("website"))
         manufacturing_name = data.get("manufacturing_name")
@@ -50,7 +50,7 @@ class ProductsAPI(generics.GenericAPIView):
         product = Product.objects.filter(Q(url=url) | Q(manufacturing_name=manufacturing_name), Q(host=host)).first()
         if not product:
             filename = data.get("image")
-            image = self.files_dict.get(filename) if filename else None
+            image = files_dict.get(filename) if filename else None
             product = Product(
                 name=data.get("title"),
                 url=url,
