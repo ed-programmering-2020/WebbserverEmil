@@ -4,21 +4,21 @@ import requests
 
 
 class IntegerSpecification(models.Model):
-    _value = models.IntegerField("value")
+    _value = models.IntegerField("value", null=True)
 
     class Meta:
         abstract = True
 
 
 class DecimalSpecification(models.Model):
-    _value = models.DecimalField("value", max_digits=5, decimal_places=5)
+    _value = models.DecimalField("value", null=True, max_digits=5, decimal_places=5)
 
     class Meta:
         abstract = True
 
 
 class CharSpecification(models.Model):
-    _value = models.CharField("value", max_length=128)
+    _value = models.CharField("value", null=True, max_length=128)
 
     class Meta:
         abstract = True
