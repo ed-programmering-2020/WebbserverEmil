@@ -10,6 +10,7 @@ class AlternativeCategoryName(AlternativeModelName):
     category_product_type = models.ForeignKey(
         "products.BaseCategoryProduct",
         related_name="alternative_names",
+        null=True,
         on_delete=models.SET_NULL
     )
 
@@ -21,6 +22,12 @@ class BaseCategoryProduct(PolymorphicModel):
     price = models.IntegerField("price")
     is_active = models.BooleanField(default=True)
     is_ranked = models.BooleanField("is ranked", default=False)
+    category_product_type = models.ForeignKey(
+        "products.SpecificationType",
+        related_name="specifications",
+        null=True,
+        on_delete=models.SET_NULL
+    )
 
     @staticmethod
     def match(settings, **kwargs):

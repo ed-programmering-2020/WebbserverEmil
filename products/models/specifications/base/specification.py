@@ -8,6 +8,7 @@ class AlternativeSpecificationName(AlternativeModelName):
     specification_type = models.ForeignKey(
         "products.SpecificationType",
         related_name="alternative_names",
+        null=True,
         on_delete=models.SET_NULL
     )
 
@@ -18,6 +19,7 @@ class BaseSpecification(PolymorphicModel):
     specification_type = models.ForeignKey(
         "products.SpecificationType",
         related_name="specifications",
+        null=True,
         on_delete=models.SET_NULL
     )
 
