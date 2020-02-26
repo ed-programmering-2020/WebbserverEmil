@@ -3,14 +3,14 @@ from operator import itemgetter
 from django.db import models
 
 
-class Laptop(BaseCategoryProduct):
-    @staticmethod
-    def get_foreign_key(model_name):
-        return models.ForeignKey("products."+model_name, related_name="laptops", on_delete=models.SET_NULL)
+def get_foreign_key(model_name):
+    return models.ForeignKey("products." + model_name, related_name="laptops", on_delete=models.SET_NULL)
 
+
+class Laptop(BaseCategoryProduct):
     # Measurements
     battery_time = get_foreign_key("BatteryTime")
-    weight = get_foreign_key("Weight"),
+    weight = get_foreign_key("Weight")
 
     # Processing
     processor = get_foreign_key("Processor")
