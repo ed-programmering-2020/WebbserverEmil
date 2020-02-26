@@ -1,5 +1,4 @@
 from products.models.category_products.base import BaseCategoryProduct
-from collections import defaultdict
 from operator import itemgetter
 from django.db import models
 
