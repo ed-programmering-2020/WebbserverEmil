@@ -7,7 +7,7 @@ from django.contrib import admin
 class ProductAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {
-            "fields": ["name", "manufacturing_name", "url", "category", "_specs"]
+            "fields": ["name", "manufacturing_name", "url", "category", "_specifications"]
         }),
         ("More", {
             "classes": ["collapse"],

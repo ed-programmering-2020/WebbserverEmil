@@ -1,19 +1,38 @@
-from ..polymorphism import PolymorphicModel
-from ..specifications import AlternativeSpecificationName, SpecificationType
+from products.models.polymorphism import PolymorphicModel, ModelType, AlternativeModelName
+from products.models.specifications import BaseSpecification
 from difflib import SequenceMatcher
 from collections import defaultdict
+from django.db.models import Q
 from django.db import models
+
+
+class AlternativeCategoryName(AlternativeModelName):
+    category_product_type = models.ForeignKey(
+        "products.BaseCategoryProduct",
+        related_name="alternative_names",
+        on_delete=models.SET_NULL
+    )
 
 
 class BaseCategoryProduct(PolymorphicModel):
     name = models.CharField('name', max_length=128)
     manufacturing_name = models.CharField("manufacturing name", max_length=128)
     score = models.DecimalField("score", max_digits=9, decimal_places=9, null=True)
+    price = models.IntegerField("price")
     is_active = models.BooleanField(default=True)
     is_ranked = models.BooleanField("is ranked", default=False)
 
-    def most_frequent(self, List):
-        return max(set(List), key=List.count) if List != [] else None
+    @staticmethod
+    def match(settings, **kwargs):
+        """Matches the user with products based on their preferences/settings"""
+
+        model = kwargs.get("model", None)
+        if model:
+            min_price, max_price = settings["price"]
+
+            return model.objects.filter(Q(price__gte=min_price), Q(price__lte=max_price))
+
+        return None
 
     def update(self):
         # Gather meta data
@@ -27,7 +46,8 @@ class BaseCategoryProduct(PolymorphicModel):
         # Update product
         if len(data["prices"]) >= 2:
             if self.check_price_outlier(data["prices"]):
-                data["prices"].remove(min(data["prices"]))
+                min_price = min(data["prices"])
+                data["prices"].remove(min_price)
 
             self.price = min(data["prices"])
 
@@ -93,33 +113,14 @@ class BaseCategoryProduct(PolymorphicModel):
         self.name = name
 
     def update_specs(self, specs_list):
-        updated_specs = []
-        for specs in specs_list:
-            for spec in specs:
-                key = spec[0]
-                value = spec[1]
+        specifications = BaseSpecification.get_specification_instances(specs_list)
 
-                # Create/get spec key
-                try:
-                    alternative_specification_name = AlternativeSpecificationName.objects.get(name__iexact=key)
+        for specification in specifications:
+            specification_attribute_name = specification.get_attribute_like_name
 
-                    # Create/get if it belongs to spec group
-                    specification_type = alternative_specification_name.specification_type
-                    if specification_type:
-                        specification_model = specification_type.get_specification_model()
-
-                        value = spec_group.process_value(value)
-
-                        try:
-                            self.spec_values.get(value__iexact=value, spec_key=spec_key)
-                        except SpecValue.DoesNotExist:
-                            spec_value = SpecValue.objects.create(value=value, spec_key=spec_key)
-                            spec_value.products.add(self)
-                            spec_value.save()
-                            updated_specs.append(spec_value)
-
-                except AlternativeSpecificationName.DoesNotExist:
-                    AlternativeSpecificationName.objects.create(name=key)
+            if hasattr(specification, specification_attribute_name):
+                eval_string = "self.{}_id = {}".format(specification_attribute_name, specification.id)
+                eval(eval_string)
 
     def check_price_outlier(self, prices):
         sorted_prices = sorted(prices)
@@ -127,10 +128,10 @@ class BaseCategoryProduct(PolymorphicModel):
 
         return sorted_prices[0] >= relative_min_price
 
-    def get_websites(self):
+    def get_product_list(self):
         urls = []
         prices = []
-        for meta_product in self.meta_products.all():
+        for meta_product in self.products.all():
             urls.append(meta_product.url)
             prices.append(meta_product.get_price())
 
@@ -142,13 +143,11 @@ class BaseCategoryProduct(PolymorphicModel):
         return list(zip(urls, prices))
 
     def get_image(self):
-        images = [mp.image for mp in self.meta_products.all() if mp.image]
+        images = [mp.image for mp in self.products.all() if mp.image]
         if len(images) > 0:
             return images[0].url
         return None
 
 
-class CategoryAlternativeName(models.Model):
-    name = models.CharField("name", max_length=32)
-    category_product = models.ForeignKey(BaseCategoryProduct, related_name="alternative_names", on_delete=models.CASCADE)
-
+class CategoryProductType(ModelType):
+    model = BaseCategoryProduct

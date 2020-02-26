@@ -8,10 +8,13 @@ def get_file_path(instance, filename):
 
 class Product(models.Model):
     name = models.CharField('name', max_length=128)
+    manufacturing_name = models.CharField("manufacturing_name", max_length=128)
     url = models.CharField('url', max_length=128, blank=True)
     image = models.ImageField(upload_to=get_file_path, blank=True, null=True)
-    host = models.ForeignKey("products.website", related_name="meta_products", on_delete=models.CASCADE, null=True)
+    category = models.CharField("category", max_length=128)
     _specifications = models.CharField("specifications", max_length=4096, default=json.dumps([]))
+
+    host = models.ForeignKey("products.website", related_name="meta_products", on_delete=models.CASCADE, null=True)
     category_product = models.ForeignKey(
         "products.BaseCategoryProduct",
         related_name="products",

@@ -1,46 +1,6 @@
-from ..polymorphism import PolymorphicModel
 from django.db import models
 from bs4 import BeautifulSoup
 import requests
-import re
-
-
-class BaseSpecification(PolymorphicModel):
-    name = models.CharField("name", max_length=32)
-    verbose_name = models.CharField("verbose name", max_length=32, null=True)
-    score = models.DecimalField("score", max_digits=9, decimal_places=9, null=True)
-    specification_type = models.ForeignKey(
-        "products.SpecificationType",
-        related_name="specifications",
-        on_delete=models.SET_NULL
-    )
-
-    @property
-    def value(self):
-        raise NotImplementedError
-
-    @value.setter
-    def value(self, value):
-        raise NotImplementedError
-
-    def process_number(self, value):
-        first_value = value.split(" ")[0]
-        value = re.sub("[^0-9]", "", first_value).replace(" ", "")
-        return int(value)
-
-    def process_text(self, value):
-        value_lowercase = value.lower()
-        value = re.sub('[^A-Za-z0-9 ]+', '', value_lowercase)
-        return value
-
-    def __gt__(self, other):
-        return self.value > other.value
-
-    def __eq__(self, other):
-        return self.value == other.value
-
-    def __str__(self):
-        raise NotImplementedError
 
 
 class IntegerSpecification(models.Model):

@@ -7,7 +7,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 from difflib import SequenceMatcher
 from django.db.models import Q
-from products.models import Product, Website, BaseCategoryProduct
+from products.models import Product, Website, BaseCategoryProduct, BaseSpecification, AlternativeCategoryName
 import string
 import json
 
@@ -21,27 +21,27 @@ class ProductsAPI(generics.GenericAPIView):
         self.files_list = request.FILES
 
         for product_data in self.data_list:
-            meta_product = self.create_or_get_meta_product(product_data)
+            product = self.create_or_get_product(product_data)
 
             # Get matching meta-product/product
-            matching_meta_product = self.find_matching_product(meta_product)
-            if matching_meta_product:
-                product = self.combine_meta_products(meta_product, matching_meta_product)
+            matching_product = self.find_matching_product(product)
+            if matching_product:
+                category_product = self.combine_products(product, matching_product)
             else:
-                matching_product = self.find_matching_category_product(meta_product)
+                matching_category_product = self.find_matching_category_product(product)
 
-                if matching_product:
-                    meta_product.product = matching_product
+                if matching_category_product:
+                    product.category_product = matching_category_product
 
-                product = meta_product.product
+                category_product = product.category_product
 
             # Update product
-            if product:
-                product.update()
+            if category_product:
+                category_product.update()
 
         return Response({})
 
-    def create_or_get_meta_product(self, data):
+    def create_or_get_product(self, data):
         url = data.get("link")
         host = Website.objects.get(name=data.get("website"))
         manufacturing_name = data.get("manufacturing_name")
@@ -67,12 +67,12 @@ class ProductsAPI(generics.GenericAPIView):
 
         return product
 
-    def find_matching_product(self, meta_product):
-        if meta_product.manufacturing_name:
+    def find_matching_product(self, product):
+        if product.manufacturing_name:
             try:
                 return Product.objects \
-                    .exclude(id=meta_product.id) \
-                    .get(manufacturing_name=meta_product.manufacturing_name)
+                    .exclude(id=product.id) \
+                    .get(manufacturing_name=product.manufacturing_name)
             except Product.DoesNotExist:
                 return None
         else:
@@ -96,7 +96,7 @@ class ProductsAPI(generics.GenericAPIView):
                 prices = [meta_product.get_price() for meta_product in product.meta_products]
                 average_price = (sum(prices) / len(prices)) / 2
 
-                if min_price <= average_price <= max_price and self.matching_specs(specs, product.spec_values.all()):
+                if min_price <= average_price <= max_price and self.matching_specs(specs, product):
                     # Get top meta-product name similarity
                     names = [self.clean_string(meta_product.name) for meta_product in product.meta_products]
                     name_similarity = self.name_similarity(name, names)
@@ -137,24 +137,17 @@ class ProductsAPI(generics.GenericAPIView):
         vec2 = vec2.reshape(1, -1)
         return cosine_similarity(vec1, vec2)[0][0]
 
-    def matching_specs(self, meta_specs, spec_values):
-        for meta_spec in meta_specs:
-            key, value = meta_spec
+    def matching_specs(self, specs, product):
+        specifications = BaseSpecification.get_specification_instances(specs)
 
-            try:
-                spec_key = SpecKey.objects.get(key__iexact=key)
-                spec_group = spec_key.spec_group
-                value = spec_group.process_value(value)
+        for specification in specifications:
+            specification_attribute_name = specification.get_attribute_like_name
 
-                if spec_group and spec_group.is_ranked:
-                    for spec_value in spec_values:
-                        spec_value_group = spec_value.spec_key.spec_group
+            if hasattr(specification, specification_attribute_name):
+                product_specification = getattr(product, specification_attribute_name)
 
-                        if spec_group.id == spec_value_group.id and value != spec_value.value:
-                            return False
-
-            except SpecKey.DoesNotExist:
-                pass
+                if product_specification.id != specification.id:
+                    return False
 
         return True
 
@@ -163,31 +156,49 @@ class ProductsAPI(generics.GenericAPIView):
         text.lower()
         return text
 
-    def combine_meta_products(self, first_meta_product, second_meta_product):
-        first_product = first_meta_product.product
-        second_product = second_meta_product.product
+    def combine_products(self, first, second):
+        first_category_product = first.category_product
+        second_category_product = second.category_product
 
-        if first_product and second_product:
-            product = first_product
+        if first_category_product and second_category_product:
+            category_product = first_category_product
 
-            first_query_set = product.meta_products.all()
-            second_query_set = second_product.meta_products.all()
+            first_query_set = category_product.products.all()
+            second_query_set = second_category_product.products.all()
             combined_query_set = first_query_set.union(second_query_set)
 
-            product.meta_products.set(combined_query_set)
-            second_product.delete()
+            category_product.products.set(combined_query_set)
+            second_category_product.delete()
 
-        elif first_product:
-            product = first_product
-            product.meta_products.add(second_meta_product)
+        elif first_category_product:
+            category_product = first_category_product
+            category_product.products.add(second)
 
-        elif second_product:
-            product = second_product
-            product.meta_products.add(first_meta_product)
+        elif second_category_product:
+            category_product = second_category_product
+            category_product.products.add(first)
 
+        elif first.category or second.category:
+            if first.category:
+                category_name = first.category
+            else:
+                category_name = second.category
+
+            try:
+                AlternativeCategoryName.objects.get(name=category_name)
+                category_product_type = AlternativeCategoryName.category_product_type
+
+                if category_product_type:
+                    category_product_model = category_product_type.get_model()
+                    category_product = category_product_model.objects.create()
+                    category_product.products.set([first, second])
+                else:
+                    return None
+            except AlternativeCategoryName.DoesNotExist:
+                AlternativeCategoryName.objects.create(name=category_name)
+                return None
         else:
-            product = Product.objects.create()
-            product.meta_products.set([first_meta_product, second_meta_product])
+            return None
 
-        product.save()
-        return product
+        category_product.save()
+        return category_product

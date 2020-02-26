@@ -4,12 +4,13 @@ from .tags import get_image_tag
 
 
 class BaseCategoryProductAdmin(admin.ModelAdmin):
-    # Edit page
-    fields = ["name", "manufacturing_name"]
-    readonly_fields = ["score"]
+    fieldsets = [
+        ("Main info", {
+            "fields": ["name", "manufacturing_name", "price", "score"]
+        })
+    ]
 
-    # List page
-    list_display = ["name", "score", "serve_image"]
+    list_display = ["name", "price", "score", "is_active", "serve_image"]
     search_fields = ["name", "manufacturing_name"]
 
     def serve_image(self, obj):
@@ -20,4 +21,20 @@ class BaseCategoryProductAdmin(admin.ModelAdmin):
 
 @admin.register(Laptop)
 class LaptopAdmin(BaseCategoryProductAdmin):
-    pass
+    super().fieldsets.append(
+        ("Specifications", {
+            "fields": [
+                "battery_time",
+                "weight",
+                "processor",
+                "graphics_card",
+                "storage_size",
+                "storage_type",
+                "ram",
+                "panel_type",
+                "refresh_rate",
+                "resolution",
+                "screen_size"
+            ]
+        })
+    )
