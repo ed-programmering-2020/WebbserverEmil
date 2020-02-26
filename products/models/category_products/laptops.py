@@ -4,7 +4,7 @@ from django.db import models
 
 
 def get_foreign_key(model_name):
-    return models.ForeignKey("products." + model_name, related_name="laptops", on_delete=models.SET_NULL)
+    return models.ForeignKey("products." + model_name, related_name="laptops", null=True, on_delete=models.SET_NULL)
 
 
 class Laptop(BaseCategoryProduct):
