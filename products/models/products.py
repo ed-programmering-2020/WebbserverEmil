@@ -18,6 +18,7 @@ class Product(models.Model):
     category_product = models.ForeignKey(
         "products.BaseCategoryProduct",
         related_name="products",
+        null=True,
         on_delete=models.CASCADE
     )
 
