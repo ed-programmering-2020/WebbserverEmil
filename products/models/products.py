@@ -28,7 +28,7 @@ class Product(models.Model):
 
     @price.setter
     def price(self, price):
-        price_instance = Price(meta_product=self)
+        price_instance = Price(product=self)
         price_instance.value = price
         price_instance.save()
 
