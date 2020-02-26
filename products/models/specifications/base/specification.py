@@ -23,6 +23,17 @@ class BaseSpecification(PolymorphicModel):
         on_delete=models.SET_NULL
     )
 
+    @classmethod
+    def create(cls, **kwargs):
+        spec_type_name = cls.__class__.__name__
+
+        try:
+            spec_type = SpecificationType.objects.get(name=spec_type_name)
+        except cls.DoesNotExist:
+            spec_type = SpecificationType.objects.create(name=spec_type_name)
+
+        return cls(specification_type=spec_type, **kwargs)
+
     @property
     def value(self):
         raise NotImplementedError
@@ -125,7 +136,8 @@ class BaseSpecification(PolymorphicModel):
                         try:
                             specification = specification_model.get(_value=processed_value)
                         except specification_model.DoesNotExist:
-                            specification = specification_model.objects.create(_value=processed_value)
+                            specification = specification_model.create(_value=processed_value)
+                            specification.save()
 
                         specifications.append(specification)
 

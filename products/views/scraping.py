@@ -190,7 +190,7 @@ class ProductsAPI(generics.GenericAPIView):
 
                 if category_product_type:
                     category_product_model = category_product_type.get_model()
-                    category_product = category_product_model.objects.create()
+                    category_product = category_product_model.objects.create(category_product_type=category_product_type)
                     category_product.products.set([first, second])
                 else:
                     return None
