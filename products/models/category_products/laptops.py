@@ -4,7 +4,8 @@ from django.db import models
 
 
 class Laptop(BaseCategoryProduct):
-    def get_foreign_key(self, model_name):
+    @staticmethod
+    def get_foreign_key(model_name):
         return models.ForeignKey("products."+model_name, related_name="laptops", on_delete=models.SET_NULL)
 
     # Measurements
