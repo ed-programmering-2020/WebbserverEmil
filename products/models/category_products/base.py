@@ -24,7 +24,7 @@ class BaseCategoryProduct(PolymorphicModel):
     is_ranked = models.BooleanField("is ranked", default=False)
     category_product_type = models.ForeignKey(
         "products.SpecificationType",
-        related_name="specifications",
+        related_name="category_products",
         null=True,
         on_delete=models.SET_NULL
     )
