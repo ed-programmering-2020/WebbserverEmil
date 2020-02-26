@@ -16,4 +16,5 @@ class AlternativeSpecificationNameAdmin(admin.ModelAdmin):
 
 @admin.register(BaseSpecification)
 class BaseSpecificationAdmin(admin.ModelAdmin):
-    pass
+    class Meta:
+        verbose_name_plural = "Specifications"

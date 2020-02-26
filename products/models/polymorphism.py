@@ -5,7 +5,8 @@ from django.db import models
 class PolymorphicManager(models.Manager):
     def get_queryset(self):
         model_instance = super().get_queryset()
-        inherited_model = model_instance.get_model()
+
+        inherited_model = model_instance.first().get_model()
         inherited_model_instance = inherited_model.objects.get(id=model_instance.id)
         return inherited_model_instance
 
