@@ -138,9 +138,9 @@ class BaseCategoryProduct(PolymorphicModel):
     def get_product_list(self):
         urls = []
         prices = []
-        for meta_product in self.products.all():
-            urls.append(meta_product.url)
-            prices.append(meta_product.get_price())
+        for product in self.products.all():
+            urls.append(product.url)
+            prices.append(product.get_price())
 
         if self.check_price_outlier(prices):
             i = prices.index(min(prices))
