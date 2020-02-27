@@ -29,6 +29,8 @@ class BaseCategoryProduct(PolymorphicModel):
         on_delete=models.SET_NULL
     )
 
+    objects = models.Manager()
+
     @staticmethod
     def match(settings, **kwargs):
         """Matches the user with products based on their preferences/settings"""

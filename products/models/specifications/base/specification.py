@@ -23,6 +23,8 @@ class BaseSpecification(PolymorphicModel):
         on_delete=models.SET_NULL
     )
 
+    objects = models.Manager()
+
     @property
     def value(self):
         raise NotImplementedError
