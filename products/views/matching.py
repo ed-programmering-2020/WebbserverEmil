@@ -24,13 +24,13 @@ class MatchAPI(generics.GenericAPIView):
         products = category.match(settings)
 
         if products:
-            # serialized_alternatives = []
-            # if products["alternatives"]:
-            #     for product in products["alternatives"]:
-            #         serialized_alternatives.append(ProductSerializer(product).data)
-
             top_product = products[0]
             serialized_product = ProductSerializer(top_product).data
+
+            serialized_alternatives = []
+            if len(products) > 1:
+                for product in products[1:]:
+                    serialized_alternatives.append(ProductSerializer(product).data)
 
             return Response({
                 "main": serialized_product,

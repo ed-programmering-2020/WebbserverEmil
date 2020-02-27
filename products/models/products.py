@@ -57,7 +57,7 @@ class Product(models.Model):
 
 class Price(models.Model):
     product = models.ForeignKey(Product, related_name="price_history", null=True, on_delete=models.CASCADE)
-    _value = models.PositiveIntegerField()
+    _value = models.PositiveIntegerField(null=True)
     date_seen = models.DateTimeField(auto_now_add=True)
 
     @property

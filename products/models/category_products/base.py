@@ -37,9 +37,13 @@ class BaseCategoryProduct(PolymorphicModel):
 
         model = kwargs.get("model", None)
         if model:
-            min_price, max_price = settings["price"]
+            price = settings.get("price", None)
+            if price:
+                min_price, max_price = settings["price"]
+                return model.inherited_objects.filter(Q(price__gte=min_price), Q(price__lte=max_price))
 
-            return model.inherited_objects.filter(Q(price__gte=min_price), Q(price__lte=max_price))
+            else:
+                return model.inherited_objects.all()
 
         return None
 
