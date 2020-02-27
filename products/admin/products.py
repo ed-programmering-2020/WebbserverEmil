@@ -35,7 +35,7 @@ class ProductAdmin(admin.ModelAdmin):
     serve_image.allow_tags = True
 
     def view_price(self, obj):
-        return "%s kr" % obj.get_price()
+        return "%s kr" % obj.price
     view_price.short_description = "Price"
 
 
