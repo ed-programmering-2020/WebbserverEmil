@@ -47,8 +47,5 @@ class ModelType(models.Model):
 class AlternativeModelName(models.Model):
     name = models.CharField("name", max_length=32)
 
-    def __str__(self):
-        return "<{self.model.__class__.__name__}AlternativeName {self.name}>".format(self=self)
-
     class Meta:
         abstract = True

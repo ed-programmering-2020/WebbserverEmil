@@ -5,6 +5,7 @@ from .tags import get_image_tag
 
 @admin.register(AlternativeCategoryName)
 class AlternativeCategoryNameAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
     fields = ["name"]
     list_display = ["name"]
 

@@ -12,6 +12,9 @@ class AlternativeSpecificationName(AlternativeModelName):
         on_delete=models.SET_NULL
     )
 
+    def __str__(self):
+        return "<AlternativeSpecificationName {self.name}>".format(self=self)
+
 
 class BaseSpecification(PolymorphicModel):
     score = models.DecimalField("score", max_digits=9, decimal_places=9, null=True)

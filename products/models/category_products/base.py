@@ -14,6 +14,9 @@ class AlternativeCategoryName(AlternativeModelName):
         on_delete=models.SET_NULL
     )
 
+    def __str__(self):
+        return "<AlternativeCategoryName {self.name}>".format(self=self)
+
 
 class BaseCategoryProduct(PolymorphicModel):
     name = models.CharField('name', max_length=128)

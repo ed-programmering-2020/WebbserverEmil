@@ -10,6 +10,7 @@ class SpecificationTypeAdmin(admin.ModelAdmin):
 
 @admin.register(AlternativeSpecificationName)
 class AlternativeSpecificationNameAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
     fields = ["name"]
     list_display = ["name"]
 

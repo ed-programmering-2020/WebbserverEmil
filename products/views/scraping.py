@@ -185,9 +185,9 @@ class ProductsAPI(generics.GenericAPIView):
 
             try:
                 AlternativeCategoryName.objects.get(name=category_name)
-                category_product_type = AlternativeCategoryName.category_product_type
+                category_product_type = AlternativeCategoryName.category_product_type.first()
 
-                if category_product_type:
+                if category_product_type is not None:
                     category_product_model = category_product_type.get_model()
                     category_product = category_product_model.objects.create(category_product_type=category_product_type)
                     category_product.products.set([first, second])
