@@ -62,8 +62,8 @@ class ProductsAPI(generics.GenericAPIView):
             product.specifications = data.get("specs")
 
         # Overall update
-        product.price = data.get("price")
         product.save()
+        product.price = data.get("price")
 
         return product
 

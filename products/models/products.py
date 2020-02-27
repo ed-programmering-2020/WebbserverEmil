@@ -25,15 +25,17 @@ class Product(models.Model):
     @property
     def price(self):
         price = self.price_history.first()
-        return price.value
+        if price:
+            return price.value
+        else:
+            return None
 
     @price.setter
     def price(self, price):
         price_instance = Price()
-        price_instance.product = self
+        price_instance.product_id = self.id
         price_instance.value = price
 
-        self.save()
         price_instance.save()
 
     @property
