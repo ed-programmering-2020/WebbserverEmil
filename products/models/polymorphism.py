@@ -23,7 +23,6 @@ class PolymorphicManager(models.Manager):
 class PolymorphicModel(models.Model):
     content_type = models.ForeignKey(ContentType, editable=False, on_delete=models.SET_NULL, null=True)
     inherited_objects = PolymorphicManager()
-    objects = models.Manager()
 
     def get_model(self):
         content_type = self.content_type
