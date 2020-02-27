@@ -78,34 +78,33 @@ class ProductsAPI(generics.GenericAPIView):
         else:
             return None
 
-    def find_matching_category_product(self, meta_product):
-        products = BaseCategoryProduct.objects.all()
+    def find_matching_category_product(self, product):
+        category_products = BaseCategoryProduct.objects.all()
         matching_products = []
 
-        price = meta_product.get_price()
+        name = self.clean_string(product.name)
+        specs = product.specs
+        price = product.price
         min_price = price / 2.5
         max_price = price * 2.5
 
-        specs = meta_product.get_specs()
+        for category_product in category_products.iterator():
+            if not category_product.manufacturing_name or not product.manufacturing_name:
 
-        name = self.clean_string(meta_product.name)
-
-        for product in products.iterator():
-            if not product.manufacturing_name or not meta_product.manufacturing_name:
                 # Check if price is acceptable and specs match
-                prices = [meta_product.get_price() for meta_product in product.meta_products]
+                prices = [product.price for product in category_product.products]
                 average_price = (sum(prices) / len(prices)) / 2
 
-                if min_price <= average_price <= max_price and self.matching_specs(specs, product):
+                if min_price <= average_price <= max_price and self.matching_specs(specs, category_product):
                     # Get top meta-product name similarity
-                    names = [self.clean_string(meta_product.name) for meta_product in product.meta_products]
+                    names = [self.clean_string(product.name) for product in category_product.products]
                     name_similarity = self.name_similarity(name, names)
-                    matching_products.append((name_similarity, meta_product))
+                    matching_products.append((name_similarity, product))
 
         # Return top meta product that is over the threshold
         if len(matching_products) != 0:
-            top_meta_product = max(matching_products, key=itemgetter(0))
-            name_similarity, product_id = top_meta_product
+            top_product = max(matching_products, key=itemgetter(0))
+            name_similarity, product_id = top_product
 
             return product_id if name_similarity >= 0.85 else None
         else:
