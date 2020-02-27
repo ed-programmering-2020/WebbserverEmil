@@ -81,4 +81,4 @@ class Price(models.Model):
             self._value = None
 
     def __str__(self):
-        return "<Price {self.price} {self.date_seen}>".format(self=self)
+        return "<Price {self.value} {self.date_seen}>".format(self=self)
