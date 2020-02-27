@@ -83,7 +83,7 @@ class ProductsAPI(generics.GenericAPIView):
         matching_products = []
 
         name = self.clean_string(product.name)
-        specs = product.specs
+        specs = product.specifications
         price = product.price
         min_price = price / 2.5
         max_price = price * 2.5
