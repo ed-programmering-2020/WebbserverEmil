@@ -15,6 +15,7 @@ class AlternativeCategoryName(AlternativeModelName):
         "products.BaseCategoryProduct",
         related_name="alternative_category_names",
         null=True,
+        blank=True,
         on_delete=models.SET_NULL
     )
 

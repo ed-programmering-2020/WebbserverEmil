@@ -9,6 +9,7 @@ class AlternativeSpecificationName(AlternativeModelName):
         "products.SpecificationType",
         related_name="alternative_specification_names",
         null=True,
+        blank=True,
         on_delete=models.SET_NULL
     )
 
