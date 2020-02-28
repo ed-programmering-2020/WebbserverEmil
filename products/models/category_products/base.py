@@ -50,7 +50,7 @@ class BaseCategoryProduct(PolymorphicModel):
         except ContentType.DoesNotExist:
             content_type = ContentType.objects.create(app_label="products", model=model_name)
 
-        cls.objects.create(content_type=content_type, **kwargs)
+        return cls.objects.create(content_type=content_type, **kwargs)
 
     @staticmethod
     def match(settings, **kwargs):
@@ -105,6 +105,7 @@ class BaseCategoryProduct(PolymorphicModel):
                 if category_product_type is not None:
                     category_product_model = category_product_type.get_model()
                     category_product = category_product_model.create(category_product_type=category_product_type)
+
                     category_product.products.set([first, second])
 
                 else:
