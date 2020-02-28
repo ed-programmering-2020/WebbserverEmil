@@ -135,7 +135,7 @@ class BaseCategoryProduct(PolymorphicModel):
         max_price = price * 2.5
 
         for category_product in category_products.iterator():
-            is_active = category_products.is_active
+            is_active = category_product.is_active
             no_manufacturing_name = not category_product.manufacturing_name or not product.manufacturing_name
 
             if no_manufacturing_name and is_active:
