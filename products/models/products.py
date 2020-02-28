@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 import re, uuid, json
 
 
@@ -21,6 +22,41 @@ class Product(models.Model):
         null=True,
         on_delete=models.CASCADE
     )
+
+    @staticmethod
+    def create_or_get(data, host, files_dict):
+        url = data.get("link")
+        manufacturing_name = data.get("manufacturing_name")
+
+        # Create/get product
+        product = Product.objects.filter(Q(url=url) | Q(manufacturing_name=manufacturing_name), Q(host=host)).first()
+        if not product:
+            filename = data.get("image")
+            image = files_dict.get(filename) if filename else None
+            product = Product(
+                name=data.get("title"),
+                url=url,
+                host=host,
+                image=image,
+                category=data.get("category"),
+                manufacturing_name=manufacturing_name
+            )
+            product.specifications = data.get("specs")
+
+        # Overall update
+        product.save()
+        product.price = data.get("price")
+
+        return product
+
+    def find_similar_product(self):
+        if self.manufacturing_name:
+            try:
+                return Product.objects.exclude(id=self.id).get(manufacturing_name=self.manufacturing_name)
+            except Product.DoesNotExist:
+                return None
+        else:
+            return None
 
     @property
     def price(self):

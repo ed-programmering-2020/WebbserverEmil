@@ -1,9 +1,13 @@
 from products.models.polymorphism import PolymorphicModel, ModelType, AlternativeModelName
 from products.models.specifications import BaseSpecification
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import CountVectorizer
+from operator import itemgetter
 from difflib import SequenceMatcher
 from collections import defaultdict
 from django.db.models import Q
 from django.db import models
+import string
 
 
 class AlternativeCategoryName(AlternativeModelName):
@@ -49,6 +53,133 @@ class BaseCategoryProduct(PolymorphicModel):
                 return model.inherited_objects.all()
 
         return None
+
+    @staticmethod
+    def create_or_combine(first, second):
+        first_category_product = first.category_product
+        second_category_product = second.category_product
+
+        if first_category_product and second_category_product:  # If both products have category products
+            category_product = first_category_product
+
+            first_query_set = category_product.products.all()
+            second_query_set = second_category_product.products.all()
+            combined_query_set = first_query_set.union(second_query_set)
+
+            category_product.products.set(combined_query_set)
+            second_category_product.delete()
+
+        elif first_category_product:  # If only the first product has a category product
+            category_product = first_category_product
+            category_product.products.add(second)
+
+        elif second_category_product:  # If only the second product has a category product
+            category_product = second_category_product
+            category_product.products.add(first)
+
+        elif first.category or second.category:
+            if first.category:
+                category_name = first.category
+            else:
+                category_name = second.category
+
+            try:
+                AlternativeCategoryName.objects.get(name=category_name)
+                category_product_type = AlternativeCategoryName.category_product_type
+
+                if category_product_type is not None:
+                    category_product_model = category_product_type.get_model()
+                    category_product = category_product_model.objects.create(category_product_type=category_product_type)
+                    category_product.products.set([first, second])
+
+                else:
+                    return None
+
+            except AlternativeCategoryName.DoesNotExist:
+                AlternativeCategoryName.objects.create(name=category_name)
+                return None
+        else:
+            return None
+
+        category_product.save()
+        return category_product
+
+    @classmethod
+    def find_matching_category_product(cls, product):
+        category_products = BaseCategoryProduct.objects.all()
+        matching_products = []
+
+        name = cls.clean_string(product.name)
+        specs = product.specifications
+        price = product.price
+        min_price = price / 2.5
+        max_price = price * 2.5
+
+        for category_product in category_products.iterator():
+            if not category_product.manufacturing_name or not product.manufacturing_name:
+
+                # Check if price is acceptable and specs match
+                prices = [product.price for product in category_product.products]
+                average_price = (sum(prices) / len(prices)) / 2
+
+                if min_price <= average_price <= max_price and cls.matching_specs(specs, category_product):
+                    # Get top meta-product name similarity
+                    names = [cls.clean_string(product.name) for product in category_product.products]
+                    name_similarity = cls.name_similarity(name, names)
+                    matching_products.append((name_similarity, product))
+
+        # Return top meta product that is over the threshold
+        if len(matching_products) != 0:
+            top_product = max(matching_products, key=itemgetter(0))
+            name_similarity, product_id = top_product
+
+            return product_id if name_similarity >= 0.85 else None
+        else:
+            return None
+
+    @staticmethod
+    def name_similarity(name, names):
+        similarity_list = []
+
+        for meta_name in names:
+            # Sequence similarity metric
+            sequence_sim = SequenceMatcher(None, name, meta_name).ratio()
+
+            # Cosine similarity metric
+            names = [name, meta_name]
+            vectorizer = CountVectorizer().fit_transform(names)
+            vectors = vectorizer.toarray()
+
+            vec1 = vectors[0].reshape(1, -1)
+            vec2 = vectors[1].reshape(1, -1)
+            cosine_sim = cosine_similarity(vec1, vec2)[0][0]
+
+            # Add highest similarity
+            top_similarity = max([sequence_sim, cosine_sim])
+            similarity_list.append(top_similarity)
+
+        return max(similarity_list)
+
+    @staticmethod
+    def matching_specs(specs, product):
+        specifications = BaseSpecification.get_specification_instances(specs)
+
+        for specification in specifications:
+            specification_attribute_name = specification.get_attribute_like_name
+
+            if hasattr(specification, specification_attribute_name):
+                product_specification = getattr(product, specification_attribute_name)
+
+                if product_specification.id != specification.id:
+                    return False
+
+        return True
+
+    @staticmethod
+    def clean_string(text):
+        text = "".join([word for word in text if word not in string.punctuation])
+        text.lower()
+        return text
 
     def update(self):
         # Gather meta data
