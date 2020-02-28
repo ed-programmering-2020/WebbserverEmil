@@ -138,7 +138,7 @@ class BaseCategoryProduct(PolymorphicModel):
             if not category_product.manufacturing_name or not product.manufacturing_name:
 
                 # Check if price is acceptable and specs match
-                prices = [product.price for product in category_product.products]
+                prices = [product.price.value for product in category_product.products]
                 average_price = (sum(prices) / len(prices)) / 2
 
                 if min_price <= average_price <= max_price and cls.matching_specs(specs, category_product):
@@ -313,6 +313,9 @@ class BaseCategoryProduct(PolymorphicModel):
         if len(images) > 0:
             return images[0].url
         return None
+
+    def __str__(self):
+        return "<CategoryProduct {self.name}>".format(self=self)
 
 
 class CategoryProductType(ModelType):
