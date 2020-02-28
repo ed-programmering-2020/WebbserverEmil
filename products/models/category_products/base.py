@@ -138,7 +138,7 @@ class BaseCategoryProduct(PolymorphicModel):
             if not category_product.manufacturing_name or not product.manufacturing_name:
 
                 # Check if price is acceptable and specs match
-                prices = [product.price.value for product in category_product.products]
+                prices = [product.price.value for product in category_product.products.all()]
                 average_price = (sum(prices) / len(prices)) / 2
 
                 if min_price <= average_price <= max_price and cls.matching_specs(specs, category_product):
