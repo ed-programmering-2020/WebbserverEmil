@@ -35,7 +35,8 @@ class BaseCategoryProductAdmin(admin.ModelAdmin):
 
 @admin.register(Laptop)
 class LaptopAdmin(BaseCategoryProductAdmin):
-    BaseCategoryProductAdmin.fieldsets.append(
+    fieldsets = BaseCategoryProductAdmin.fieldsets
+    fieldsets.append(
         ("Specifications", {
             "fields": [
                 "battery_time",
