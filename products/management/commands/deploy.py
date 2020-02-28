@@ -8,4 +8,4 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         Laptop.create_dummy()
 
-        self.stdout.write(self.style.SUCCESS("Successful deploy"))
+        self.stdout.write(self.style.SUCCESS("Deployment was successful"))

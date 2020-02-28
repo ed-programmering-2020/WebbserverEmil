@@ -25,7 +25,7 @@ class AlternativeCategoryName(AlternativeModelName):
 
 class BaseCategoryProduct(PolymorphicModel):
     name = models.CharField('name', max_length=128)
-    manufacturing_name = models.CharField("manufacturing name", max_length=128)
+    manufacturing_name = models.CharField("manufacturing name", max_length=128, null=True, blank=True)
     score = models.DecimalField("score", max_digits=9, decimal_places=9, null=True)
     price = models.IntegerField("price")
     is_active = models.BooleanField(default=True)
@@ -120,7 +120,6 @@ class BaseCategoryProduct(PolymorphicModel):
                 name="dummy",
                 category_product_type=category_product_type,
                 price=0,
-                manufacturing_name="dummy",
                 is_active=False
             )
 

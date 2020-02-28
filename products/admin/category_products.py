@@ -23,7 +23,7 @@ class BaseCategoryProductAdmin(admin.ModelAdmin):
         })
     ]
 
-    list_display = ["name", "price", "score", "is_active", "serve_image"]
+    list_display = ["name", "price", "score", "serve_image"]
     search_fields = ["name", "manufacturing_name"]
 
     def serve_image(self, obj):
