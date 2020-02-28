@@ -24,7 +24,7 @@ class ProductsAPI(generics.GenericAPIView):
                 category_product = BaseCategoryProduct.create_or_combine(product, matching_product)
 
             else:
-                matching_category_product = BaseCategoryProduct.find_matching_category_product(product)
+                matching_category_product = BaseCategoryProduct.find_similar_category_product(product)
 
                 if matching_category_product:
                     product.category_product = matching_category_product

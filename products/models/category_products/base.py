@@ -44,14 +44,15 @@ class BaseCategoryProduct(PolymorphicModel):
         """Matches the user with products based on their preferences/settings"""
 
         model = kwargs.get("model", None)
+        model_instances = model.inherited_objects.filter(is_active=True)
         if model:
             price = settings.get("price", None)
             if price:
                 min_price, max_price = settings["price"]
-                return model.inherited_objects.filter(Q(is_active=True), Q(price__gte=min_price), Q(price__lte=max_price))
+                return model_instances.filter(Q(price__gte=min_price), Q(price__lte=max_price))
 
             else:
-                return model.inherited_objects.all()
+                return model_instances
 
         return None
 
@@ -124,7 +125,7 @@ class BaseCategoryProduct(PolymorphicModel):
             )
 
     @classmethod
-    def find_matching_category_product(cls, product):
+    def find_similar_category_product(cls, product):
         category_products = BaseCategoryProduct.objects.all()
         matching_products = []
 
@@ -322,11 +323,8 @@ class BaseCategoryProduct(PolymorphicModel):
 
 class CategoryProductType(ModelType):
     def get_model(self):
-        model_instance = BaseCategoryProduct.objects.filter(category_product_type=self).first()
-        if model_instance is not None:
-            return model_instance.get_model()
-        else:
-            return None
+        model_instance = BaseCategoryProduct.objects.filter(category_product_type_id=self.id).first()
+        return model_instance.get_model()
 
     def __str__(self):
         return "<CategoryProductType {self.name}>".format(self=self)
