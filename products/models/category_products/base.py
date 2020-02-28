@@ -28,7 +28,7 @@ class BaseCategoryProduct(PolymorphicModel):
     name = models.CharField('name', max_length=128)
     manufacturing_name = models.CharField("manufacturing name", max_length=128, null=True, blank=True)
     score = models.DecimalField("score", max_digits=9, decimal_places=9, null=True)
-    price = models.IntegerField("price")
+    price = models.IntegerField("price", null=True)
     is_active = models.BooleanField(default=True)
     is_ranked = models.BooleanField("is ranked", default=False)
     category_product_type = models.ForeignKey(
@@ -42,10 +42,13 @@ class BaseCategoryProduct(PolymorphicModel):
 
     @classmethod
     def create(cls, **kwargs):
+        model_name = cls.__name__
+
+        # Create/get content type
         try:
-            content_type = ContentType.objects.get(app_label="products", model=cls.__name__)
+            content_type = ContentType.objects.get(app_label="products", model=model_name)
         except ContentType.DoesNotExist:
-            content_type = ContentType.objects.create(app_label="products", model=cls.__name__)
+            content_type = ContentType.objects.create(app_label="products", model=model_name)
 
         cls.objects.create(content_type=content_type, **kwargs)
 
@@ -118,18 +121,17 @@ class BaseCategoryProduct(PolymorphicModel):
 
     @classmethod
     def create_dummy(cls):
-        print(cls)
-        print(cls.__name__)
-
         try:
-            print(cls.objects.get(name="dummy"))
-
+            # Get dummy category product if it exists
+            cls.objects.get(name="dummy")
         except cls.DoesNotExist:
+            # Create/get category product type
             try:
                 category_product_type = CategoryProductType.objects.get(name=cls.__name__)
             except CategoryProductType.DoesNotExist:
                 category_product_type = CategoryProductType.objects.create(name=cls.__name__)
 
+            # Create dummy category product
             cls.create(
                 name="dummy",
                 category_product_type=category_product_type,
