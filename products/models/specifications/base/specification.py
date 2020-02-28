@@ -163,12 +163,8 @@ class BaseSpecification(PolymorphicModel):
 
 class SpecificationType(ModelType):
     def get_model(self):
-        model_instance = BaseSpecification.objects.filter(specification_type=self).first()
-        if model_instance is not None:
-            return model_instance.get_model()
-        else:
-            return None
+        model_instance = BaseSpecification.objects.filter(specification_type_id=self.id).first()
+        return model_instance.get_model()
 
     def __str__(self):
         return "<SpecificationType {self.name}>".format(self=self)
-

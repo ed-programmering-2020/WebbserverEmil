@@ -111,7 +111,7 @@ class BaseCategoryProduct(PolymorphicModel):
         try:
             cls.objects.get(name="dummy")
         except cls.DoesNotExist:
-            category_product_type_name = cls.__class__.__name__
+            category_product_type_name = cls.__name__
             try:
                 category_product_type = CategoryProductType.objects.get(name=category_product_type_name)
             except CategoryProductType.DoesNotExist:
