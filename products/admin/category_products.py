@@ -1,5 +1,5 @@
 from django.contrib import admin
-from products.models import Laptop, AlternativeCategoryName, CategoryProductType
+from products.models import Laptop, AlternativeCategoryName, CategoryProductType, BaseCategoryProduct
 from .tags import get_image_tag
 
 
@@ -16,6 +16,7 @@ class CategoryProductTypeAdmin(admin.ModelAdmin):
     list_display = ["name"]
 
 
+@admin.register(BaseCategoryProduct)
 class BaseCategoryProductAdmin(admin.ModelAdmin):
     fieldsets = [
         ("Main info", {
