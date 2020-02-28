@@ -118,14 +118,17 @@ class BaseCategoryProduct(PolymorphicModel):
 
     @classmethod
     def create_dummy(cls):
+        print(cls)
+        print(cls.__name__)
+
         try:
-            cls.objects.get(name="dummy")
+            print(cls.objects.get(name="dummy"))
+
         except cls.DoesNotExist:
-            category_product_type_name = cls.__name__
             try:
-                category_product_type = CategoryProductType.objects.get(name=category_product_type_name)
+                category_product_type = CategoryProductType.objects.get(name=cls.__name__)
             except CategoryProductType.DoesNotExist:
-                category_product_type = CategoryProductType.objects.create(name=category_product_type_name)
+                category_product_type = CategoryProductType.objects.create(name=cls.__name__)
 
             cls.create(
                 name="dummy",
