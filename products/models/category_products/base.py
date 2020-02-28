@@ -106,6 +106,23 @@ class BaseCategoryProduct(PolymorphicModel):
         return category_product
 
     @classmethod
+    def create_dummy(cls):
+        try:
+            cls.objects.get(name="dummy")
+        except cls.DoesNotExist:
+            category_product_type_name = cls.__class__.__name__
+            try:
+                category_product_type = CategoryProductType.objects.get(name=category_product_type_name)
+            except CategoryProductType.DoesNotExist:
+                category_product_type = CategoryProductType.objects.create(name=category_product_type_name)
+
+            cls.objects.create(
+                name="dummy",
+                category_product_type=category_product_type,
+                is_active=False
+            )
+
+    @classmethod
     def find_matching_category_product(cls, product):
         category_products = BaseCategoryProduct.objects.all()
         matching_products = []
