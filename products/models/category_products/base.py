@@ -135,10 +135,10 @@ class BaseCategoryProduct(PolymorphicModel):
         max_price = price * 2.5
 
         for category_product in category_products.iterator():
-            if not category_product.manufacturing_name \
-                    or not product.manufacturing_name \
-                    and category_products.products.count != 0:
+            is_active = category_products.is_active
+            no_manufacturing_name = not category_product.manufacturing_name or not product.manufacturing_name
 
+            if no_manufacturing_name and is_active:
                 # Check if price is acceptable and specs match
                 prices = [product.price.value for product in category_product.products.all()]
                 average_price = (sum(prices) / len(prices)) / 2
