@@ -155,7 +155,7 @@ class BaseCategoryProduct(PolymorphicModel):
             for category_product in category_products.iterator():
                 is_active = category_product.is_active
                 no_manufacturing_name = not category_product.manufacturing_name or not product.manufacturing_name
-                has_products = len(category_product.products.count()) > 0
+                has_products = category_product.products.count() > 0
 
                 if no_manufacturing_name and is_active and has_products:
                     # Check if price is acceptable and specs match
