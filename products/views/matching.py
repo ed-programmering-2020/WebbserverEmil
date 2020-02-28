@@ -34,4 +34,4 @@ class MatchAPI(generics.GenericAPIView):
                     "products": serialized_products,
                 })
 
-        return Response({"main": None})
+        return Response({"products": []})
