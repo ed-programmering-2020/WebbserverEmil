@@ -48,7 +48,7 @@ class BaseCategoryProduct(PolymorphicModel):
             price = settings.get("price", None)
             if price:
                 min_price, max_price = settings["price"]
-                return model.inherited_objects.filter(Q(price__gte=min_price), Q(price__lte=max_price))
+                return model.inherited_objects.filter(Q(is_active=True), Q(price__gte=min_price), Q(price__lte=max_price))
 
             else:
                 return model.inherited_objects.all()
@@ -119,6 +119,8 @@ class BaseCategoryProduct(PolymorphicModel):
             cls.objects.create(
                 name="dummy",
                 category_product_type=category_product_type,
+                price=0,
+                manufacturing_name="dummy",
                 is_active=False
             )
 
