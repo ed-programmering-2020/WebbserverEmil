@@ -300,7 +300,10 @@ class BaseCategoryProduct(PolymorphicModel):
 class CategoryProductType(ModelType):
     def get_model(self):
         model_instance = BaseCategoryProduct.objects.filter(category_product_type=self).first()
-        return model_instance.get_model()
+        if model_instance is not None:
+            return model_instance.get_model()
+        else:
+            return None
 
     def __str__(self):
         return "<CategoryProductType {self.name}>".format(self=self)
