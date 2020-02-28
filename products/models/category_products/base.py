@@ -223,7 +223,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
     def update(self):
         # Gather meta data
-        data = defaultdict(default_factory=[])
+        data = defaultdict(list)
         for product in self.products.all():
             data["names"].append(product.name)
             data["specifications"].append(product.get_specs())
