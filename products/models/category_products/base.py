@@ -85,8 +85,8 @@ class BaseCategoryProduct(PolymorphicModel):
                 category_name = second.category
 
             try:
-                AlternativeCategoryName.objects.get(name=category_name)
-                category_product_type = AlternativeCategoryName.category_product_type
+                alternative_category_name = AlternativeCategoryName.objects.get(name=category_name)
+                category_product_type = alternative_category_name.category_product_type
 
                 if category_product_type is not None:
                     category_product_model = category_product_type.get_model()
