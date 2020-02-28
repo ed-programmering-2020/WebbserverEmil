@@ -33,10 +33,6 @@ class PolymorphicModel(models.Model):
 class ModelType(models.Model):
     name = models.CharField("name", max_length=32)
 
-    def get_model(self):
-        model_instance = self.model.objects.filter(specification_type=self).first()
-        return model_instance.get_model()
-
     def __str__(self):
         return "<{self.model.__class__.__name__}Type {self.name}>".format(self=self)
 

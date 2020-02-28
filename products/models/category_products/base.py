@@ -298,4 +298,6 @@ class BaseCategoryProduct(PolymorphicModel):
 
 
 class CategoryProductType(ModelType):
-    model = BaseCategoryProduct
+    def get_model(self):
+        model_instance = BaseCategoryProduct.objects.filter(category_product_type=self).first()
+        return model_instance.get_model()
