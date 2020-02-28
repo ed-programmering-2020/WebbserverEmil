@@ -9,7 +9,7 @@ from django.db import models
 class AlternativeCategoryName(AlternativeModelName):
     category_product_type = models.ForeignKey(
         "products.BaseCategoryProduct",
-        related_name="alternative_names",
+        related_name="alternative_category_names",
         null=True,
         on_delete=models.SET_NULL
     )

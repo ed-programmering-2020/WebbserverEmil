@@ -7,7 +7,7 @@ import re
 class AlternativeSpecificationName(AlternativeModelName):
     specification_type = models.ForeignKey(
         "products.SpecificationType",
-        related_name="alternative_names",
+        related_name="alternative_specification_names",
         null=True,
         on_delete=models.SET_NULL
     )
