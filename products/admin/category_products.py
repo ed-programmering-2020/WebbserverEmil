@@ -16,7 +16,6 @@ class CategoryProductTypeAdmin(admin.ModelAdmin):
     list_display = ["name"]
 
 
-@admin.register(BaseCategoryProduct)
 class BaseCategoryProductAdmin(admin.ModelAdmin):
     fieldsets = [
         ("Main info", {

@@ -12,7 +12,7 @@ import string
 
 class AlternativeCategoryName(AlternativeModelName):
     category_product_type = models.ForeignKey(
-        "products.BaseCategoryProduct",
+        "products.CategoryProductType",
         related_name="alternative_category_names",
         null=True,
         blank=True,
