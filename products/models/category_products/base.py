@@ -135,7 +135,9 @@ class BaseCategoryProduct(PolymorphicModel):
         max_price = price * 2.5
 
         for category_product in category_products.iterator():
-            if not category_product.manufacturing_name or not product.manufacturing_name:
+            if not category_product.manufacturing_name \
+                    or not product.manufacturing_name \
+                    and category_products.products.count != 0:
 
                 # Check if price is acceptable and specs match
                 prices = [product.price.value for product in category_product.products.all()]
