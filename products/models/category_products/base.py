@@ -5,6 +5,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from operator import itemgetter
 from difflib import SequenceMatcher
 from collections import defaultdict
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 from django.db import models
 import string
@@ -38,6 +39,15 @@ class BaseCategoryProduct(PolymorphicModel):
     )
 
     objects = models.Manager()
+
+    @classmethod
+    def create(cls, **kwargs):
+        try:
+            content_type = ContentType.objects.get(app_label="products", model=cls.__name__)
+        except ContentType.DoesNotExist:
+            content_type = ContentType.objects.create(app_label="products", model=cls.__name__)
+
+        cls.objects.create(content_type=content_type, **kwargs)
 
     @staticmethod
     def match(settings, **kwargs):
@@ -91,7 +101,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
                 if category_product_type is not None:
                     category_product_model = category_product_type.get_model()
-                    category_product = category_product_model.objects.create(category_product_type=category_product_type)
+                    category_product = category_product_model.create(category_product_type=category_product_type)
                     category_product.products.set([first, second])
 
                 else:
@@ -117,7 +127,7 @@ class BaseCategoryProduct(PolymorphicModel):
             except CategoryProductType.DoesNotExist:
                 category_product_type = CategoryProductType.objects.create(name=category_product_type_name)
 
-            cls.objects.create(
+            cls.create(
                 name="dummy",
                 category_product_type=category_product_type,
                 price=0,
