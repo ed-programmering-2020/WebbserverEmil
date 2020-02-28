@@ -5,8 +5,8 @@ from rest_framework import generics
 import json
 
 
-def import_category(name):
-    name = "products.models.categories." + name
+def import_model(name):
+    name = "products.models." + name.capitalize()
     components = name.split('.')
     mod = __import__(components[0])
     for comp in components[1:]:
@@ -19,21 +19,17 @@ class MatchAPI(generics.GenericAPIView):
     serializer_class = ProductSerializer
 
     def get(self, request, name, *args, **kwargs):
-        category = import_category(name).objects.get(name=name)
         settings = json.loads(request.GET["settings"])
-        products = category.match(settings)
+        model = import_model(name)
+        products = model.match(settings)
 
         if products:
-            top_product = products[0]
-            serialized_product = ProductSerializer(top_product).data
-
-            serialized_alternatives = []
-            if len(products) > 1:
-                for product in products[1:]:
-                    serialized_alternatives.append(ProductSerializer(product).data)
+            serialized_products = []
+            for product in products:
+                serialized_products.append(ProductSerializer(product).data)
 
             return Response({
-                "main": serialized_product,
+                "products": serialized_products,
             })
         else:
             return Response({"main": None})
