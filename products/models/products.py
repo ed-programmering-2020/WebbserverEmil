@@ -52,7 +52,7 @@ class Product(models.Model):
     def find_similar_product(self):
         if self.manufacturing_name:
             try:
-                return Product.objects.exclude(id=self.id).get(manufacturing_name=self.manufacturing_name)
+                return Product.objects.exclude(id=self.id).filter(manufacturing_name=self.manufacturing_name).first()
             except Product.DoesNotExist:
                 return None
         else:
