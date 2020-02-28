@@ -33,9 +33,6 @@ class PolymorphicModel(models.Model):
 class ModelType(models.Model):
     name = models.CharField("name", max_length=32)
 
-    def __str__(self):
-        return "<{self.model.__class__.__name__}Type {self.name}>".format(self=self)
-
     class Meta:
         abstract = True
 

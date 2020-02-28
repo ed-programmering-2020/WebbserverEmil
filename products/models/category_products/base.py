@@ -301,3 +301,7 @@ class CategoryProductType(ModelType):
     def get_model(self):
         model_instance = BaseCategoryProduct.objects.filter(category_product_type=self).first()
         return model_instance.get_model()
+
+    def __str__(self):
+        return "<CategoryProductType {self.name}>".format(self=self)
+

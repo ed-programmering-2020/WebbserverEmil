@@ -165,3 +165,7 @@ class SpecificationType(ModelType):
     def get_model(self):
         model_instance = BaseSpecification.objects.filter(specification_type=self).first()
         return model_instance.get_model()
+
+    def __str__(self):
+        return "<SpecificationType {self.name}>".format(self=self)
+
