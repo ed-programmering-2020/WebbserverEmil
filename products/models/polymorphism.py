@@ -24,6 +24,18 @@ class PolymorphicModel(models.Model):
     content_type = models.ForeignKey(ContentType, editable=False, on_delete=models.SET_NULL, null=True)
     inherited_objects = PolymorphicManager()
 
+    @classmethod
+    def create(cls, **kwargs):
+        model_name = cls.__name__
+
+        # Create/get content type
+        try:
+            content_type = ContentType.objects.get(app_label="products", model=model_name)
+        except ContentType.DoesNotExist:
+            content_type = ContentType.objects.create(app_label="products", model=model_name)
+
+        return cls.objects.create(content_type=content_type, **kwargs)
+
     def get_model(self):
         content_type = self.content_type
         model = content_type.model_class()

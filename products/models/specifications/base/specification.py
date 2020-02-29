@@ -107,6 +107,24 @@ class BaseSpecification(PolymorphicModel):
             specification.is_ranked = True
             specification.save()
 
+    @classmethod
+    def create_dummy(cls):
+        try:
+            # Get dummy category product if it exists
+            cls.objects.get(name="dummy")
+        except cls.DoesNotExist:
+            # Create/get category product type
+            try:
+                specification_type = SpecificationType.objects.get(name=cls.__name__)
+            except SpecificationType.DoesNotExist:
+                specification_type = SpecificationType.objects.create(name=cls.__name__)
+
+            # Create dummy category product
+            cls.create(
+                name="dummy",
+                specification=specification_type
+            )
+
     @staticmethod
     def get_specification_instances(product_data):
         specifications = []

@@ -40,18 +40,6 @@ class BaseCategoryProduct(PolymorphicModel):
 
     objects = models.Manager()
 
-    @classmethod
-    def create(cls, **kwargs):
-        model_name = cls.__name__
-
-        # Create/get content type
-        try:
-            content_type = ContentType.objects.get(app_label="products", model=model_name)
-        except ContentType.DoesNotExist:
-            content_type = ContentType.objects.create(app_label="products", model=model_name)
-
-        return cls.objects.create(content_type=content_type, **kwargs)
-
     @staticmethod
     def match(settings, **kwargs):
         """Matches the user with products based on their preferences/settings"""
