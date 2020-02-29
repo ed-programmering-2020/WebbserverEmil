@@ -162,7 +162,7 @@ class BaseSpecification(PolymorphicModel):
 
 
 class SpecificationType(ModelType):
-    def get_model(self):
+    def get_specification_model(self):
         model_instance = BaseSpecification.objects.filter(specification_type_id=self.id).first()
         return model_instance.get_model()
 
