@@ -120,10 +120,7 @@ class BaseSpecification(PolymorphicModel):
                 specification_type = SpecificationType.objects.create(name=cls.__name__)
 
             # Create dummy category product
-            cls.create(
-                name="dummy",
-                specification=specification_type
-            )
+            cls.create(specification=specification_type)
 
     @staticmethod
     def get_specification_instances(product_data):
