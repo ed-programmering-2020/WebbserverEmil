@@ -111,7 +111,7 @@ class BaseSpecification(PolymorphicModel):
     def create_dummy(cls):
         try:
             # Get dummy category product if it exists
-            cls.objects.get(name="dummy")
+            cls.objects.first()
         except cls.DoesNotExist:
             # Create/get category product type
             try:
