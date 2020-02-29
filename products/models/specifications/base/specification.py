@@ -153,6 +153,7 @@ class BaseSpecification(PolymorphicModel):
                             print("bringo")
                             specification = temporary_model_instance
                             specification.specification_type = specification_type
+                            print(specification.value)
                             print("babinba")
                             specification.save()
                             print("brango")
