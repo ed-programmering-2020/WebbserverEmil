@@ -38,8 +38,11 @@ class PolymorphicModel(models.Model):
 
     def get_model(self):
         content_type = self.content_type
-        model = content_type.model_class()
-        return model
+
+        if content_type:
+            return content_type.model_class()
+        else:
+            return None
 
 
 class ModelType(models.Model):

@@ -142,7 +142,7 @@ class BaseSpecification(PolymorphicModel):
 
                         # Get model and process value
                         specification_model = specification_type.get_specification_model()
-                        temporary_model_instance = specification_model()
+                        temporary_model_instance = specification_model.create()
                         temporary_model_instance.value = value
                         processed_value = temporary_model_instance.value
 
