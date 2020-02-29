@@ -4,8 +4,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 from operator import itemgetter
 from difflib import SequenceMatcher
-from collections import defaultdict
-from django.contrib.contenttypes.models import ContentType
+from collections import defaultdic
 from django.db.models import Q
 from django.db import models
 import string
@@ -298,11 +297,13 @@ class BaseCategoryProduct(PolymorphicModel):
 
     def update_specs(self, product_data):
         specifications = BaseSpecification.get_specification_instances(product_data)
+        print("+++++++")
 
         for specification in specifications:
             specification_attribute_name = specification.get_attribute_like_name
+            print(specification_attribute_name)
 
-            if hasattr(specification, specification_attribute_name):
+            if hasattr(self, specification_attribute_name):
                 eval_string = "self.{}_id = {}".format(specification_attribute_name, specification.id)
                 eval(eval_string)
 

@@ -171,6 +171,7 @@ class BaseSpecification(PolymorphicModel):
 
     def process_number(self, value):
         first_value = value.split(" ")[0]
+        print("----")
         print(first_value)
         value = re.sub("[^0-9]", "", first_value).replace(" ", "")
         print(value)
