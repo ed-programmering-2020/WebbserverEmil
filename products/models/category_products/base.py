@@ -297,11 +297,9 @@ class BaseCategoryProduct(PolymorphicModel):
 
     def update_specs(self, product_data):
         specifications = BaseSpecification.get_specification_instances(product_data)
-        print("+++++++")
 
         for specification in specifications:
             specification_attribute_name = specification.get_attribute_like_name()
-            print(specification_attribute_name)
 
             if hasattr(self, specification_attribute_name):
                 eval_string = "self.{}_id = {}".format(specification_attribute_name, specification.id)

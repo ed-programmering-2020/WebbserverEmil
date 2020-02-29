@@ -54,7 +54,7 @@ class BaseSpecification(PolymorphicModel):
         sorted_specifications = defaultdict()
 
         # Sorting
-        for specification in BaseSpecification.objects.all().iterator():
+        for specification in BaseSpecification.inherited_objects.all().iterator():
             if not specification.is_ranked:
                 value = specification.value
                 key = specification.__class__.__name__
@@ -139,42 +139,27 @@ class BaseSpecification(PolymorphicModel):
 
                         # Get model and process value
                         specification_model = specification_type.get_specification_model()
-
-                        print(1)
                         temporary_model_instance = specification_model()
                         temporary_model_instance.value = value
                         processed_value = temporary_model_instance.value
-                        print(2)
 
                         try:
                             specification = specification_model.objects.get(_value=processed_value)
-                            print("brongo")
                         except specification_model.DoesNotExist:
-                            print("bringo")
                             specification = temporary_model_instance
                             specification.specification_type = specification_type
-                            print(specification.value)
-                            print("babinba")
                             specification.save()
-                            print("brango")
-
-                        print(3)
 
                         specifications.append(specification)
 
                 except AlternativeSpecificationName.DoesNotExist:
                     AlternativeSpecificationName.objects.create(name=key, host=host)
 
-        print("bapp")
-
         return specifications
 
     def process_number(self, value):
         first_value = value.split(" ")[0]
-        print("----")
-        print(first_value)
         value = re.sub("[^0-9]", "", first_value).replace(" ", "")
-        print(value)
         if value != "":
             return int(value)
         else:
@@ -192,7 +177,7 @@ class BaseSpecification(PolymorphicModel):
         return self.value == other.value
 
     def __str__(self):
-        raise "<BaseSpecification {self.score}>".format(self=self)
+        return "<BaseSpecification {self.score}>".format(self=self)
 
 
 class SpecificationType(ModelType):
