@@ -112,11 +112,13 @@ class BaseSpecification(PolymorphicModel):
         if cls.objects.count() == 0:
             specification_type_name = cls.__name__
 
+            print("bapp")
             # Create/get category product type
             try:
                 specification_type = SpecificationType.objects.get(name=specification_type_name)
             except SpecificationType.DoesNotExist:
                 specification_type = SpecificationType.objects.create(name=specification_type_name)
+            print("bopp")
 
             # Create dummy category product
             cls.create(specification_type=specification_type)
