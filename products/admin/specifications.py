@@ -2,8 +2,13 @@ from django.contrib import admin
 from products.models import BaseSpecification, AlternativeSpecificationName, SpecificationType
 
 
+class AlternativeNameInline(admin.TabularInline):
+    model = AlternativeSpecificationName
+
+
 @admin.register(SpecificationType)
 class SpecificationTypeAdmin(admin.ModelAdmin):
+    inlines = [AlternativeNameInline]
     fields = ["name"]
     list_display = ["name"]
 
