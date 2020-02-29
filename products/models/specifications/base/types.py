@@ -42,7 +42,7 @@ class TypeSpecification(CharSpecification):
 
 
 class BenchmarkSpecification(CharSpecification):
-    benchmark_score = models.IntegerField("benchmark")
+    benchmark_score = models.IntegerField("benchmark", null=True)
 
     @staticmethod
     def get_soup(url):
