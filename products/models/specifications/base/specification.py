@@ -39,7 +39,7 @@ class BaseSpecification(PolymorphicModel):
 
     def get_attribute_like_name(self):
         attribute_like_name = ""
-        class_name = self.__name__
+        class_name = self.__class__.__name__
         for i, letter in enumerate(class_name):
             if not letter.islower() and i != 0:
                 letter = letter.lower()
