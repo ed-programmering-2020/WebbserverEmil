@@ -114,9 +114,12 @@ class BaseSpecification(PolymorphicModel):
             for spec in specs:
                 key, value = spec
 
+                print(key, value)
+
                 # Create/get spec key
                 try:
                     alternative_specification_name = AlternativeSpecificationName.objects.get(name__iexact=key)
+                    print("bapp")
 
                     # Create/get if it belongs to spec group
                     specification_type = alternative_specification_name.specification_type
@@ -138,6 +141,7 @@ class BaseSpecification(PolymorphicModel):
 
                 except AlternativeSpecificationName.DoesNotExist:
                     AlternativeSpecificationName.objects.create(name=key)
+                    print("bopp")
 
         return specifications
 
