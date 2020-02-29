@@ -171,8 +171,13 @@ class BaseSpecification(PolymorphicModel):
 
     def process_number(self, value):
         first_value = value.split(" ")[0]
+        print(first_value)
         value = re.sub("[^0-9]", "", first_value).replace(" ", "")
-        return int(value)
+        print(value)
+        if value != "":
+            return int(value)
+        else:
+            return None
 
     def process_text(self, value):
         value_lowercase = value.lower()
