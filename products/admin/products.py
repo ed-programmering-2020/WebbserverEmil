@@ -41,6 +41,6 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Price)
 class PriceAdmin(admin.ModelAdmin):
-    list_display = ["_value", "product"]
+    list_display = ["_value", "product", "host"]
     search_fields = []
 
