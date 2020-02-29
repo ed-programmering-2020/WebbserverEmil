@@ -225,10 +225,19 @@ class BaseCategoryProduct(PolymorphicModel):
         # Gather meta data
         data = defaultdict(list)
         for product in self.products.all():
+            # Identification
             data["names"].append(product.name)
-            data["specifications"].append(product.get_specs())
             data["manufacturing_names"].append(product.manufacturing_name)
-            data["prices"].append(product.get_price())
+
+            # Specifications
+            specifications = product.specifications
+            if specifications:
+                data["specifications"].append(specifications)
+
+            # Pricing
+            price = product.price
+            if price is not None:
+                data["prices"].append(price.value)
 
         # Update product
         if len(data["prices"]) >= 2:
