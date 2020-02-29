@@ -156,6 +156,8 @@ class BaseSpecification(PolymorphicModel):
                 except AlternativeSpecificationName.DoesNotExist:
                     AlternativeSpecificationName.objects.create(name=key, host=host)
 
+        print("bapp")
+
         return specifications
 
     def process_number(self, value):
