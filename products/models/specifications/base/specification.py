@@ -140,15 +140,15 @@ class BaseSpecification(PolymorphicModel):
                         # Get model and process value
                         specification_model = specification_type.get_specification_model()
 
-                        try:
-                            temporary_model_instance = specification_model()
-                            temporary_model_instance.value = value
-                            processed_value = temporary_model_instance.value
-                            specification = specification_model.objects.get(_value=processed_value)
+                        temporary_model_instance = specification_model()
+                        temporary_model_instance.value = value
+                        processed_value = temporary_model_instance.value
 
+                        try:
+                            specification = specification_model.objects.get(_value=processed_value)
                         except specification_model.DoesNotExist:
-                            specification = specification_model.objects.create(specification_type=specification_type)
-                            specification.value = value
+                            specification = temporary_model_instance
+                            specification.specification_type = specification_type
                             specification.save()
 
                         specifications.append(specification)
