@@ -11,7 +11,7 @@ class IntegerSpecification(models.Model):
 
 
 class DecimalSpecification(models.Model):
-    _value = models.DecimalField("value", null=True, max_digits=5, decimal_places=5)
+    _value = models.DecimalField("value", null=True, max_digits=8, decimal_places=5)
 
     class Meta:
         abstract = True
