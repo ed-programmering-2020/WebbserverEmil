@@ -232,7 +232,7 @@ class BaseCategoryProduct(PolymorphicModel):
             # Specifications
             specifications = product.specifications
             if specifications:
-                data["specifications"].append(specifications)
+                data["specifications"].append((product.host, specifications))
 
             # Pricing
             price = product.price
@@ -308,8 +308,8 @@ class BaseCategoryProduct(PolymorphicModel):
 
         self.name = name
 
-    def update_specs(self, specs_list):
-        specifications = BaseSpecification.get_specification_instances(specs_list)
+    def update_specs(self, product_data):
+        specifications = BaseSpecification.get_specification_instances(product_data)
 
         for specification in specifications:
             specification_attribute_name = specification.get_attribute_like_name

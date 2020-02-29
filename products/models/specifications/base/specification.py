@@ -108,18 +108,15 @@ class BaseSpecification(PolymorphicModel):
             specification.save()
 
     @staticmethod
-    def get_specification_instances(specs_list):
+    def get_specification_instances(product_data):
         specifications = []
-        for specs in specs_list:
+        for host, specs in product_data:
             for spec in specs:
                 key, value = spec
 
-                print(key, value)
-
                 # Create/get spec key
                 try:
-                    alternative_specification_name = AlternativeSpecificationName.objects.get(name__iexact=key)
-                    print("bapp")
+                    alternative_specification_name = AlternativeSpecificationName.objects.get(name__iexact=key, host=host)
 
                     # Create/get if it belongs to spec group
                     specification_type = alternative_specification_name.specification_type
@@ -140,8 +137,7 @@ class BaseSpecification(PolymorphicModel):
                         specifications.append(specification)
 
                 except AlternativeSpecificationName.DoesNotExist:
-                    AlternativeSpecificationName.objects.create(name=key)
-                    print("bopp")
+                    AlternativeSpecificationName.objects.create(name=key, host=host)
 
         return specifications
 

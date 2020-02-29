@@ -38,7 +38,8 @@ class ModelType(models.Model):
 
 
 class AlternativeModelName(models.Model):
-    name = models.CharField("name", max_length=32)
+    name = models.CharField("name", max_length=64)
+    host = models.ForeignKey("products.Website", null=True, on_delete=models.CASCADE)
 
     class Meta:
         abstract = True
