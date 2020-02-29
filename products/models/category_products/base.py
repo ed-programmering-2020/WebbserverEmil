@@ -254,7 +254,7 @@ class BaseCategoryProduct(PolymorphicModel):
                     break
 
         self.update_name(data["names"])
-        self.update_specs(data["specs"])
+        self.update_specs(data["specifications"])
         self.is_ranked = False
         self.save()
 
