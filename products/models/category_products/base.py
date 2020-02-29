@@ -4,7 +4,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 from operator import itemgetter
 from difflib import SequenceMatcher
-from collections import defaultdic
+from collections import defaultdict
 from django.db.models import Q
 from django.db import models
 import string
