@@ -54,11 +54,14 @@ class BaseSpecification(PolymorphicModel):
         sorted_specifications = defaultdict()
 
         # Sorting
-        for specification in BaseSpecification.inherited_objects.all().iterator():
+        for specification in BaseSpecification.objects.all().iterator():
             if not specification.is_ranked:
-                value = specification.value
-                key = specification.__class__.__name__
-                package = (specification.id, value)
+                model = specification.get_model()
+                inherited_specification = model.objects.get(id=specification.id)
+
+                key = inherited_specification.__class__.__name__
+                value = inherited_specification.value
+                package = (inherited_specification.id, value)
 
                 if key not in sorted_specifications:
                     sorted_specifications[key] = [[package]]
