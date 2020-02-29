@@ -31,7 +31,7 @@ class BaseSpecification(PolymorphicModel):
 
     @property
     def value(self):
-        raise NotImplementedError
+        return None
 
     @value.setter
     def value(self, value):
