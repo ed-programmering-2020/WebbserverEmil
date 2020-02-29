@@ -128,9 +128,7 @@ class BaseSpecification(PolymorphicModel):
         specifications = []
         for host, specs in product_data:
             for spec in specs:
-                print(spec)
-                print(type(spec))
-                key, value = spec
+                key, value = tuple(spec)
 
                 # Create/get spec key
                 try:
@@ -176,7 +174,7 @@ class BaseSpecification(PolymorphicModel):
         return self.value == other.value
 
     def __str__(self):
-        raise NotImplementedError
+        raise "<BaseSpecification {self.score}>".format(self=self)
 
 
 class SpecificationType(ModelType):
