@@ -159,12 +159,12 @@ class BaseCategoryProduct(PolymorphicModel):
 
                 if no_manufacturing_name and is_active and has_products:
                     # Check if price is acceptable and specs match
-                    prices = [product.price.value for product in category_product.products]
+                    prices = [product.price.value for product in category_product.products.all()]
                     average_price = (sum(prices) / len(prices)) / 2
 
                     if min_price <= average_price <= max_price and cls.matching_specs(specs, category_product):
                         # Get top meta-product name similarity
-                        names = [cls.clean_string(product.name) for product in category_product.products]
+                        names = [cls.clean_string(product.name) for product in category_product.products.all()]
                         name_similarity = cls.name_similarity(name, names)
                         matching_products.append((name_similarity, product))
 
