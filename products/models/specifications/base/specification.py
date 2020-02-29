@@ -128,6 +128,8 @@ class BaseSpecification(PolymorphicModel):
         specifications = []
         for host, specs in product_data:
             for spec in specs:
+                print(spec)
+                print(type(spec))
                 key, value = spec
 
                 # Create/get spec key
