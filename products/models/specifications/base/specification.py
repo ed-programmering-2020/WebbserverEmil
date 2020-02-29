@@ -148,10 +148,14 @@ class BaseSpecification(PolymorphicModel):
 
                         try:
                             specification = specification_model.objects.get(_value=processed_value)
+                            print("brongo")
                         except specification_model.DoesNotExist:
+                            print("bringo")
                             specification = temporary_model_instance
                             specification.specification_type = specification_type
+                            print("babinba")
                             specification.save()
+                            print("brango")
 
                         print(3)
 
