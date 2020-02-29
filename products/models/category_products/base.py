@@ -300,7 +300,7 @@ class BaseCategoryProduct(PolymorphicModel):
         print("+++++++")
 
         for specification in specifications:
-            specification_attribute_name = specification.get_attribute_like_name
+            specification_attribute_name = specification.get_attribute_like_name()
             print(specification_attribute_name)
 
             if hasattr(self, specification_attribute_name):
