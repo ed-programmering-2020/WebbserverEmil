@@ -131,7 +131,7 @@ class BaseSpecification(PolymorphicModel):
             print(host)
             print(specs)
             for spec in specs:
-                print(spec)
+                print(spec, len(spec))
                 key = spec[0]
                 value = spec[1]
 
