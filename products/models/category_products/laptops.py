@@ -69,7 +69,7 @@ class Laptop(BaseCategoryProduct):
                     filtered_laptops.append(laptop)
 
             laptops = filtered_laptops
-        print(laptops, start - time.time())
+        print(laptops, time.time() - start)
 
         # Get usage score
         start = time.time()
@@ -94,7 +94,7 @@ class Laptop(BaseCategoryProduct):
             laptops = laptops[:10]
         else:
             laptops = laptops[:len(laptops)]
-        print(laptops, start - time.time())
+        print(laptops, time.time() - start)
 
         # Get priority score
         start = time.time()
@@ -114,6 +114,6 @@ class Laptop(BaseCategoryProduct):
 
                 sorted_laptops[laptop] = score / laptop.price
             laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
-        print(laptops, start - time.time())
+        print(laptops, time.time() - start)
 
         return laptops
