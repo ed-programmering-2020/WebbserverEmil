@@ -88,7 +88,7 @@ class Laptop(BaseCategoryProduct):
 
             sorted_laptops[laptop.id] = score / laptop.price
 
-        laptops = sorted(sorted_laptops, key=itemgetter(1), reverse=True)
+        laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
         if len(laptops) >= 10:
             laptops = laptops[:10]
         else:
@@ -111,7 +111,7 @@ class Laptop(BaseCategoryProduct):
                         exec("priority_score += laptop.{}.score * {}".format(name, priority / 5))
 
                 sorted_laptops[laptop.id] = score / laptop.price
-            laptops = sorted(laptops, key=itemgetter(1), reverse=True)
+            laptops = sorted(sorted_laptops, key=itemgetter(1), reverse=True)
         print(laptops)
 
         # Get laptop instances
