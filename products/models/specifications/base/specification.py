@@ -27,8 +27,9 @@ class BaseSpecification(PolymorphicModel):
         blank=True,
         on_delete=models.SET_NULL
     )
-
     objects = models.Manager()
+
+    to_rank = False
 
     @property
     def value(self):
