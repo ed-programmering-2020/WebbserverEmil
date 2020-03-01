@@ -162,13 +162,12 @@ class BaseSpecification(PolymorphicModel):
 
                         # Add specification instance to a list
                         specification_instances.append(specification)
-                        print(specification)
 
                 except AlternativeSpecificationName.DoesNotExist:
                     # Create new alternative specification name
                     AlternativeSpecificationName.objects.create(name=key, host=host)
 
-        return specifications
+        return specification_instances
 
     def process_number(self, value):
         first_value = value.split(" ")[0]
