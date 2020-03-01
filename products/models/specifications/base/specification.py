@@ -128,36 +128,37 @@ class BaseSpecification(PolymorphicModel):
     def get_specification_instances(product_data):
         specifications = []
         for host, specs in product_data:
-            for spec in specs:
-                if len(spec) == 2:
-                    key = spec[0]
-                    value = spec[1]
+            if specs:
+                for spec in specs:
+                    if len(spec) == 2:
+                        key = spec[0]
+                        value = spec[1]
 
-                    # Create/get spec key
-                    try:
-                        alternative_specification_name = AlternativeSpecificationName.objects.get(name__iexact=key, host=host)
+                        # Create/get spec key
+                        try:
+                            alternative_specification_name = AlternativeSpecificationName.objects.get(name__iexact=key, host=host)
 
-                        # Create/get if it belongs to spec group
-                        specification_type = alternative_specification_name.specification_type
-                        if specification_type:
+                            # Create/get if it belongs to spec group
+                            specification_type = alternative_specification_name.specification_type
+                            if specification_type:
 
-                            # Get model and process value
-                            specification_model = specification_type.get_specification_model()
-                            temporary_model_instance = specification_model.create()
-                            temporary_model_instance.value = value
-                            processed_value = temporary_model_instance.value
+                                # Get model and process value
+                                specification_model = specification_type.get_specification_model()
+                                temporary_model_instance = specification_model.create()
+                                temporary_model_instance.value = value
+                                processed_value = temporary_model_instance.value
 
-                            try:
-                                specification = specification_model.objects.get(_value=processed_value)
-                            except specification_model.DoesNotExist:
-                                specification = temporary_model_instance
-                                specification.specification_type = specification_type
-                                specification.save()
+                                try:
+                                    specification = specification_model.objects.get(_value=processed_value)
+                                except specification_model.DoesNotExist:
+                                    specification = temporary_model_instance
+                                    specification.specification_type = specification_type
+                                    specification.save()
 
-                            specifications.append(specification)
+                                specifications.append(specification)
 
-                    except AlternativeSpecificationName.DoesNotExist:
-                        AlternativeSpecificationName.objects.create(name=key, host=host)
+                        except AlternativeSpecificationName.DoesNotExist:
+                            AlternativeSpecificationName.objects.create(name=key, host=host)
 
         return specifications
 
