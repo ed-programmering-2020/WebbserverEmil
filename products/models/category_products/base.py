@@ -186,6 +186,9 @@ class BaseCategoryProduct(PolymorphicModel):
 
     @staticmethod
     def matching_specs(specifications, product):
+        if specifications is None:
+            return False
+
         specification_instances = BaseSpecification.get_specification_instances(specifications)
         matches = 0
 
