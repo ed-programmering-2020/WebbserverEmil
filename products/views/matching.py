@@ -19,12 +19,10 @@ class MatchAPI(generics.GenericAPIView):
     serializer_class = ProductSerializer
 
     def get(self, request, name, *args, **kwargs):
-        settings_json = request.GET
+        settings = request.GET
 
-        print(settings_json)
-        if settings_json is not None:
-            settings = json.loads(settings_json)
-            print(settings)
+        print(settings)
+        if settings is not None:
             model = import_model(name)
             print(model)
             products = model.match(settings)
