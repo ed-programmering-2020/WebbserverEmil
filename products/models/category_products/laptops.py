@@ -110,7 +110,8 @@ class Laptop(BaseCategoryProduct):
                     priority = priorities.get(specification["group"], None)
                     if priority is not None:
                         name = specification["name"]
-                        exec("score += laptop.{}.score * {}".format(name, priority / 5))
+                        if eval("laptop.{} is not None and laptop.{}.to_rank is True".format(name, name)):
+                            exec("score += laptop.{}.score * {}".format(name, priority / 5))
 
                 sorted_laptops[laptop] = score / laptop.price
             laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
