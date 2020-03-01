@@ -251,12 +251,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
                 for specification in specification_instances:
                     specification_attribute_name = specification.get_attribute_like_name()
-
-                    print(specification_attribute_name)
-                    if hasattr(self, specification_attribute_name):
-                        print("here")
-                        eval("self.{}_id = {}".format(specification_attribute_name, specification.id))
-                        print(eval("self.{}_id".format(specification_attribute_name)))
+                    eval("self.{}_id = {}".format(specification_attribute_name, specification.id))
 
         # Update the rest of the category product
         self.update_name(data["names"])
