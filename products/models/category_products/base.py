@@ -247,6 +247,8 @@ class BaseCategoryProduct(PolymorphicModel):
                 specifications = BaseSpecification.get_specification_instances(specifications, host)
 
                 for specification in specifications:
+                    print(specification)
+                    print(type(specification))
                     specification_attribute_name = specification.get_attribute_like_name()
 
                     if hasattr(self, specification_attribute_name):
