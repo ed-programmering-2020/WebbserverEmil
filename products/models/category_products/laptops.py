@@ -108,13 +108,13 @@ class Laptop(BaseCategoryProduct):
 
                     if eval("laptop.{} is not None and laptop.{}.to_rank is True".format(name, name)):
                         priority = priorities[specification["group"]]
-
                         exec("priority_score += laptop.{}.score * {}".format(name, priority / 5))
 
                 sorted_laptops[laptop.id] = score / laptop.price
             laptops = sorted(laptops, key=itemgetter(1), reverse=True)
         print(laptops)
 
+        # Get laptop instances
         laptop_instances = []
         for laptop_id, __ in laptops:
             laptop_instance = BaseCategoryProduct.objects.get(id=laptop_id)
