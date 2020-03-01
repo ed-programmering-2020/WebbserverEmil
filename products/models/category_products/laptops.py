@@ -60,10 +60,13 @@ class Laptop(BaseCategoryProduct):
         size = settings.get("size", None)
         if size is not None:
             size_dict = json.loads(size)
+            print(size_dict)
+            min_price = size_dict["min"]
+            max_price = size_dict["max"]
 
             filtered_laptops = []
             for laptop in laptops:
-                if size_dict["min"] < laptop.screen_size < size_dict["max"]:
+                if min_price < laptop.screen_size < max_price:
                     filtered_laptops.append(laptop)
 
             laptops = filtered_laptops
