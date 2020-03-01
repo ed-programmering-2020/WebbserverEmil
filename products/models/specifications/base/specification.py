@@ -187,7 +187,7 @@ class BaseSpecification(PolymorphicModel):
         return value
 
     def __hash__(self):
-        return hash(self._get_pk_val())
+        return hash(self.id)
 
     def __gt__(self, other):
         return self.value > other.value
