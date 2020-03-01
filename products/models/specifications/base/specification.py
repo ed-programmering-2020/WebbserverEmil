@@ -139,7 +139,7 @@ class BaseSpecification(PolymorphicModel):
                 # Create/get alternative specification name
                 try:
                     if host is not None:
-                        alternative_specification_name = AlternativeSpecificationName.objects.get(name__iexact=key)
+                        alternative_specification_name = AlternativeSpecificationName.objects.filter(name__iexact=key).first()
                     else:
                         alternative_specification_name = AlternativeSpecificationName.objects.get(name__iexact=key, host=host)
 

@@ -218,7 +218,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
             # Specifications
             specifications = product.specifications
-            if specifications:
+            if specifications is not None:
                 data["specifications"].append((product.host, specifications))
 
             # Pricing
@@ -242,7 +242,7 @@ class BaseCategoryProduct(PolymorphicModel):
                     break
 
         # Update specifications
-        if data["specifications"] is not None and data["specifications"] != []:
+        if data["specifications"] is not []:
             for host, specifications in data["specifications"]:
                 specification_instances = BaseSpecification.get_specification_instances(specifications, host)
 
