@@ -15,6 +15,19 @@ def get_foreign_key(model_name):
 
 
 class Laptop(BaseCategoryProduct):
+    specifications = [
+        {"name": "battery_time", "group": "battery", "general": 1.3, "gaming": 0.7},
+        {"name": "weight", "group": "weight", "general": 1.3, "gaming": 0.7},
+        {"name": "processor", "group": "performance", "gaming": 1.15},
+        {"name": "graphics_card", "group": "performance", "general": 0.7, "gaming": 1.3},
+        {"name": "refresh_rate", "group": "screen", "general": 0.7, "gaming": 1.3},
+        {"name": "ram", "group": "performance"},
+        {"name": "storage_type", "group": "performance"},
+        {"name": "storage_size", "group": "storage"},
+        {"name": "resolution", "group": "screen"},
+        {"name": "panel_type", "group": "screen"}
+    ]
+
     # Measurements
     battery_time = get_foreign_key("BatteryTime")
     weight = get_foreign_key("Weight")
@@ -38,9 +51,6 @@ class Laptop(BaseCategoryProduct):
     def match(settings, **kwargs):
         """Matches the user with products based on their preferences/settings"""
 
-        def get_priority(value):
-            return value / 5
-
         laptops = super().match(settings, model=Laptop)
         laptops = list(laptops)
 
@@ -60,25 +70,13 @@ class Laptop(BaseCategoryProduct):
         for laptop in laptops:
             usage_score = 0
 
-            if settings["usage"] == "general":
-                usage_score += laptop.battery_time.score * 1.3  # Battery time
-                usage_score += laptop.weight.score * 1.3  # Weight
-                usage_score += laptop.processor.score  # Processor
-                usage_score += laptop.graphics_card.score * 0.7  # Graphics card
-                usage_score += laptop.refresh_rate.score * 0.7  # Refresh rate
+            for specification in Laptop.specifications:
+                if settings["usage"] == "general":
+                    multiplier = specification.get("general", 1)
+                else:
+                    multiplier = specification.get("gaming", 1)
 
-            elif settings["usage"] == "gaming":
-                usage_score += laptop.battery_time.score * 0.7  # Battery time
-                usage_score += laptop.weight.score * 0.7  # Weight
-                usage_score += laptop.processor.score * 1.15  # Processor
-                usage_score += laptop.graphics_card.score * 1.3  # Graphics card
-                usage_score += laptop.refresh_rate.score * 1.15  # Refresh rate
-
-            usage_score += laptop.ram.score  # Ram
-            usage_score += laptop.storage_type.score  # Storage type
-            usage_score += laptop.storage_size.score  # Storage size
-            usage_score += laptop.resolution.score  # Resolution
-            usage_score += laptop.panel_type.score  # Panel type
+                eval("usage_score += laptop.{}.score * {}".format(specification["name"], multiplier))
 
             sorted_laptops[laptop.id] = {"usage": usage_score}
         laptops = sorted(sorted_laptops, key=itemgetter("usage"), reverse=True)[:10]
@@ -86,27 +84,14 @@ class Laptop(BaseCategoryProduct):
         # Get priority score
         priorities = settings.get("priorities", None)
         if priorities is not None:
-            weight = get_priority(priorities["weight"])
-            battery = get_priority(priorities["battery"])
-            performance = get_priority(priorities["performance"])
-            storage = get_priority(priorities["storage"])
-            screen = get_priority(priorities["screen"])
-
             for laptop in laptops:
                 priority_score = 0
 
-                priority_score += laptop.weight.score * weight  # Weight
-                priority_score += laptop.battery_time.score * battery  # Battery time
-                priority_score += laptop.storage_size.score * storage  # Storage size
-
-                priority_score += laptop.processor.score * performance  # Processor
-                priority_score += laptop.graphics_card.score * performance  # Graphics card
-                priority_score += laptop.ram.score * performance  # Ram
-                priority_score += laptop.storage_type.score * performance  # Storage type
-
-                priority_score += laptop.refresh_rate.score * screen  # Refresh rate
-                priority_score += laptop.resolution.score * screen  # Resolution
-                priority_score += laptop.panel_type.score * screen  # Panel type
+                for specification in Laptop.specifications:
+                    eval("priority_score += laptop.{}.score * {}".format(
+                        specification["name"],
+                        priorities[specification["group"]] / 5)
+                    )
 
                 sorted_laptops[laptop.id] = {"priority": priority_score}
             laptops = sorted(laptops, key=itemgetter("priority"), reverse=True)
@@ -139,7 +124,8 @@ class Laptop(BaseCategoryProduct):
 
                 score = 0
                 for specification in specifications:
-                    score += specification.score
+                    if specification is not None:
+                        score += specification.score
 
                 laptop.score = score / laptop.price
                 laptop.is_ranked = True
