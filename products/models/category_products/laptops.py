@@ -76,8 +76,11 @@ class Laptop(BaseCategoryProduct):
                 else:
                     multiplier = specification.get("gaming", 1)
 
-                eval("usage_score += laptop.{}.score * {}".format(specification["name"], multiplier))
+                name = specification["name"]
+                if eval("laptop.{}.score is not None".format(name)):
+                    eval("usage_score += laptop.{}.score * {}".format(name, multiplier))
 
+            usage_score /= laptop.price
             sorted_laptops[laptop.id] = {"usage": usage_score}
         laptops = sorted(sorted_laptops, key=itemgetter("usage"), reverse=True)[:10]
 
@@ -88,11 +91,14 @@ class Laptop(BaseCategoryProduct):
                 priority_score = 0
 
                 for specification in Laptop.specifications:
-                    eval("priority_score += laptop.{}.score * {}".format(
-                        specification["name"],
-                        priorities[specification["group"]] / 5)
-                    )
+                    name = specification["name"]
 
+                    if eval("laptop.{}.score is not None".format(name)):
+                        priority = priorities[specification["group"]]
+
+                        eval("priority_score += laptop.{}.score * {}".format(name, priority / 5))
+
+                priority_score /= laptop.price
                 sorted_laptops[laptop.id] = {"priority": priority_score}
             laptops = sorted(laptops, key=itemgetter("priority"), reverse=True)
 
@@ -102,31 +108,3 @@ class Laptop(BaseCategoryProduct):
             laptop_instances.append(laptop_instance)
 
         return laptop_instances
-
-    @staticmethod
-    def rank():
-        """Ranks the laptop products with specification scores"""
-
-        for laptop in Laptop.objects.all().iterator():
-            if not laptop.is_ranked:
-                specifications = [
-                    laptop.battery_time,
-                    laptop.weight,
-                    laptop.processor,
-                    laptop.graphics_card,
-                    laptop.storage_size,
-                    laptop.storage_type,
-                    laptop.ram,
-                    laptop.panel_type,
-                    laptop.refresh_rate,
-                    laptop.resolution
-                ]
-
-                score = 0
-                for specification in specifications:
-                    if specification is not None:
-                        score += specification.score
-
-                laptop.score = score / laptop.price
-                laptop.is_ranked = True
-                laptop.save()
