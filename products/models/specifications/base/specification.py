@@ -128,10 +128,7 @@ class BaseSpecification(PolymorphicModel):
     def get_specification_instances(product_data):
         specifications = []
         for host, specs in product_data:
-            print(host)
-            print(specs)
             for spec in specs:
-                print(spec, len(spec))
                 if len(spec) == 2:
                     key = spec[0]
                     value = spec[1]
