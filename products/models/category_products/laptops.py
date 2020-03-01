@@ -99,6 +99,8 @@ class Laptop(BaseCategoryProduct):
         # Get priority score
         priorities = settings.get("priorities", None)
         if priorities is not None:
+            priorities = json.loads(priorities)
+
             sorted_laptops = {}
             for laptop in laptops:
                 score = 0
