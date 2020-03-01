@@ -47,9 +47,7 @@ class BaseCategoryProduct(PolymorphicModel):
         if model:
             price = settings.get("price", None)
             if price:
-                min_price, max_price = price
-                return model_instances.filter(Q(price__gte=min_price), Q(price__lte=max_price))
-
+                return model_instances.filter(Q(price__gte=price["min"]), Q(price__lte=price["max"]))
             else:
                 return model_instances
 
