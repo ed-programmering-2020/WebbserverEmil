@@ -43,7 +43,7 @@ class BaseCategoryProduct(PolymorphicModel):
         """Matches the user with products based on their preferences/settings"""
 
         model = kwargs.get("model", None)
-        model_instances = model.inherited_objects.filter(is_active=True)
+        model_instances = model.objects.filter(is_active=True)
         if model:
             price = settings.get("price", None)
             if price:
