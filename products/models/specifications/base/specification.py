@@ -32,7 +32,7 @@ class BaseSpecification(PolymorphicModel):
 
     @property
     def value(self):
-        return None
+        raise NotImplementedError
 
     @value.setter
     def value(self, value):
@@ -75,11 +75,11 @@ class BaseSpecification(PolymorphicModel):
                             __, saved_value = stored_specification[0]
 
                             # Rank with value
-                            if specification.is_better(saved_value):
+                            if inherited_specification.is_better(saved_value):
                                 sorted_specifications[key].insert(i, [package])
                                 break
 
-                            elif specification.is_equal(saved_value):
+                            elif inherited_specification.is_equal(saved_value):
                                 sorted_specifications[key][i].append(package)
                                 break
 
