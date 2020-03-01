@@ -138,7 +138,10 @@ class BaseSpecification(PolymorphicModel):
 
                 # Create/get alternative specification name
                 try:
-                    alternative_specification_name = AlternativeSpecificationName.objects.get(name__iexact=key, host=host)
+                    if host is not None:
+                        alternative_specification_name = AlternativeSpecificationName.objects.get(name__iexact=key)
+                    else:
+                        alternative_specification_name = AlternativeSpecificationName.objects.get(name__iexact=key, host=host)
 
                     # Create/get specification if it belongs to specification type
                     specification_type = alternative_specification_name.specification_type
