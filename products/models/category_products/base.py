@@ -190,7 +190,7 @@ class BaseCategoryProduct(PolymorphicModel):
     @staticmethod
     def matching_specs(specs, product):
         product_data = (product.host, specs)
-        specifications = BaseSpecification.get_specification_instances(specs)
+        specifications = BaseSpecification.get_specification_instances(product_data)
 
         for specification in specifications:
             specification_attribute_name = specification.get_attribute_like_name
