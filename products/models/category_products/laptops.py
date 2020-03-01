@@ -83,7 +83,7 @@ class Laptop(BaseCategoryProduct):
                     multiplier = specification.get("gaming", 1)
 
                 name = specification["name"]
-                if exec("laptop.{}.score is not None".format(name)):
+                if eval("laptop.{} is not None".format(name)):
                     exec("usage_score += laptop.{}.score * {}".format(name, multiplier))
 
             usage_score /= laptop.price
@@ -100,7 +100,7 @@ class Laptop(BaseCategoryProduct):
                 for specification in Laptop.specifications:
                     name = specification["name"]
 
-                    if exec("laptop.{}.score is not None".format(name)):
+                    if eval("laptop.{} is not None".format(name)):
                         priority = priorities[specification["group"]]
 
                         exec("priority_score += laptop.{}.score * {}".format(name, priority / 5))
