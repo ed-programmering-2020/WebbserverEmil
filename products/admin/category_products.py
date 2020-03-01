@@ -19,11 +19,11 @@ class CategoryProductTypeAdmin(admin.ModelAdmin):
 class BaseCategoryProductAdmin(admin.ModelAdmin):
     fieldsets = [
         ("Main info", {
-            "fields": ["name", "manufacturing_name", "price", "score"]
+            "fields": ["name", "manufacturing_name", "price"]
         })
     ]
 
-    list_display = ["name", "price", "score", "serve_image"]
+    list_display = ["name", "price", "serve_image"]
     search_fields = ["name", "manufacturing_name"]
 
     def serve_image(self, obj):
