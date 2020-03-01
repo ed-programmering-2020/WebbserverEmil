@@ -59,7 +59,7 @@ class Laptop(BaseCategoryProduct):
         # Filter with size range
         size = settings.get("size", None)
         if size is not None:
-            size_dict = json.loads(settings["size"])
+            size_dict = json.loads(size)
 
             filtered_laptops = []
             for laptop in laptops:
