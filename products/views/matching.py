@@ -23,7 +23,7 @@ class MatchAPI(generics.GenericAPIView):
 
         print(query_settings)
         if query_settings is not None:
-            settings = dict(query_settings.iterlist())
+            settings = query_settings.dict()
             model = import_model(name)
             print(model)
             products = model.match(settings)
