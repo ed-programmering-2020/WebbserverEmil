@@ -53,6 +53,7 @@ class Laptop(BaseCategoryProduct):
 
         laptops = super().match(settings, model=Laptop)
         laptops = list(laptops)
+        print(laptops)
 
         # Filter with size range
         size = settings.get("size", None)
@@ -64,6 +65,7 @@ class Laptop(BaseCategoryProduct):
                     filtered_laptops.append(laptop)
 
             laptops = filtered_laptops
+        print(laptops)
 
         # Get usage score
         sorted_laptops = defaultdict()
@@ -83,6 +85,7 @@ class Laptop(BaseCategoryProduct):
             usage_score /= laptop.price
             sorted_laptops[laptop.id] = {"usage": usage_score}
         laptops = sorted(sorted_laptops, key=itemgetter("usage"), reverse=True)[:10]
+        print(laptops)
 
         # Get priority score
         priorities = settings.get("priorities", None)
@@ -101,10 +104,12 @@ class Laptop(BaseCategoryProduct):
                 priority_score /= laptop.price
                 sorted_laptops[laptop.id] = {"priority": priority_score}
             laptops = sorted(laptops, key=itemgetter("priority"), reverse=True)
+        print(laptops)
 
         laptop_instances = []
         for laptop_id, __ in laptops:
             laptop_instance = BaseCategoryProduct.objects.get(id=laptop_id)
             laptop_instances.append(laptop_instance)
 
+        print(laptop_instances)
         return laptop_instances
