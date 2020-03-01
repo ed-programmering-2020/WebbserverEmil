@@ -72,9 +72,9 @@ class Laptop(BaseCategoryProduct):
         print(laptops)
 
         # Get usage score
-        sorted_laptops = defaultdict()
+        sorted_laptops = {}
         for laptop in laptops:
-            usage_score = 0
+            score = 0
 
             for specification in Laptop.specifications:
                 if settings["usage"] == "general":
@@ -86,16 +86,22 @@ class Laptop(BaseCategoryProduct):
                 if eval("laptop.{} is not None and laptop.{}.to_rank is True".format(name, name)):
                     exec("usage_score += laptop.{}.score * {}".format(name, multiplier))
 
-            usage_score /= laptop.price
-            sorted_laptops[laptop.id] = {"usage": usage_score}
-        laptops = sorted(sorted_laptops, key=itemgetter("usage"), reverse=True)[:10]
+            sorted_laptops[laptop.id] = score / laptop.price
+
+        laptops = sorted(sorted_laptops, key=itemgetter(1), reverse=True)
+        if len(laptops) >= 10:
+            laptops = laptops[:10]
+        else:
+            laptops = laptops[:len(laptops)]
+
         print(laptops)
 
         # Get priority score
         priorities = settings.get("priorities", None)
         if priorities is not None:
+            sorted_laptops = {}
             for laptop in laptops:
-                priority_score = 0
+                score = 0
 
                 for specification in Laptop.specifications:
                     name = specification["name"]
@@ -105,9 +111,8 @@ class Laptop(BaseCategoryProduct):
 
                         exec("priority_score += laptop.{}.score * {}".format(name, priority / 5))
 
-                priority_score /= laptop.price
-                sorted_laptops[laptop.id] = {"priority": priority_score}
-            laptops = sorted(laptops, key=itemgetter("priority"), reverse=True)
+                sorted_laptops[laptop.id] = score / laptop.price
+            laptops = sorted(laptops, key=itemgetter(1), reverse=True)
         print(laptops)
 
         laptop_instances = []
