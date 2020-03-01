@@ -189,6 +189,7 @@ class BaseCategoryProduct(PolymorphicModel):
     @staticmethod
     def matching_specs(specifications, product):
         specification_instances = BaseSpecification.get_specification_instances(specifications)
+        matches = 0
 
         for specification in specification_instances:
             specification_attribute_name = specification.get_attribute_like_name
@@ -199,7 +200,12 @@ class BaseCategoryProduct(PolymorphicModel):
                 if product_specification.id != specification.id:
                     return False
 
-        return True
+                matches += 1
+
+        if matches > 0:
+            return True
+        else:
+            return False
 
     @staticmethod
     def clean_string(text):
