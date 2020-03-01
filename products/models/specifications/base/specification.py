@@ -24,6 +24,7 @@ class BaseSpecification(PolymorphicModel):
         "products.SpecificationType",
         related_name="specifications",
         null=True,
+        blank=True,
         on_delete=models.SET_NULL
     )
 
@@ -184,6 +185,9 @@ class BaseSpecification(PolymorphicModel):
         value_lowercase = value.lower()
         value = re.sub('[^A-Za-z0-9 ]+', '', value_lowercase)
         return value
+
+    def __hash__(self):
+        return hash(self._get_pk_val())
 
     def __gt__(self, other):
         return self.value > other.value
