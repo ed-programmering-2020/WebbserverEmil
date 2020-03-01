@@ -137,13 +137,13 @@ class BaseSpecification(PolymorphicModel):
                 key = spec[0]
                 value = spec[1]
 
-                # Create/get alternative specification name
-                try:
-                    if host is not None:
-                        alternative_specification_name = AlternativeSpecificationName.objects.filter(name__iexact=key).first()
-                    else:
-                        alternative_specification_name = AlternativeSpecificationName.objects.get(name__iexact=key, host=host)
+                # Get alternative specification name
+                if host is not None:
+                    alternative_specification_name = AlternativeSpecificationName.objects.filter(name__iexact=key).first()
+                else:
+                    alternative_specification_name = AlternativeSpecificationName.objects.filter(name__iexact=key, host=host).first()
 
+                if alternative_specification_name is not None:
                     # Create/get specification if it belongs to specification type
                     specification_type = alternative_specification_name.specification_type
                     if specification_type:
@@ -166,8 +166,7 @@ class BaseSpecification(PolymorphicModel):
 
                         # Add specification instance to a list
                         specification_instances.append(specification)
-
-                except AlternativeSpecificationName.DoesNotExist:
+                else:
                     # Create new alternative specification name
                     AlternativeSpecificationName.objects.create(name=key, host=host)
 
