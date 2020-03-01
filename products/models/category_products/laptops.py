@@ -2,6 +2,7 @@ from products.models.category_products.base import BaseCategoryProduct
 from collections import defaultdict
 from operator import itemgetter
 from django.db import models
+import json
 
 
 def get_foreign_key(model_name):
@@ -58,10 +59,11 @@ class Laptop(BaseCategoryProduct):
         # Filter with size range
         size = settings.get("size", None)
         if size is not None:
-            min_size, max_size = settings["size"]
+            size_dict = json.loads(settings["size"])
+
             filtered_laptops = []
             for laptop in laptops:
-                if min_size < laptop.screen_size < max_size:
+                if size_dict["min"] < laptop.screen_size < size_dict["max"]:
                     filtered_laptops.append(laptop)
 
             laptops = filtered_laptops
