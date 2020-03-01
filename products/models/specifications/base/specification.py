@@ -62,26 +62,28 @@ class BaseSpecification(PolymorphicModel):
 
                 key = inherited_specification.__class__.__name__
                 value = inherited_specification.value
-                package = (inherited_specification.id, value)
 
-                if key not in sorted_specifications:
-                    sorted_specifications[key] = [[package]]
-                else:
-                    for i, stored_specification in enumerate(sorted_specifications[key]):
-                        __, saved_value = stored_specification[0]
+                if value is not None:
+                    package = (inherited_specification.id, value)
 
-                        # Rank with value
-                        if specification.is_better(saved_value):
-                            sorted_specifications[key].insert(i, [package])
-                            break
+                    if key not in sorted_specifications:
+                        sorted_specifications[key] = [[package]]
+                    else:
+                        for i, stored_specification in enumerate(sorted_specifications[key]):
+                            __, saved_value = stored_specification[0]
 
-                        elif specification.is_equal(saved_value):
-                            sorted_specifications[key][i].append(package)
-                            break
+                            # Rank with value
+                            if specification.is_better(saved_value):
+                                sorted_specifications[key].insert(i, [package])
+                                break
 
-                        elif i == (len(sorted_specifications[key]) - 1):
-                            sorted_specifications[key].append([package])
-                            break
+                            elif specification.is_equal(saved_value):
+                                sorted_specifications[key][i].append(package)
+                                break
+
+                            elif i == (len(sorted_specifications[key]) - 1):
+                                sorted_specifications[key].append([package])
+                                break
 
         # Scoring
         scored_specifications = defaultdict()
