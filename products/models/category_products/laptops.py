@@ -102,7 +102,7 @@ class Laptop(BaseCategoryProduct):
             priorities = json.loads(priorities)
 
             sorted_laptops = {}
-            for laptop in laptops:
+            for laptop, __ in laptops.items():
                 score = 0
 
                 for specification in Laptop.specifications:
