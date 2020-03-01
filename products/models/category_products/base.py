@@ -322,7 +322,7 @@ class BaseCategoryProduct(PolymorphicModel):
         prices = []
         for product in self.products.all():
             urls.append(product.url)
-            prices.append(product.get_price())
+            prices.append(product.price)
 
         if self.check_price_outlier(prices):
             i = prices.index(min(prices))
