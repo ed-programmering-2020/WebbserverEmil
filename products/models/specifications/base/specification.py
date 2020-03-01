@@ -150,6 +150,7 @@ class BaseSpecification(PolymorphicModel):
 
                                 try:
                                     specification = specification_model.objects.get(_value=processed_value)
+                                    temporary_model_instance.delete()
                                 except specification_model.DoesNotExist:
                                     specification = temporary_model_instance
                                     specification.specification_type = specification_type
