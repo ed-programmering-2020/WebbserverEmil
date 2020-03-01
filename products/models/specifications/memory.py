@@ -46,5 +46,3 @@ class StorageType(BaseSpecification, TypeSpecification):
 
     def __str__(self):
         return "<StorageType %s>" % self._value
-
-

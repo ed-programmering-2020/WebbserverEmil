@@ -44,6 +44,9 @@ class PolymorphicModel(models.Model):
         else:
             return None
 
+    def __hash__(self):
+        return hash(self.id)
+
 
 class ModelType(models.Model):
     name = models.CharField("name", max_length=32)
