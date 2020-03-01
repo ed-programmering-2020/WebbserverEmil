@@ -1,7 +1,7 @@
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from products.serializers import CategoryProductSerializer
 from rest_framework import generics
+from products.serializers import CategoryProductSerializer
 
 
 def import_model(name):

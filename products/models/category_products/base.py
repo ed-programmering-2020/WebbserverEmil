@@ -314,7 +314,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
         return sorted_prices[0] >= relative_min_price
 
-    def get_product_list(self):
+    def get_websites(self):
         urls = []
         prices = []
         for product in self.products.all():
