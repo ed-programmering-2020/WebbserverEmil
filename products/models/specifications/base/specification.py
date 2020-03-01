@@ -156,9 +156,8 @@ class BaseSpecification(PolymorphicModel):
                             specification = specification_model.objects.get(_value=processed_value)
                         except specification_model.DoesNotExist:
                             # Create new specification
-                            specification = specification_model.create()
+                            specification = specification_model.create(specification_type=specification_type)
                             specification.value = value
-                            specification.specification_type = specification_type
                             specification.save()
 
                         # Add specification instance to a list

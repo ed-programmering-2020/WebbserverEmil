@@ -244,9 +244,9 @@ class BaseCategoryProduct(PolymorphicModel):
         # Update specifications
         if data["specifications"] is not None and data["specifications"] != []:
             for host, specifications in data["specifications"]:
-                specifications = BaseSpecification.get_specification_instances(specifications, host)
+                specification_instances = BaseSpecification.get_specification_instances(specifications, host)
 
-                for specification in specifications:
+                for specification in specification_instances:
                     print(specification)
                     print(type(specification))
                     specification_attribute_name = specification.get_attribute_like_name()
