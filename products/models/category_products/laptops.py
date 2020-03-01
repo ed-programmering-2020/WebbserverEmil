@@ -1,8 +1,7 @@
 from products.models.category_products.base import BaseCategoryProduct
-from collections import defaultdict
 from operator import itemgetter
 from django.db import models
-import json
+import json, time
 
 
 def get_foreign_key(model_name):
@@ -52,6 +51,7 @@ class Laptop(BaseCategoryProduct):
     def match(settings, **kwargs):
         """Matches the user with products based on their preferences/settings"""
 
+        start = time.time()
         laptops = BaseCategoryProduct.match(settings, model=Laptop)
         laptops = list(laptops)
         print(laptops)
@@ -69,9 +69,11 @@ class Laptop(BaseCategoryProduct):
                     filtered_laptops.append(laptop)
 
             laptops = filtered_laptops
-        print(laptops)
+        print(laptops, start - time.time())
 
         # Get usage score
+        start = time.time()
+
         sorted_laptops = {}
         for laptop in laptops:
             score = 0
@@ -87,16 +89,15 @@ class Laptop(BaseCategoryProduct):
                     exec("score += laptop.{}.score * {}".format(name, multiplier))
 
             sorted_laptops[laptop] = score / laptop.price
-
         laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
         if len(laptops) >= 10:
             laptops = laptops[:10]
         else:
             laptops = laptops[:len(laptops)]
-
-        print(laptops)
+        print(laptops, start - time.time())
 
         # Get priority score
+        start = time.time()
         priorities = settings.get("priorities", None)
         if priorities is not None:
             priorities = json.loads(priorities)
@@ -113,6 +114,6 @@ class Laptop(BaseCategoryProduct):
 
                 sorted_laptops[laptop] = score / laptop.price
             laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
-        print(laptops)
+        print(laptops, start - time.time())
 
         return laptops
