@@ -1,8 +1,7 @@
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from products.serializers import ProductSerializer
+from products.serializers import CategoryProductSerializer
 from rest_framework import generics
-import json
 
 
 def import_model(name):
@@ -16,23 +15,19 @@ def import_model(name):
 
 class MatchAPI(generics.GenericAPIView):
     permission_classes = [AllowAny]
-    serializer_class = ProductSerializer
+    serializer_class = CategoryProductSerializer
 
     def get(self, request, name, *args, **kwargs):
         settings = request.GET.dict()
 
-        print(settings)
         if settings is not None:
             model = import_model(name)
-            print(model)
             products = model.match(settings)
-            print(products)
 
             if products:
-                print("here")
                 serialized_products = []
                 for product in products:
-                    serialized_products.append(ProductSerializer(product).data)
+                    serialized_products.append(CategoryProductSerializer(product).data)
 
                 return Response({
                     "products": serialized_products,
