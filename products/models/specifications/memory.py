@@ -44,8 +44,5 @@ class StorageType(BaseSpecification, TypeSpecification):
     def value(self, value):
         self._value = self.process_text(value)
 
-    def __hash__(self):
-        return hash(self.id)
-
     def __str__(self):
         return "<StorageType %s>" % self._value

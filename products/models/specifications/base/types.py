@@ -31,11 +31,11 @@ class TypeSpecification(CharSpecification):
                 return i
         return 0
 
-    def __gt__(self, other):
-        return self.get_rank(self.value) > self.get_rank(other.value)
+    def is_better(self, value):
+        return self.get_rank(self.value) > self.get_rank(value)
 
-    def __eq__(self, other):
-        return self.get_rank(self.value) == self.get_rank(other.value)
+    def is_equal(self, value):
+        return self.get_rank(self.value) == self.get_rank(value)
 
     class Meta:
         abstract = True
