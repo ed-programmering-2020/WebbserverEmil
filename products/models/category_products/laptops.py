@@ -86,7 +86,7 @@ class Laptop(BaseCategoryProduct):
                 if eval("laptop.{} is not None and laptop.{}.to_rank is True".format(name, name)):
                     exec("score += laptop.{}.score * {}".format(name, multiplier))
 
-            sorted_laptops[laptop.id] = score / laptop.price
+            sorted_laptops[laptop] = score / laptop.price
 
         laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
         if len(laptops) >= 10:
@@ -111,7 +111,7 @@ class Laptop(BaseCategoryProduct):
                         name = specification["name"]
                         exec("score += laptop.{}.score * {}".format(name, priority / 5))
 
-                sorted_laptops[laptop.id] = score / laptop.price
+                sorted_laptops[laptop] = score / laptop.price
             laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
         print(laptops)
 
