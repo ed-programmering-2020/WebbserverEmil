@@ -43,12 +43,11 @@ class BaseSpecification(PolymorphicModel):
         class_name = self.__class__.__name__
         for i, letter in enumerate(class_name):
             if not letter.islower() and i != 0:
-                letter = letter.lower()
                 attribute_like_name += "_"
 
             attribute_like_name += letter
 
-        return attribute_like_name
+        return attribute_like_name.lower()
 
     @staticmethod
     def rank():
@@ -188,8 +187,6 @@ class BaseSpecification(PolymorphicModel):
         return value
 
     def is_better(self, value):
-        print(self.value)
-        print(type(self.value))
         return self.value > value
 
     def is_equal(self, value):
