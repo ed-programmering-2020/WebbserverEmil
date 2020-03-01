@@ -51,7 +51,7 @@ class Laptop(BaseCategoryProduct):
     def match(settings, **kwargs):
         """Matches the user with products based on their preferences/settings"""
 
-        laptops = super().match(settings, model=Laptop)
+        laptops = BaseCategoryProduct.match(settings, model=Laptop)
         laptops = list(laptops)
         print(laptops)
 
