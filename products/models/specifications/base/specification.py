@@ -125,43 +125,47 @@ class BaseSpecification(PolymorphicModel):
             cls.create(specification_type=specification_type)
 
     @staticmethod
-    def get_specification_instances(product_data):
-        specifications = []
-        for host, specs in product_data:
-            if specs:
-                for spec in specs:
-                    if len(spec) == 2:
-                        key = spec[0]
-                        value = spec[1]
+    def get_specification_instances(specifications, host=None):
+        specification_instances = []
 
-                        # Create/get spec key
+        # Iterate through all specifications
+        for spec in specifications:
+
+            # Proceed if specification is valid
+            if len(spec) == 2:
+                key = spec[0]
+                value = spec[1]
+
+                # Create/get alternative specification name
+                try:
+                    alternative_specification_name = AlternativeSpecificationName.objects.get(name__iexact=key, host=host)
+
+                    # Create/get specification if it belongs to specification type
+                    specification_type = alternative_specification_name.specification_type
+                    if specification_type:
+
+                        # Get specification model
+                        specification_model = specification_type.get_specification_model()
                         try:
-                            alternative_specification_name = AlternativeSpecificationName.objects.get(name__iexact=key, host=host)
+                            # Process value with a temporary specification model
+                            temporary_model_instance = specification_model()
+                            temporary_model_instance.value = value
+                            processed_value = temporary_model_instance.value
 
-                            # Create/get if it belongs to spec group
-                            specification_type = alternative_specification_name.specification_type
-                            if specification_type:
+                            # Find specification instance with processed value
+                            specification = specification_model.objects.get(_value=processed_value)
+                        except specification_model.DoesNotExist:
+                            # Create new specification
+                            specification = specification_model.create()
+                            specification.value = value
+                            specification.specification_type = specification_type
+                            specification.save()
 
-                                # Get model and process value
-                                specification_model = specification_type.get_specification_model()
-
-                                try:
-                                    temporary_model_instance = specification_model()
-                                    temporary_model_instance.value = value
-                                    processed_value = temporary_model_instance.value
-
-                                    specification = specification_model.objects.get(_value=processed_value)
-
-                                except specification_model.DoesNotExist:
-                                    specification = specification_model.create()
-                                    specification.value = value
-                                    specification.specification_type = specification_type
-                                    specification.save()
-
-                                specifications.append(specification)
-
-                        except AlternativeSpecificationName.DoesNotExist:
-                            AlternativeSpecificationName.objects.create(name=key, host=host)
+                        # Add specification instance to a list
+                        specification_instances.append(specification)
+                except AlternativeSpecificationName.DoesNotExist:
+                    # Create new alternative specification name
+                    AlternativeSpecificationName.objects.create(name=key, host=host)
 
         return specifications
 

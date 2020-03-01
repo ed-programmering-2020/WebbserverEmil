@@ -61,7 +61,7 @@ class BaseCategoryProduct(PolymorphicModel):
         first_category_product = first.category_product
         second_category_product = second.category_product
 
-        if first_category_product and second_category_product:  # If both products have category products
+        if first_category_product and second_category_product:  # Both products have category products
             category_product = first_category_product
 
             first_query_set = category_product.products.all()
@@ -71,11 +71,11 @@ class BaseCategoryProduct(PolymorphicModel):
             category_product.products.set(combined_query_set)
             second_category_product.delete()
 
-        elif first_category_product:  # If only the first product has a category product
+        elif first_category_product:  # Only the first product has a category product
             category_product = first_category_product
             category_product.products.add(second)
 
-        elif second_category_product:  # If only the second product has a category product
+        elif second_category_product:  # Only the second product has a category product
             category_product = second_category_product
             category_product.products.add(first)
 
@@ -188,11 +188,10 @@ class BaseCategoryProduct(PolymorphicModel):
         return max(similarity_list)
 
     @staticmethod
-    def matching_specs(specs, product):
-        product_data = (product.host, specs)
-        specifications = BaseSpecification.get_specification_instances(product_data)
+    def matching_specs(specifications, product):
+        specification_instances = BaseSpecification.get_specification_instances(specifications)
 
-        for specification in specifications:
+        for specification in specification_instances:
             specification_attribute_name = specification.get_attribute_like_name
 
             if hasattr(specification, specification_attribute_name):
@@ -227,7 +226,7 @@ class BaseCategoryProduct(PolymorphicModel):
             if price is not None:
                 data["prices"].append(price)
 
-        # Update product
+        # Update price
         if len(data["prices"]) >= 2:
             if self.check_price_outlier(data["prices"]):
                 min_price = min(data["prices"])
@@ -235,16 +234,27 @@ class BaseCategoryProduct(PolymorphicModel):
 
             self.price = min(data["prices"])
 
+        # Update manufacturing name
         if self.manufacturing_name is None:
             for manufacturing_name in data["manufacturing_names"]:
                 if manufacturing_name:
                     self.manufacturing_name = manufacturing_name
                     break
 
-        self.update_name(data["names"])
+        # Update specifications
         if data["specifications"] is not None and data["specifications"] != []:
-            self.update_specs(data["specifications"])
+            for host, specifications in data["specifications"]:
+                specifications = BaseSpecification.get_specification_instances(specifications, host)
 
+                for specification in specifications:
+                    specification_attribute_name = specification.get_attribute_like_name()
+
+                    if hasattr(self, specification_attribute_name):
+                        eval_string = "self.{}_id = {}".format(specification_attribute_name, specification.id)
+                        eval(eval_string)
+
+        # Update the rest of the category product
+        self.update_name(data["names"])
         self.is_ranked = False
         self.save()
 
@@ -297,16 +307,6 @@ class BaseCategoryProduct(PolymorphicModel):
             name = names[0]
 
         self.name = name
-
-    def update_specs(self, product_data):
-        specifications = BaseSpecification.get_specification_instances(product_data)
-
-        for specification in specifications:
-            specification_attribute_name = specification.get_attribute_like_name()
-
-            if hasattr(self, specification_attribute_name):
-                eval_string = "self.{}_id = {}".format(specification_attribute_name, specification.id)
-                eval(eval_string)
 
     def check_price_outlier(self, prices):
         sorted_prices = sorted(prices)
