@@ -27,8 +27,9 @@ class Weight(BaseSpecification, IntegerSpecification):
 
         self._value = number
 
-    def __gt__(self, other):
-        return self.value < other.value
+    @staticmethod
+    def is_better(first, second):
+        return first < second
 
     def __str__(self):
         return "<Weight %skg>" % self._value

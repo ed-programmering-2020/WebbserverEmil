@@ -71,11 +71,11 @@ class BaseSpecification(PolymorphicModel):
                         __, saved_value = stored_specification[0]
 
                         # Rank with value
-                        if value > saved_value:
+                        if model.is_better(value, saved_value):
                             sorted_specifications[key].insert(i, [package])
                             break
 
-                        elif value == saved_value:
+                        elif model.is_equal(value, saved_value):
                             sorted_specifications[key][i].append(package)
                             break
 
@@ -186,14 +186,13 @@ class BaseSpecification(PolymorphicModel):
         value = re.sub('[^A-Za-z0-9 ]+', '', value_lowercase)
         return value
 
-    def __hash__(self):
-        return hash(self.id)
+    @staticmethod
+    def is_better(first, second):
+        return first > second
 
-    def __gt__(self, other):
-        return self.value > other.value
-
-    def __eq__(self, other):
-        return self.value == other.value
+    @staticmethod
+    def is_equal(first, second):
+        return first == second
 
     def __str__(self):
         return "<BaseSpecification {self.score}>".format(self=self)
