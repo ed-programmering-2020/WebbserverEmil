@@ -190,6 +190,8 @@ class BaseSpecification(PolymorphicModel):
         return value
 
     def is_better(self, value):
+        print(self.value)
+        print(type(self.value))
         return self.value > value
 
     def is_equal(self, value):
