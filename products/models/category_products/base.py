@@ -7,7 +7,7 @@ from difflib import SequenceMatcher
 from collections import defaultdict
 from django.db.models import Q
 from django.db import models
-import string
+import string, json
 
 
 class AlternativeCategoryName(AlternativeModelName):
@@ -45,7 +45,7 @@ class BaseCategoryProduct(PolymorphicModel):
         model = kwargs.get("model", None)
         model_instances = model.objects.filter(is_active=True)
         if model:
-            price = settings.get("price", None)
+            price = json.loads(settings.get("price", None))
             if price:
                 return model_instances.filter(Q(price__gte=price["min"]), Q(price__lte=price["max"]))
             else:
