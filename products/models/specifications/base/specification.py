@@ -63,7 +63,9 @@ class BaseSpecification(PolymorphicModel):
                 key = inherited_specification.__class__.__name__
                 value = inherited_specification.value
 
+                print(value)
                 if value is not None:
+                    print("got in")
                     package = (inherited_specification.id, value)
 
                     if key not in sorted_specifications:
