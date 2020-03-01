@@ -65,7 +65,7 @@ class Laptop(BaseCategoryProduct):
 
             filtered_laptops = []
             for laptop in laptops:
-                if laptop.screen_size and min_price < laptop.screen_size < max_price:
+                if laptop.screen_size and min_price < laptop.screen_size.value < max_price:
                     filtered_laptops.append(laptop)
 
             laptops = filtered_laptops
