@@ -115,11 +115,4 @@ class Laptop(BaseCategoryProduct):
             laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
         print(laptops)
 
-        # Get laptop instances
-        laptop_instances = []
-        for laptop_id, __ in laptops:
-            laptop_instance = BaseCategoryProduct.objects.get(id=laptop_id)
-            laptop_instances.append(laptop_instance)
-
-        print(laptop_instances)
-        return laptop_instances
+        return laptops

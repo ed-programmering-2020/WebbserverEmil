@@ -26,7 +26,7 @@ class MatchAPI(generics.GenericAPIView):
 
             if products:
                 serialized_products = []
-                for product in products:
+                for product, __ in products:
                     serialized_products.append(CategoryProductSerializer(product).data)
 
                 return Response({
