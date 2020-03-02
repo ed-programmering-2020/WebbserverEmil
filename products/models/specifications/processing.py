@@ -34,7 +34,7 @@ class GraphicsCard(BaseSpecification, BenchmarkSpecification):
         super().save_benchmarks(graphics_card_scores, GraphicsCard)
 
     def __str__(self):
-        return "<GraphicsCard %s>" % self._value
+        return "<GraphicsCard %s>" % self.value
 
 
 class Processor(BaseSpecification, BenchmarkSpecification):
@@ -93,4 +93,4 @@ class Processor(BaseSpecification, BenchmarkSpecification):
         super().save_benchmarks(processors, Processor)
 
     def __str__(self):
-        return "<Processor %s>" % self._value
+        return "<Processor %s>" % self.value

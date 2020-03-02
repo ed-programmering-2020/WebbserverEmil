@@ -26,9 +26,13 @@ class CharSpecification(models.Model):
 
 class TypeSpecification(CharSpecification):
     def get_rank(self, value):
-        for i, panel_type in enumerate(self.types):
-            if panel_type in value:
-                return i
+        for i, panel_types in enumerate(self.types):
+            if type(panel_types) is not list:
+                panel_types = [panel_types]
+
+            for panel_type in panel_types:
+                if panel_type in value:
+                    return i
         return 0
 
     def is_better(self, value):

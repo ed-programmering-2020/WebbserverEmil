@@ -3,7 +3,11 @@ import re
 
 
 class PanelType(BaseSpecification, TypeSpecification):
-    types = ["ips", "va", "tn"]
+    types = [
+        "tn",
+        "va",
+        ["ips", "retina"]
+    ]
 
     @property
     def value(self):

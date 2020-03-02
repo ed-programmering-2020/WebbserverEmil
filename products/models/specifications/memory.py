@@ -11,7 +11,7 @@ class Ram(BaseSpecification, IntegerSpecification):
         self._value = self.process_number(value)
 
     def __str__(self):
-        return "<Ram %s>" % self._value
+        return "<Ram %sGb>" % self._value
 
 
 class StorageSize(BaseSpecification, IntegerSpecification):
@@ -24,13 +24,14 @@ class StorageSize(BaseSpecification, IntegerSpecification):
         value.lower()
         number = int(value.split(" ")[0])
 
-        if "tb" in value:
+        # Convert to gigabyte
+        if "tb" in value or value <= 4:
             number *= 1024
 
         self._value = number
 
     def __str__(self):
-        return "<StorageSize %s>" % self._value
+        return "<StorageSize %sGb>" % self._value
 
 
 class StorageType(BaseSpecification, TypeSpecification):
@@ -45,4 +46,4 @@ class StorageType(BaseSpecification, TypeSpecification):
         self._value = self.process_text(value)
 
     def __str__(self):
-        return "<StorageType %s>" % self._value
+        return "<StorageType %s>" % self._value.capitalize()

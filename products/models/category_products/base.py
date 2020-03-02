@@ -248,13 +248,18 @@ class BaseCategoryProduct(PolymorphicModel):
                     break
 
         # Update specifications
-        if data["specifications"] is not []:
-            for host, specifications in data["specifications"]:
-                specification_instances = BaseSpecification.get_specification_instances(specifications, host)
+        specifications_caught = 0
+        for host, specifications in data["specifications"]:
+            specification_instances = BaseSpecification.get_specification_instances(specifications, host)
 
-                for specification in specification_instances:
-                    specification_attribute_name = specification.get_attribute_like_name()
-                    exec("self.{}_id = {}".format(specification_attribute_name, specification.id))
+            for specification in specification_instances:
+                specification_attribute_name = specification.get_attribute_like_name()
+                exec("self.{}_id = {}".format(specification_attribute_name, specification.id))
+                specifications_caught += 1
+
+        if specifications_caught == 0:
+            self.delete()
+            return
 
         # Update the rest of the category product
         self.update_name(data["names"])

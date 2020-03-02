@@ -20,8 +20,11 @@ class ProductAdmin(admin.ModelAdmin):
         "view_price",
         "serve_url",
         "serve_image",
+        "host",
     ]
-
+    list_filter = [
+        "host"
+    ]
     search_fields = ["name", "manufacturing_name"]
 
     def serve_url(self, obj):
