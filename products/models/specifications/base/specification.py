@@ -166,7 +166,7 @@ class BaseSpecification(PolymorphicModel):
 
                         specification_instances.append(specification)
                 else:
-                    AlternativeSpecificationName.objects.polymorphic_create(name=key, host=host)
+                    AlternativeSpecificationName.objects.create(name=key, host=host)
 
         return specification_instances
 

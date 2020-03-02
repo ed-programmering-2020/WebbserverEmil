@@ -22,7 +22,7 @@ class TokenAPI(generics.RetrieveAPIView):
     def get(self, requests, *args, **kwargs):
         user = self.request.user
         AuthToken.objects.filter(user=user).delete()
-        return Response({"token": AuthToken.objects.polymorphic_create(user)[1]})
+        return Response({"token": AuthToken.objects.create(user)[1]})
 
 
 class RegistrationAPI(generics.GenericAPIView):
@@ -36,7 +36,7 @@ class RegistrationAPI(generics.GenericAPIView):
         user = serializer.save()
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
-            "token": AuthToken.objects.polymorphic_create(user)[1]
+            "token": AuthToken.objects.create(user)[1]
         })
 
 
@@ -51,7 +51,7 @@ class LoginAPI(generics.GenericAPIView):
         user = serializer.validated_data
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
-            "token": AuthToken.objects.polymorphic_create(user)[1]
+            "token": AuthToken.objects.create(user)[1]
         })
 
 
