@@ -25,7 +25,7 @@ class StorageSize(BaseSpecification, IntegerSpecification):
         number = int(value.split(" ")[0])
 
         # Convert to gigabyte
-        if "tb" in value or value <= 4:
+        if "tb" in value or number <= 4:
             number *= 1024
 
         self._value = number
