@@ -256,11 +256,8 @@ class BaseCategoryProduct(PolymorphicModel):
                 specification_attribute_name = specification.get_attribute_like_name()
                 exec("self.{}_id = {}".format(specification_attribute_name, specification.id))
                 specifications_caught += 1
-                print(eval("self.{}_id".format(specification_attribute_name)))
 
-        print(specifications_caught)
-
-        if specifications_caught >= 2:
+        if specifications_caught <= 2:
             self.delete()
             return
 
@@ -335,7 +332,7 @@ class BaseCategoryProduct(PolymorphicModel):
             if price is not None:
                 prices.append(price)
 
-        if self.check_price_outlier(prices):
+        if len(prices) >= 2 and self.check_price_outlier(prices):
             i = prices.index(min(prices))
             urls.pop(i)
             prices.pop(i)
