@@ -164,6 +164,7 @@ class BaseSpecification(PolymorphicModel):
                             specification.value = value
                             specification.save()
 
+                        processed_spec.delete()
                         specification_instances.append(specification)
                 else:
                     AlternativeSpecificationName.objects.create(name=key, host=host)

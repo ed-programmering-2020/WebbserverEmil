@@ -256,6 +256,9 @@ class BaseCategoryProduct(PolymorphicModel):
                 specification_attribute_name = specification.get_attribute_like_name()
                 exec("self.{}_id = {}".format(specification_attribute_name, specification.id))
                 specifications_caught += 1
+                print(specification)
+
+        print(specifications_caught)
 
         if specifications_caught == 0:
             self.delete()
