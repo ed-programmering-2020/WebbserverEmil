@@ -148,21 +148,21 @@ class BaseSpecification(PolymorphicModel):
                 if alternative_specification_name is not None:
                     # Create/get specification if it belongs to specification type
                     specification_type = alternative_specification_name.specification_type
-                    if specification_type:
 
+                    if specification_type:
                         # Get specification model
                         specification_model = specification_type.get_specification_model()
-                        try:
-                            # Process value with a temporary specification model
-                            temporary_model_instance = specification_model()
-                            temporary_model_instance.value = value
-                            processed_value = temporary_model_instance.value
 
-                            print(processed_value)
+                        # Process value for comparison
+                        processed_spec = specification()
+                        processed_spec.value = value
 
-                            # Find specification instance with processed value
-                            specification = specification_model.objects.get(_value=processed_value)
-                        except specification_model.DoesNotExist:
+                        # Find existing specification instance
+                        for spec in specification_model.objects.all():
+                            if spec.value == processed_spec.value:
+                                specification = spec
+                                break
+                        else:
                             # Create new specification
                             specification = specification_model.create(specification_type=specification_type)
                             specification.value = value
