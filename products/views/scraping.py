@@ -22,8 +22,8 @@ class ProductsAPI(generics.GenericAPIView):
             matching_product = product.find_similar_product()
 
             # Create/combine into a category product
-            category_product = BaseCategoryProduct.create(product, matching_product)
-            matching_product.product = category_product
+            category_product = BaseCategoryProduct.create(product, matching_product)  # May be none
+            product.product = category_product
 
             # Update product
             if category_product:
