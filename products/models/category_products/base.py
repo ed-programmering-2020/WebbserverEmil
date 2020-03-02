@@ -273,6 +273,7 @@ class BaseCategoryProduct(PolymorphicModel):
                 specification_attribute_name = specification.to_attribute_name()
 
                 exec("self.{}_id = {}".format(specification_attribute_name, specification.id))
+                self.save()
                 specification.save()
                 print(specification.laptops)
 
