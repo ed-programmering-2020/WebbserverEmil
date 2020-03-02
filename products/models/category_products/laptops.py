@@ -93,7 +93,6 @@ class Laptop(BaseCategoryProduct):
             laptops = laptops[:len(laptops)]
 
         # Get priority score
-        start = time.time()
         priorities = settings.get("priorities", None)
         if priorities is not None:
             priorities = json.loads(priorities)
