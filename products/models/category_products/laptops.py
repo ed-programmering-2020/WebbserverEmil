@@ -51,10 +51,8 @@ class Laptop(BaseCategoryProduct):
     def match(settings, **kwargs):
         """Matches the user with products based on their preferences/settings"""
 
-        start = time.time()
         laptops = BaseCategoryProduct.match(settings, model=Laptop)
         laptops = list(laptops)
-        print(laptops)
 
         # Filter with size range
         size = settings.get("size", None)
@@ -69,11 +67,8 @@ class Laptop(BaseCategoryProduct):
                     filtered_laptops.append(laptop)
 
             laptops = filtered_laptops
-        print(laptops, time.time() - start)
 
         # Get usage score
-        start = time.time()
-
         sorted_laptops = {}
         for laptop in laptops:
             score = 0
@@ -90,11 +85,12 @@ class Laptop(BaseCategoryProduct):
 
             sorted_laptops[laptop] = score / laptop.price
         laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
+
+        # Get top products
         if len(laptops) >= 10:
             laptops = laptops[:10]
         else:
             laptops = laptops[:len(laptops)]
-        print(laptops, time.time() - start)
 
         # Get priority score
         start = time.time()
@@ -115,6 +111,5 @@ class Laptop(BaseCategoryProduct):
 
                 sorted_laptops[laptop] = score / laptop.price
             laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
-        print(laptops, time.time() - start)
 
         return laptops
