@@ -11,5 +11,5 @@ class FeedbackAPI(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         message = request.POST["message"]
-        Feedback.objects.create(message=message)
+        Feedback.objects.polymorphic_create(message=message)
         return Response({"message": "success"})

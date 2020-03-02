@@ -122,10 +122,10 @@ class BaseSpecification(PolymorphicModel):
             try:
                 specification_type = SpecificationType.objects.get(name=specification_type_name)
             except SpecificationType.DoesNotExist:
-                specification_type = SpecificationType.objects.create(name=specification_type_name)
+                specification_type = SpecificationType.objects.polymorphic_create(name=specification_type_name)
 
             # Create dummy category product
-            cls.create(specification_type=specification_type)
+            cls.polymorphic_create(specification_type=specification_type)
 
     @staticmethod
     def get_specification_instances(specifications, host=None):
@@ -160,13 +160,13 @@ class BaseSpecification(PolymorphicModel):
                                 specification = spec
                                 break
                         else:
-                            specification = specification_model.create(specification_type=specification_type)
+                            specification = specification_model.polymorphic_create(specification_type=specification_type)
                             specification.value = value
                             specification.save()
 
                         specification_instances.append(specification)
                 else:
-                    AlternativeSpecificationName.objects.create(name=key, host=host)
+                    AlternativeSpecificationName.objects.polymorphic_create(name=key, host=host)
 
         return specification_instances
 

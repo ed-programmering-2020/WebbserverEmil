@@ -53,10 +53,42 @@ class BaseCategoryProduct(PolymorphicModel):
 
         return None
 
-    @staticmethod
-    def create_or_combine(first, second):
+    @classmethod
+    def create(cls, product, extra=None):
+        if extra is not None:
+            return cls.combine(product, extra)
+        else:
+            similar_category_product = cls.find_similar(product)
+            if similar_category_product is not None:
+                return similar_category_product
+
+            elif product.category:
+                category_model, category_type = cls.get_category_model(product.category)
+                if category_model is not None:
+                    return category_model.polymorphic_create(category_product_type=category_type)
+
+        return None
+
+    @classmethod
+    def create_dummy(cls):
+        try:
+            # Get dummy category product if it exists
+            cls.objects.get(name="dummy")
+        except cls.DoesNotExist:
+            # Create/get category product type
+            try:
+                category_product_type = CategoryProductType.objects.get(name=cls.__name__)
+            except CategoryProductType.DoesNotExist:
+                category_product_type = CategoryProductType.objects.polymorphic_create(name=cls.__name__)
+
+            # Create dummy category product
+            cls.polymorphic_create(name="dummy", price=0, category_product_type=category_product_type, is_active=False)
+
+    @classmethod
+    def combine(cls, first, second):
         first_category_product = first.category_product
         second_category_product = second.category_product
+        category_product = None
 
         if first_category_product and second_category_product:  # Both products have category products
             category_product = first_category_product
@@ -76,56 +108,26 @@ class BaseCategoryProduct(PolymorphicModel):
             category_product = second_category_product
             category_product.products.add(first)
 
-        elif first.category or second.category:
+        elif first.category or second.category:  # Both products have category names
             if first.category:
                 category_name = first.category
             else:
                 category_name = second.category
 
-            try:
-                alternative_category_name = AlternativeCategoryName.objects.get(name=category_name)
-                category_product_type = alternative_category_name.category_product_type
+            category_model, category_type = cls.get_category_model(category_name)
+            if category_model is not None:
+                category_product = category_model.polymorphic_create(category_product_type=category_type)
+                category_product.products.set([first, second])
 
-                if category_product_type is not None:
-                    category_product_model = category_product_type.get_model()
-                    category_product = category_product_model.create(category_product_type=category_product_type)
-
-                    category_product.products.set([first, second])
-
-                else:
-                    return None
-
-            except AlternativeCategoryName.DoesNotExist:
-                AlternativeCategoryName.objects.create(name=category_name)
-                return None
+        # return category product
+        if category_product is not None:
+            category_product.save()
+            return category_product
         else:
             return None
 
-        category_product.save()
-        return category_product
-
     @classmethod
-    def create_dummy(cls):
-        try:
-            # Get dummy category product if it exists
-            cls.objects.get(name="dummy")
-        except cls.DoesNotExist:
-            # Create/get category product type
-            try:
-                category_product_type = CategoryProductType.objects.get(name=cls.__name__)
-            except CategoryProductType.DoesNotExist:
-                category_product_type = CategoryProductType.objects.create(name=cls.__name__)
-
-            # Create dummy category product
-            cls.create(
-                name="dummy",
-                category_product_type=category_product_type,
-                price=0,
-                is_active=False
-            )
-
-    @classmethod
-    def find_similar_category_product(cls, product):
+    def find_similar(cls, product):
         category_products = BaseCategoryProduct.objects.all()
         matching_products = []
 
@@ -160,6 +162,21 @@ class BaseCategoryProduct(PolymorphicModel):
             return product_id if name_similarity >= 0.85 else None
         else:
             return None
+
+    @staticmethod
+    def get_category_model(category_name):
+        try:
+            alternative_category_name = AlternativeCategoryName.objects.get(name=category_name)
+            category_product_type = alternative_category_name.category_product_type
+
+            if category_product_type is not None:
+                category_product_model = category_product_type.get_model()
+                return category_product_model, category_product_type
+
+        except AlternativeCategoryName.DoesNotExist:
+            AlternativeCategoryName.objects.polymorphic_create(name=category_name)
+
+        return None
 
     @staticmethod
     def name_similarity(name, names):

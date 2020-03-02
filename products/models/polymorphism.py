@@ -25,7 +25,7 @@ class PolymorphicModel(models.Model):
     inherited_objects = PolymorphicManager()
 
     @classmethod
-    def create(cls, **kwargs):
+    def polymorphic_create(cls, **kwargs):
         model_name = cls.__name__
 
         # Create/get content type

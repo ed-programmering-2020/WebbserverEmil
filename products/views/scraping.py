@@ -2,7 +2,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework import generics
-from products.models import Product, Website, BaseCategoryProduct, BaseSpecification, AlternativeCategoryName
+from products.models import Product, Website, BaseCategoryProduct
 import json
 
 
@@ -18,18 +18,12 @@ class ProductsAPI(generics.GenericAPIView):
             host = Website.objects.get(name=product_data.get("website"))
             product = Product.create_or_get(product_data, host, files_list)
 
-            # Get matching meta-product/product
+            # Find matching product
             matching_product = product.find_similar_product()
-            if matching_product:
-                category_product = BaseCategoryProduct.create_or_combine(product, matching_product)
 
-            else:
-                matching_category_product = BaseCategoryProduct.find_similar_category_product(product)
-
-                if matching_category_product:
-                    product.category_product = matching_category_product
-
-                category_product = product.category_product
+            # Create/combine into a category product
+            category_product = BaseCategoryProduct.create(product, matching_product)
+            matching_product.product = category_product
 
             # Update product
             if category_product:
