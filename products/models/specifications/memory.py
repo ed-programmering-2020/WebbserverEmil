@@ -22,11 +22,11 @@ class StorageSize(BaseSpecification, IntegerSpecification):
     @value.setter
     def value(self, value):
         value.lower()
-        number = int(value.split(" ")[0])
+        number = int(value.split(" ")[0].split(".")[0])
 
         # Convert to gigabyte
         if "tb" in value or number <= 4:
-            number *= 1024
+            number *= 1000  # Not 1024 because a few websites formats that way already
 
         self._value = number
 
