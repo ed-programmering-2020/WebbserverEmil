@@ -14,7 +14,7 @@ class GraphicsCard(BaseSpecification, BenchmarkSpecification):
     @staticmethod
     def collect_benchmarks():
         url = "https://benchmarks.ul.com/compare/best-gpus"
-        soup = super().get_soup(url)
+        soup = BenchmarkSpecification.get_soup(url)
         graphics_card_scores = []
 
         # Get all scores
@@ -31,7 +31,7 @@ class GraphicsCard(BaseSpecification, BenchmarkSpecification):
                 graphics_card_package = (name, score)
                 graphics_card_scores.append(graphics_card_package)
 
-        super(BenchmarkSpecification).save_benchmarks(graphics_card_scores, GraphicsCard)
+        BenchmarkSpecification.save_benchmarks(graphics_card_scores, GraphicsCard)
 
     def __str__(self):
         return "<GraphicsCard %s>" % self.value
@@ -49,7 +49,7 @@ class Processor(BaseSpecification, BenchmarkSpecification):
     @staticmethod
     def collect_benchmarks():
         url = "https://browser.geekbench.com/processor-benchmarks"
-        soup = super(BenchmarkSpecification).get_soup(url)
+        soup = BenchmarkSpecification.get_soup(url)
         processor_scores = defaultdict()
 
         # Get all scores
