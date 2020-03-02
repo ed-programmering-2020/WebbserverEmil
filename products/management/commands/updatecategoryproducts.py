@@ -1,12 +1,12 @@
 from django.core.management.base import BaseCommand
-from products.models import BaseCategoryProduct
+from products.models import Laptop
 
 
 class Command(BaseCommand):
     help = "Update all category products"
 
     def handle(self, *args, **kwargs):
-        for category_product in BaseCategoryProduct.objects.filter(is_active=True).iterator():
-            category_product.update()
+        for laptop in Laptop.objects.filter(is_active=True).iterator():
+            laptop.update()
 
         self.stdout.write(self.style.SUCCESS("Successfully updated category products"))
