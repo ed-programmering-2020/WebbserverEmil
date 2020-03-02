@@ -275,7 +275,7 @@ class BaseCategoryProduct(PolymorphicModel):
                 exec("self.{}_id = {}".format(specification_attribute_name, specification.id))
                 self.save()
                 specification.save()
-                print(specification.laptops)
+                print(eval("self.{}".format(specification_attribute_name)))
 
                 specifications_caught += 1
 
