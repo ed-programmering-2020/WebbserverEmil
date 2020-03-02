@@ -158,6 +158,8 @@ class BaseSpecification(PolymorphicModel):
                             temporary_model_instance.value = value
                             processed_value = temporary_model_instance.value
 
+                            print(processed_value)
+
                             # Find specification instance with processed value
                             specification = specification_model.objects.get(_value=processed_value)
                         except specification_model.DoesNotExist:
