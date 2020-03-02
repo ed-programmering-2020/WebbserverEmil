@@ -11,7 +11,19 @@ class IntegerSpecification(models.Model):
 
 
 class DecimalSpecification(models.Model):
-    _value = models.DecimalField("value", null=True, max_digits=4, decimal_places=1)
+    _value = models.DecimalField("value", null=True, max_digits=4, decimal_places=2)
+
+    def process_value(self, value):
+        value = value.split(" ")[0]
+        value = ''.join(i for i in value if not i.isalpha())
+
+        if "," in value:
+            value = value.replace(",", ".")
+
+        if value is not "":
+            return float(value)
+        else:
+            return None
 
     class Meta:
         abstract = True

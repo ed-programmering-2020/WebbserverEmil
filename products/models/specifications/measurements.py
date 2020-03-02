@@ -1,4 +1,4 @@
-from .base import BaseSpecification, IntegerSpecification
+from .base import BaseSpecification, IntegerSpecification, DecimalSpecification
 
 
 class BatteryTime(BaseSpecification, IntegerSpecification):
@@ -14,7 +14,7 @@ class BatteryTime(BaseSpecification, IntegerSpecification):
         return "<BatteryTime %s>" % self._value
 
 
-class Weight(BaseSpecification, IntegerSpecification):
+class Weight(BaseSpecification, DecimalSpecification):
     @property
     def value(self):
         return self._value
@@ -22,10 +22,11 @@ class Weight(BaseSpecification, IntegerSpecification):
     @value.setter
     def value(self, value):
         number = self.process_number(value)
-        if " g" in value:
-            number = number / 1000
+        if number is not None:
+            if value >= 10:
+                number = number / 1000
 
-        self._value = number
+            self._value = number
 
     def is_better(self, value):
         return self.value < value
