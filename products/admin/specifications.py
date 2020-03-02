@@ -22,4 +22,4 @@ class AlternativeSpecificationNameAdmin(admin.ModelAdmin):
 
 @admin.register(BaseSpecification)
 class BaseSpecificationAdmin(admin.ModelAdmin):
-    list_display = ["score", "specification_type"]
+    list_display = ["_value", "score", "specification_type"]
