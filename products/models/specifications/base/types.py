@@ -17,9 +17,11 @@ class DecimalSpecification(models.Model):
         value = value.split(" ")[0]
         value = ''.join(i for i in value if not i.isalpha())
 
+        # Change commas to dots for later float parsing
         if "," in value:
             value = value.replace(",", ".")
 
+        # return value as float if it is valid
         if value is not "":
             return float(value)
         else:

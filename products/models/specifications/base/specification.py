@@ -131,10 +131,7 @@ class BaseSpecification(PolymorphicModel):
     def get_specification_instances(specifications, host=None):
         specification_instances = []
 
-        # Iterate through all specifications
         for spec in specifications:
-
-            # Proceed if specification is valid
             if len(spec) == 2:
                 key = spec[0]
                 value = spec[1]
@@ -154,24 +151,21 @@ class BaseSpecification(PolymorphicModel):
                         specification_model = specification_type.get_specification_model()
 
                         # Process value for comparison
-                        processed_spec = specification()
+                        processed_spec = specification_model()
                         processed_spec.value = value
 
-                        # Find existing specification instance
+                        # Find existing specification instance, else create a new specification
                         for spec in specification_model.objects.all():
                             if spec.value == processed_spec.value:
                                 specification = spec
                                 break
                         else:
-                            # Create new specification
                             specification = specification_model.create(specification_type=specification_type)
                             specification.value = value
                             specification.save()
 
-                        # Add specification instance to a list
                         specification_instances.append(specification)
                 else:
-                    # Create new alternative specification name
                     AlternativeSpecificationName.objects.create(name=key, host=host)
 
         return specification_instances
