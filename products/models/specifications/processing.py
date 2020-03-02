@@ -49,7 +49,7 @@ class Processor(BaseSpecification, BenchmarkSpecification):
     @staticmethod
     def collect_benchmarks():
         url = "https://browser.geekbench.com/processor-benchmarks"
-        soup = super().get_soup(url)
+        soup = super(BenchmarkSpecification).get_soup(url)
         processor_scores = defaultdict()
 
         # Get all scores
