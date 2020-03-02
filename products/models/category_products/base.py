@@ -210,7 +210,7 @@ class BaseCategoryProduct(PolymorphicModel):
         matches = 0
 
         for specification in specification_instances:
-            specification_attribute_name = specification.get_attribute_like_name
+            specification_attribute_name = specification.to_attribute_name
 
             if hasattr(specification, specification_attribute_name):
                 product_specification = getattr(product, specification_attribute_name)
@@ -270,16 +270,16 @@ class BaseCategoryProduct(PolymorphicModel):
             specification_instances = BaseSpecification.get_specification_instances(specifications, host)
 
             for specification in specification_instances:
-                specification_attribute_name = specification.get_attribute_like_name()
+                specification_attribute_name = specification.to_attribute_name()
+                
                 exec("self.{}_id = {}".format(specification_attribute_name, specification.id))
+                specification.save()
+
                 specifications_caught += 1
-        print(specifications_caught)
 
         if specifications_caught <= 2:
             self.delete()
             return
-
-        print("here")
 
         # Update the rest of the category product
         self.update_name(data["names"])

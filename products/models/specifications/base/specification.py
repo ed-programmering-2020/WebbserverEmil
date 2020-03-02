@@ -39,7 +39,7 @@ class BaseSpecification(PolymorphicModel):
     def value(self, value):
         raise NotImplementedError
 
-    def get_attribute_like_name(self):
+    def to_attribute_name(self):
         attribute_like_name = ""
         class_name = self.__class__.__name__
         for i, letter in enumerate(class_name):
@@ -156,7 +156,7 @@ class BaseSpecification(PolymorphicModel):
 
                         # Find existing specification instance, else create a new specification
                         for spec in specification_model.objects.all():
-                            if spec.value == processed_spec.value:
+                            if spec.is_equal(processed_spec):
                                 specification = spec
                                 break
                         else:
