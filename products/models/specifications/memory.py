@@ -46,4 +46,4 @@ class StorageType(BaseSpecification, TypeSpecification):
         self._value = self.process_text(value)
 
     def __str__(self):
-        return "<StorageType %s>" % self._value.capitalize()
+        return "<StorageType %s>" % (self.value.capitalize() if self.value is not None else None)
