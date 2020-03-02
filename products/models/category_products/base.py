@@ -324,7 +324,7 @@ class BaseCategoryProduct(PolymorphicModel):
             urls.append(product.url)
 
             price = product.price
-            if price is not NotImplementedError:
+            if price is not None:
                 prices.append(price)
 
         if self.check_price_outlier(prices):
