@@ -25,7 +25,7 @@ class ProductsAPI(generics.GenericAPIView):
             category_product = BaseCategoryProduct.create(product, matching_product)  # May be none
             product.product = category_product
 
-            # Update product
+            # Update product§
             if category_product:
                 category_product.update()
 

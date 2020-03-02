@@ -174,9 +174,9 @@ class BaseCategoryProduct(PolymorphicModel):
                 return category_product_model, category_product_type
 
         except AlternativeCategoryName.DoesNotExist:
-            AlternativeCategoryName.objects.polymorphic_create(name=category_name)
+            AlternativeCategoryName.objects.create(name=category_name)
 
-        return None
+        return None, None
 
     @staticmethod
     def name_similarity(name, names):
