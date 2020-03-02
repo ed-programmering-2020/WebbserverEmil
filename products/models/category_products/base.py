@@ -273,10 +273,13 @@ class BaseCategoryProduct(PolymorphicModel):
                 specification_attribute_name = specification.get_attribute_like_name()
                 exec("self.{}_id = {}".format(specification_attribute_name, specification.id))
                 specifications_caught += 1
+        print(specifications_caught)
 
         if specifications_caught <= 2:
             self.delete()
             return
+
+        print("here")
 
         # Update the rest of the category product
         self.update_name(data["names"])
@@ -357,7 +360,7 @@ class BaseCategoryProduct(PolymorphicModel):
         return list(zip(urls, prices))
 
     def get_image(self):
-        images = [mp.image for mp in self.products.all() if mp.image]
+        images = [p.image for p in self.products.all() if p.image]
         if len(images) > 0:
             return images[0].url
         return None
