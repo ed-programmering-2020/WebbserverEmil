@@ -65,8 +65,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
         # Get price range or else return instances without filtering
         price_range = settings.get("price", None)
-        if price_range is not None:
-            print("here")
+        if price_range is None:
             return model_instances
 
         # Return price filtered model instances
