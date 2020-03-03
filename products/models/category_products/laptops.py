@@ -78,7 +78,7 @@ class Laptop(BaseCategoryProduct):
         print("before", laptops)
         print("---")
 
-        # Get usage score
+        # Score laptops based on usage
         sorted_laptops = {}
         for laptop in laptops:
             score = 0
@@ -122,11 +122,18 @@ class Laptop(BaseCategoryProduct):
                 score = 0
 
                 for specification in Laptop.specifications:
+                    # Check if the laptop has the given specification
+                    name = specification["name"]
+                    if not laptop.has_ranked_specification(name):
+                        continue
+
+                    # Check if priority was given
                     priority = priorities.get(specification["group"], None)
-                    if priority is not None:
-                        name = specification["name"]
-                        if eval("laptop.{} is not None and laptop.{}.to_rank is True".format(name, name)):
-                            exec("score += laptop.{}.score * {}".format(name, priority / 5))
+                    if priority is None:
+                        continue
+
+                    # Add score to the total
+                    score += eval("laptop.{}.score ".format(name)) * priority / 5
 
                 sorted_laptops[laptop] = score / laptop.price
             laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
