@@ -64,12 +64,15 @@ class BaseCategoryProduct(PolymorphicModel):
         model_instances = model.objects.exclude(price=None).filter(is_active=True)
 
         # Get price range or else return instances without filtering
-        price_range = json.loads(settings.get("price", None))
+        price_range = settings.get("price", None)
         if price_range is not None:
+            print("here")
             return model_instances
 
         # Return price filtered model instances
-        return model_instances.filter(Q(price__gte=price_range["min"]), Q(price__lte=price_range["max"]))
+        price_range_dict = json.loads(price_range)
+        print(price_range_dict)
+        return model_instances.filter(Q(price__gte=price_range_dict["min"]), Q(price__lte=price_range_dict["max"]))
 
     @classmethod
     def create(cls, product, another_product=None):
