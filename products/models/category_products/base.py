@@ -70,7 +70,6 @@ class BaseCategoryProduct(PolymorphicModel):
 
         # Return price filtered model instances
         price_range_dict = json.loads(price_range)
-        print(price_range_dict)
         return model_instances.filter(Q(price__gte=price_range_dict["min"]), Q(price__lte=price_range_dict["max"]))
 
     @classmethod
