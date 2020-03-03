@@ -202,13 +202,13 @@ class BaseCategoryProduct(PolymorphicModel):
             # Check if the category is fit for being
             no_manufacturing_name = not category_product.manufacturing_name or not product.manufacturing_name
             if not (no_manufacturing_name and category_product.is_active):
-                break
+                continue
 
             # Check if price is acceptable and specs match
             prices = [product.price for product in category_product.products.all() if product.price is not None]
             average_price = (sum(prices) / len(prices)) / 2
             if not (min_price <= average_price <= max_price) and not cls.matching_specs(specs, category_product):
-                break
+                continue
 
             # Get top meta-product name similarity
             names = [cls.clean_string(product.name) for product in category_product.products.all()]
@@ -309,7 +309,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
             # Check if product has specification attribute
             if hasattr(specification, specification_attribute_name):
-                break
+                continue
 
             # Check if specifications match
             product_specification = getattr(product, specification_attribute_name)
@@ -435,6 +435,22 @@ class BaseCategoryProduct(PolymorphicModel):
             name = names[0]
 
         self.name = name
+
+    @classmethod
+    def has_specification(cls, specification_name):
+        """Checks if the category product has a given specification and if that specification is ranked
+
+        Args:
+            specification_name: the name of the specification to check with
+
+        Returns:
+            bool: result
+        """
+
+        has_specification = eval("{}.{} is not None".format(cls, specification_name))
+        is_ranked = eval("{}.{}.score is not None".format(cls, specification_name))
+
+        return has_specification and is_ranked
 
     def check_price_outlier(self, prices):
         sorted_prices = sorted(prices)

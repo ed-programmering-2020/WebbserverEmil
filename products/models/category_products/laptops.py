@@ -84,17 +84,24 @@ class Laptop(BaseCategoryProduct):
             score = 0
 
             for specification in Laptop.specifications:
+                # Check if the laptop has the given specification
+                name = specification["name"]
+                if laptop.has_specification(name):
+                    continue
+
+                # Get usage multiplier
                 if settings["usage"] == "general":
                     multiplier = specification.get("general", 1)
                 else:
                     multiplier = specification.get("gaming", 1)
 
-                name = specification["name"]
-                print(eval("laptop.{} is not None".format(name)))
-                if eval("laptop.{} is not None".format(name)):
-                    score += eval("laptop.{}.score ".format(name)) * multiplier
-                    print(score)
+                # Add score to the total
+                score += eval("laptop.{}.score ".format(name)) * multiplier
+
+            # Divide total score by price and save it to dict
             sorted_laptops[laptop] = score / laptop.price
+
+        # sort laptops based on score
         laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
 
         print("after", laptops)

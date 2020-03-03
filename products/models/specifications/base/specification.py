@@ -29,8 +29,6 @@ class BaseSpecification(PolymorphicModel):
     )
     objects = models.Manager()
 
-    to_rank = False
-
     @property
     def value(self):
         raise NotImplementedError
