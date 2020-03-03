@@ -90,6 +90,8 @@ class Laptop(BaseCategoryProduct):
                     multiplier = specification.get("gaming", 1)
 
                 name = specification["name"]
+                print(eval("laptop.{} is not None".format(name)))
+                print(eval("laptop.{}.to_rank is True".format(name)))
                 if eval("laptop.{} is not None".format(name)) and eval("laptop.{}.to_rank is True".format(name)):
                     score += eval("laptop.{}.score ".format(name)) * multiplier
                     print(score)
