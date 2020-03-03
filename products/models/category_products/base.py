@@ -53,7 +53,7 @@ class BaseCategoryProduct(PolymorphicModel):
         """Matches the user with products based on their preferences/settings
 
         Args:
-            settings (dict): settings matching preferences
+            settings (dict): settings with matching preferences
             model (class): category product model
 
         Returns:

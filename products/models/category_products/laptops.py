@@ -49,7 +49,14 @@ class Laptop(BaseCategoryProduct):
 
     @staticmethod
     def match(settings, **kwargs):
-        """Matches the user with products based on their preferences/settings"""
+        """Matches the user with products based on their preferences/settings
+
+        Args:
+            settings (dict): settings with matching preferences
+
+        Returns:
+            QuerySet: Matched laptops in ranked order
+        """
 
         laptops = BaseCategoryProduct.match(settings, Laptop)
         laptops = list(laptops)
@@ -68,6 +75,8 @@ class Laptop(BaseCategoryProduct):
 
             laptops = filtered_laptops
 
+        print("before", laptops)
+
         # Get usage score
         sorted_laptops = {}
         for laptop in laptops:
@@ -85,6 +94,8 @@ class Laptop(BaseCategoryProduct):
 
             sorted_laptops[laptop] = score / laptop.price
         laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
+
+        print("after", laptops)
 
         # Get top 10 products
         if len(laptops) >= 10:
