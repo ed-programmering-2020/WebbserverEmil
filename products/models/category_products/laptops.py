@@ -50,6 +50,16 @@ class Laptop(BaseCategoryProduct):
     resolution = get_foreign_key("Resolution")
     screen_size = get_foreign_key("ScreenSize")
 
+    def calculate_score(self, score, price_range):
+        price_upper_mid = (price_range["min"] + price_range["max"]) * 0.75
+        dist_to_mid = price_range["max"] - price_upper_mid
+
+        price_dist = abs(self.price - price_upper_mid)
+        price_relative_dist = price_dist / dist_to_mid
+
+        score = score * (price_relative_dist / 3)
+        return score / self.price
+
     @staticmethod
     def match(settings, **kwargs):
         """Matches the user with products based on their preferences/settings
@@ -63,6 +73,7 @@ class Laptop(BaseCategoryProduct):
 
         laptops = BaseCategoryProduct.match(settings, Laptop)
         laptops = list(laptops)
+        price_range = json.dumps(settings.get("price", None))
 
         # Filter with size range
         size = settings.get("size", None)
@@ -103,7 +114,7 @@ class Laptop(BaseCategoryProduct):
                 score += eval("laptop.{}.score ".format(name)) * Decimal(multiplier)
 
             # Divide total score by price and save it to dict
-            sorted_laptops[laptop] = score / laptop.price
+            sorted_laptops[laptop] = laptop.calculate_score(score, price_range)
 
         # sort laptops based on score
         laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
@@ -139,7 +150,8 @@ class Laptop(BaseCategoryProduct):
                     # Add score to the total
                     score += eval("laptop.{}.score ".format(name)) * Decimal(priority / 5)
 
-                sorted_laptops[laptop] = score / laptop.price
+                sorted_laptops[laptop] = laptop.calculate_score(score, price_range)
+
             laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
 
         return laptops
