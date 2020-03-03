@@ -447,8 +447,8 @@ class BaseCategoryProduct(PolymorphicModel):
             bool: result
         """
 
-        has_specification = eval("{}.{} is not None".format(cls, specification_name))
-        is_ranked = eval("{}.{}.score is not None".format(cls, specification_name))
+        has_specification = eval("cls.%s is not None" % specification_name)
+        is_ranked = eval("cls.%s.score is not None" % specification_name)
 
         return has_specification and is_ranked
 
