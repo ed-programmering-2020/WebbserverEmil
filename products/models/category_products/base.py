@@ -436,7 +436,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
         self.name = name
 
-    def has_specification(self, specification_name):
+    def has_ranked_specification(self, specification_name):
         """Checks if the category product has a given specification and if that specification is ranked
 
         Args:
@@ -446,10 +446,14 @@ class BaseCategoryProduct(PolymorphicModel):
             bool: result
         """
 
+        # Check if the self has a specification
         has_specification = eval("self.%s is not None" % specification_name)
-        is_ranked = eval("self.%s.score is not None" % specification_name)
+        if not has_specification:
+            return
 
-        return has_specification and is_ranked
+        # Check specification is ranked
+        is_ranked = eval("self.%s.score is not None" % specification_name)
+        return is_ranked
 
     def check_price_outlier(self, prices):
         sorted_prices = sorted(prices)

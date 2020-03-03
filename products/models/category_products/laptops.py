@@ -86,7 +86,7 @@ class Laptop(BaseCategoryProduct):
             for specification in Laptop.specifications:
                 # Check if the laptop has the given specification
                 name = specification["name"]
-                if laptop.has_specification(name):
+                if laptop.has_ranked_specification(name):
                     continue
 
                 # Get usage multiplier
