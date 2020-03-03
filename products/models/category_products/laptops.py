@@ -86,8 +86,7 @@ class Laptop(BaseCategoryProduct):
             for specification in Laptop.specifications:
                 # Check if the laptop has the given specification
                 name = specification["name"]
-                if laptop.has_ranked_specification(name):
-                    print("here")
+                if not laptop.has_ranked_specification(name):
                     continue
 
                 # Get usage multiplier
@@ -97,7 +96,6 @@ class Laptop(BaseCategoryProduct):
                     multiplier = specification.get("gaming", 1)
 
                 # Add score to the total
-                print("and here")
                 score += eval("laptop.{}.score ".format(name)) * multiplier
 
             # Divide total score by price and save it to dict
