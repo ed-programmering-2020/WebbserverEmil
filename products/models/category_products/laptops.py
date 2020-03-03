@@ -1,7 +1,10 @@
-from products.models.category_products.base import BaseCategoryProduct
 from operator import itemgetter
+from decimal import Decimal
+
+from products.models.category_products.base import BaseCategoryProduct
 from django.db import models
-import json, time
+
+import json
 
 
 def get_foreign_key(model_name):
@@ -97,7 +100,7 @@ class Laptop(BaseCategoryProduct):
 
                 # Add score to the total
                 print(eval("laptop.{}.score ".format(name)))
-                score += eval("laptop.{}.score ".format(name)) * multiplier
+                score += eval("laptop.{}.score ".format(name)) * Decimal(multiplier)
 
             # Divide total score by price and save it to dict
             sorted_laptops[laptop] = score / laptop.price
@@ -134,7 +137,7 @@ class Laptop(BaseCategoryProduct):
                         continue
 
                     # Add score to the total
-                    score += eval("laptop.{}.score ".format(name)) * priority / 5
+                    score += eval("laptop.{}.score ".format(name)) * Decimal(priority / 5)
 
                 sorted_laptops[laptop] = score / laptop.price
             laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
