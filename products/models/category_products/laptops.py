@@ -73,7 +73,7 @@ class Laptop(BaseCategoryProduct):
 
         laptops = BaseCategoryProduct.match(settings, Laptop)
         laptops = list(laptops)
-        price_range = json.dumps(settings.get("price", None))
+        price_range = json.loads(settings.get("price", None))
 
         # Filter with size range
         size = settings.get("size", None)
