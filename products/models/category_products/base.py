@@ -436,8 +436,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
         self.name = name
 
-    @classmethod
-    def has_specification(cls, specification_name):
+    def has_specification(self, specification_name):
         """Checks if the category product has a given specification and if that specification is ranked
 
         Args:
@@ -447,8 +446,8 @@ class BaseCategoryProduct(PolymorphicModel):
             bool: result
         """
 
-        has_specification = eval("cls.%s is not None" % specification_name)
-        is_ranked = eval("cls.%s.score is not None" % specification_name)
+        has_specification = eval("self.%s is not None" % specification_name)
+        is_ranked = eval("self.%s.score is not None" % specification_name)
 
         return has_specification and is_ranked
 
