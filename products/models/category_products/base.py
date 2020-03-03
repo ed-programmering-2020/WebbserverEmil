@@ -1,16 +1,24 @@
+"""This module contains everything need to create and maintain different category products"""
+
 from products.models.polymorphism import PolymorphicModel, ModelType, AlternativeModelName
 from products.models.specifications import BaseSpecification
+
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
+
+from django.db.models import Q
+from django.db import models
+
 from operator import itemgetter
 from difflib import SequenceMatcher
 from collections import defaultdict
-from django.db.models import Q
-from django.db import models
-import string, json
+import string
+import json
 
 
 class AlternativeCategoryName(AlternativeModelName):
+    """Model containing alternative names for categories from different websites"""
+
     category_product_type = models.ForeignKey(
         "products.CategoryProductType",
         related_name="alternative_category_names",
@@ -24,6 +32,8 @@ class AlternativeCategoryName(AlternativeModelName):
 
 
 class BaseCategoryProduct(PolymorphicModel):
+    """Base class for all category product models"""
+
     name = models.CharField('name', max_length=128)
     manufacturing_name = models.CharField("manufacturing name", max_length=128, null=True, blank=True)
     price = models.IntegerField("price", null=True, blank=True)
@@ -39,13 +49,16 @@ class BaseCategoryProduct(PolymorphicModel):
     objects = models.Manager()
 
     @staticmethod
-    def match(settings, **kwargs):
-        """Matches the user with products based on their preferences/settings"""
+    def match(settings, model):
+        """Matches the user with products based on their preferences/settings
 
-        # Get models or else exit
-        model = kwargs.get("model", None)
-        if model is None:
-            return
+        Args:
+            settings (dict): settings matching preferences
+            model (class): category product model
+
+        Returns:
+            queryset: category products of a given model
+        """
 
         # Query for active model instances
         model_instances = model.objects.filter(is_active=True)
@@ -59,121 +72,173 @@ class BaseCategoryProduct(PolymorphicModel):
         return model_instances.filter(Q(price__gte=price_range["min"]), Q(price__lte=price_range["max"]))
 
     @classmethod
-    def create(cls, product, extra=None):
-        if extra is not None:
-            return cls.combine(product, extra)
-        else:
-            similar_category_product = cls.find_similar(product)
-            if similar_category_product is not None:
-                return similar_category_product
+    def create(cls, product, another_product=None):
+        """Creates a new category product with either one or two products
 
-            elif product.category:
-                category_model, category_type = cls.get_category_model(product.category)
-                if category_model is not None:
-                    return category_model.polymorphic_create(category_product_type=category_type)
+        Args:
+            product (Product): main product
+            another_product (Product): additional product to combine with
+
+        Returns:
+            CategoryProduct: created or matching category product
+        """
+
+        # When 2 products were given, return the combined category product
+        if another_product is not None:
+            return cls.combine(product, another_product)
+
+        # Find similar category product
+        similar_category_product = cls.find_similar(product)
+        if similar_category_product is not None:
+            return similar_category_product
+
+        # Create a new category product with only 1 product
+        if product.category:
+            category_model, category_type = cls.get_category_model(product.category)
+            if category_model is not None:
+                print(product)
+                return category_model.polymorphic_create(category_product_type=category_type)
 
         return None
 
     @classmethod
     def create_dummy(cls):
+        """Creates a dummy category product based on (non)inherited model """
+
         try:
             # Get dummy category product if it exists
             cls.objects.get(name="dummy")
         except cls.DoesNotExist:
-            # Create/get category product type
-            try:
-                category_product_type = CategoryProductType.objects.get(name=cls.__name__)
-            except CategoryProductType.DoesNotExist:
-                category_product_type = CategoryProductType.objects.polymorphic_create(name=cls.__name__)
-
             # Create dummy category product
+            category_product_type = cls.get_category_product_type()
             cls.polymorphic_create(name="dummy", price=0, category_product_type=category_product_type, is_active=False)
 
     @classmethod
     def combine(cls, first, second):
+        """Combines products into category products
+
+        Args:
+            first (Product): first product
+            second: (Product): second product
+
+        Returns:
+            CategoryProduct: combination for the 2 products
+
+        """
+
         first_category_product = first.category_product
         second_category_product = second.category_product
-        category_product = None
 
-        if first_category_product and second_category_product:  # Both products have category products
+        # Both products have category products
+        if first_category_product and second_category_product:
             category_product = first_category_product
 
+            # Combine all products into one queryset
             first_query_set = category_product.products.all()
             second_query_set = second_category_product.products.all()
             combined_query_set = first_query_set.union(second_query_set)
 
+            # Add products to one of the category products while deleting the other
             category_product.products.set(combined_query_set)
             second_category_product.delete()
 
-        elif first_category_product:  # Only the first product has a category product
+            return category_product
+
+        # Only the first product has a category product
+        if first_category_product:
             category_product = first_category_product
             category_product.products.add(second)
+            return category_product
 
-        elif second_category_product:  # Only the second product has a category product
+        # Only the second product has a category product
+        if second_category_product:
             category_product = second_category_product
             category_product.products.add(first)
+            return category_product
 
-        elif first.category or second.category:  # Both products have category names
+        # Both products have category names
+        if first.category or second.category:
             if first.category:
                 category_name = first.category
             else:
                 category_name = second.category
 
+            # Create new category product
             category_model, category_type = cls.get_category_model(category_name)
             if category_model is not None:
                 category_product = category_model.polymorphic_create(category_product_type=category_type)
                 category_product.products.set([first, second])
+                return category_product
 
-        # return category product
-        if category_product is not None:
-            category_product.save()
-            return category_product
-        else:
-            return None
+        return None
 
     @classmethod
     def find_similar(cls, product):
-        category_products = BaseCategoryProduct.objects.all()
-        matching_products = []
+        """Finds a similar category product to a product
 
+        Args:
+            product (Product): the product to find similar products with
+
+        Returns:
+            CategoryProduct: similar category product
+        """
+
+        price = product.price
+        if price is None:
+            return
+
+        # Calculate min and max price range
+        min_price = price / 2.5
+        max_price = price * 2.5
+
+        # Get name and specifications
         name = cls.clean_string(product.name)
         specs = product.specifications
-        price = product.price
-        if price is not None:
-            min_price = price / 2.5
-            max_price = price * 2.5
 
-            for category_product in category_products.iterator():
-                is_active = category_product.is_active
-                no_manufacturing_name = not category_product.manufacturing_name or not product.manufacturing_name
-                has_products = category_product.products.count() > 0
+        # Find similar category products
+        matching_category_products = []
+        for category_product in BaseCategoryProduct.objects.all().iterator():
+            # Check if the category is fit for being
+            no_manufacturing_name = not category_product.manufacturing_name or not product.manufacturing_name
+            if not (no_manufacturing_name and category_product.is_active):
+                break
 
-                if no_manufacturing_name and is_active and has_products:
-                    # Check if price is acceptable and specs match
-                    prices = [product.price for product in category_product.products.all() if product.price is not None]
-                    average_price = (sum(prices) / len(prices)) / 2
+            # Check if price is acceptable and specs match
+            prices = [product.price for product in category_product.products.all() if product.price is not None]
+            average_price = (sum(prices) / len(prices)) / 2
+            if not (min_price <= average_price <= max_price) and not cls.matching_specs(specs, category_product):
+                break
 
-                    if min_price <= average_price <= max_price and cls.matching_specs(specs, category_product):
-                        # Get top meta-product name similarity
-                        names = [cls.clean_string(product.name) for product in category_product.products.all()]
-                        name_similarity = cls.name_similarity(name, names)
-                        matching_products.append((name_similarity, product))
+            # Get top meta-product name similarity
+            names = [cls.clean_string(product.name) for product in category_product.products.all()]
+            name_similarity = cls.name_similarity(name, names)
+            matching_category_products.append((name_similarity, category_product))
 
         # Return top meta product that is over the threshold
-        if len(matching_products) != 0:
-            top_product = max(matching_products, key=itemgetter(0))
-            name_similarity, product_id = top_product
+        if len(matching_category_products) != 0:
+            top_category_products = max(matching_category_products, key=itemgetter(0))
+            name_similarity, category_product = top_category_products
+            return category_product
 
-            return product_id if name_similarity >= 0.85 else None
-        else:
-            return None
+        return None
 
     @staticmethod
     def get_category_model(category_name):
+        """Finds the category model belonging to a certain category name
+
+        Args:
+            category_name (str): the given category name
+
+        Returns:
+            CategoryProduct: resulting category product model
+            CategoryProductType: resulting category product type
+        """
+
         try:
             alternative_category_name = AlternativeCategoryName.objects.get(name=category_name)
             category_product_type = alternative_category_name.category_product_type
 
+            # Get category product model
             if category_product_type is not None:
                 category_product_model = category_product_type.get_model()
                 return category_product_model, category_product_type
@@ -182,6 +247,20 @@ class BaseCategoryProduct(PolymorphicModel):
             AlternativeCategoryName.objects.create(name=category_name)
 
         return None, None
+
+    @classmethod
+    def get_category_product_type(cls):
+        """Finds the category product type belonging to category product
+
+        Returns:
+            CategoryProductType: resulting category product type
+        """
+
+        try:
+            # Return existing category product type
+            return CategoryProductType.objects.get(name=cls.__name__)
+        except CategoryProductType.DoesNotExist:
+            return None
 
     @staticmethod
     def name_similarity(name, names):
@@ -349,8 +428,7 @@ class BaseCategoryProduct(PolymorphicModel):
         return sorted_prices[0] >= relative_min_price
 
     def get_websites(self):
-        urls = []
-        prices = []
+        urls, prices = [], []
         for product in self.products.all():
             urls.append(product.url)
 
@@ -376,7 +454,15 @@ class BaseCategoryProduct(PolymorphicModel):
 
 
 class CategoryProductType(ModelType):
+    """Model used to identify which category product a category belongs to"""
+
     def get_model(self):
+        """Gets the model of its respective category product
+
+        Returns:
+            class: Category product model class
+        """
+
         model_instance = BaseCategoryProduct.objects.filter(category_product_type_id=self.id).first()
         return model_instance.get_model()
 

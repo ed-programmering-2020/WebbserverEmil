@@ -16,16 +16,16 @@ def get_foreign_key(model_name):
 
 class Laptop(BaseCategoryProduct):
     specifications = [
-        {"name": "battery_time", "group": "battery", "general": 1.3, "gaming": 0.7},
-        {"name": "weight", "group": "weight", "general": 1.3, "gaming": 0.7},
-        {"name": "processor", "group": "performance", "gaming": 1.15},
-        {"name": "graphics_card", "group": "performance", "general": 0.7, "gaming": 1.3},
-        {"name": "refresh_rate", "group": "screen", "general": 0.7, "gaming": 1.3},
-        {"name": "ram", "group": "performance"},
+        {"name": "battery_time", "group": "battery", "general": 2, "gaming": 0.3},
+        {"name": "weight", "group": "weight", "general": 1.6, "gaming": 0.6},
+        {"name": "processor", "group": "performance", "gaming": 1.5},
+        {"name": "graphics_card", "group": "performance", "general": 0.4, "gaming": 2.5},
+        {"name": "refresh_rate", "group": "screen", "general": 0.5, "gaming": 2},
+        {"name": "ram", "group": "performance", "general": 0.8, "gaming": 0.8},
         {"name": "storage_type", "group": "performance"},
         {"name": "storage_size", "group": "storage"},
         {"name": "resolution", "group": "screen"},
-        {"name": "panel_type", "group": "screen"}
+        {"name": "panel_type", "group": "screen", "general": 1.4}
     ]
 
     # Measurements
@@ -86,7 +86,7 @@ class Laptop(BaseCategoryProduct):
             sorted_laptops[laptop] = score / laptop.price
         laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
 
-        # Get top products
+        # Get top 10 products
         if len(laptops) >= 10:
             laptops = laptops[:10]
         else:
