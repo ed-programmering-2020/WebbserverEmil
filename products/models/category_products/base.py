@@ -451,7 +451,7 @@ class BaseCategoryProduct(PolymorphicModel):
         if not has_specification:
             return False
 
-        # Check specification is ranked
+        # Check if specification is ranked
         is_ranked = eval("self.%s.score is not None" % specification_name)
         return is_ranked
 
