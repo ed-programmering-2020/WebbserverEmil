@@ -88,9 +88,11 @@ class BaseCategoryProduct(PolymorphicModel):
         dist_to_mid = price_range["max"] - price_upper_mid
 
         price_dist = abs(self.price - price_upper_mid)
-        price_relative_dist = price_dist / dist_to_mid
+        price_relative_dist = 1 - price_dist / dist_to_mid
 
-        score = score * Decimal(price_relative_dist / 3)
+        print(score)
+        score = score * Decimal(price_relative_dist / 2)
+        print(score)
         return score / self.price
 
 
