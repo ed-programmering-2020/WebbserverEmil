@@ -50,16 +50,6 @@ class Laptop(BaseCategoryProduct):
     resolution = get_foreign_key("Resolution")
     screen_size = get_foreign_key("ScreenSize")
 
-    def calculate_score(self, score, price_range):
-        price_upper_mid = (price_range["min"] + price_range["max"]) * 0.75
-        dist_to_mid = price_range["max"] - price_upper_mid
-
-        price_dist = abs(self.price - price_upper_mid)
-        price_relative_dist = price_dist / dist_to_mid
-
-        score = score * (price_relative_dist / 3)
-        return score / self.price
-
     @staticmethod
     def match(settings, **kwargs):
         """Matches the user with products based on their preferences/settings

@@ -12,6 +12,7 @@ from django.db import models
 from operator import itemgetter
 from difflib import SequenceMatcher
 from collections import defaultdict
+from decimal import Decimal
 import string
 import json
 
@@ -71,6 +72,27 @@ class BaseCategoryProduct(PolymorphicModel):
         # Return price filtered model instances
         price_range_dict = json.loads(price_range)
         return model_instances.filter(Q(price__gte=price_range_dict["min"]), Q(price__lte=price_range_dict["max"]))
+
+    def calculate_score(self, score, price_range):
+        """Calculates score with a bias towards prices closer to the upper 75% line of the price range given
+
+        Args:
+            score: a Decimal score
+            price_range: a dict with min and max values for price range
+
+        Returns:
+            Decimal: resulting score
+        """
+
+        price_upper_mid = (price_range["min"] + price_range["max"]) * 0.75
+        dist_to_mid = price_range["max"] - price_upper_mid
+
+        price_dist = abs(self.price - price_upper_mid)
+        price_relative_dist = price_dist / dist_to_mid
+
+        score = score * Decimal(price_relative_dist / 3)
+        return score / self.price
+
 
     @classmethod
     def create(cls, product, another_product=None):
