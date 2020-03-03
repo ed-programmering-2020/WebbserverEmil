@@ -60,8 +60,8 @@ class BaseCategoryProduct(PolymorphicModel):
             queryset: category products of a given model
         """
 
-        # Query for active model instances
-        model_instances = model.objects.filter(is_active=True)
+        # Query for active model instances with price value
+        model_instances = model.objects.exclude(price=None).filter(is_active=True)
 
         # Get price range or else return instances without filtering
         price_range = json.loads(settings.get("price", None))
