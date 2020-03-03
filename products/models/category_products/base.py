@@ -36,7 +36,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
     name = models.CharField('name', max_length=128)
     manufacturing_name = models.CharField("manufacturing name", max_length=128, null=True, blank=True)
-    price = models.IntegerField("price", null=True, blank=True)
+    price = models.PositiveIntegerField("price", null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_ranked = models.BooleanField("is ranked", default=False)
     category_product_type = models.ForeignKey(
@@ -263,15 +263,24 @@ class BaseCategoryProduct(PolymorphicModel):
             return None
 
     @staticmethod
-    def name_similarity(name, names):
-        similarity_list = []
+    def name_similarity(name, other_names):
+        """Get the similarity between different names
 
-        for meta_name in names:
+        Args:
+            name (str): main name to compare with
+            other_names (list): a list of names to compare with
+
+        Returns:
+            int: top similarity metric
+        """
+
+        similarity_list = []
+        for other_name in other_names:
             # Sequence similarity metric
-            sequence_sim = SequenceMatcher(None, name, meta_name).ratio()
+            sequence_sim = SequenceMatcher(None, name, other_name).ratio()
 
             # Cosine similarity metric
-            names = [name, meta_name]
+            names = [name, other_name]
             vectorizer = CountVectorizer().fit_transform(names)
             vectors = vectorizer.toarray()
 
@@ -287,27 +296,32 @@ class BaseCategoryProduct(PolymorphicModel):
 
     @staticmethod
     def matching_specs(specifications, product):
+        # If no specifications are given return false
         if specifications is None:
             return False
 
-        specification_instances = BaseSpecification.get_specification_instances(specifications)
+        # Iterate trough specifications
         matches = 0
-
+        specification_instances = BaseSpecification.get_specification_instances(specifications)
         for specification in specification_instances:
             specification_attribute_name = specification.to_attribute_name
 
+            # Check if product has specification attribute
             if hasattr(specification, specification_attribute_name):
-                product_specification = getattr(product, specification_attribute_name)
+                break
 
-                if product_specification.id != specification.id:
-                    return False
+            # Check if specifications match
+            product_specification = getattr(product, specification_attribute_name)
+            if product_specification.id != specification.id:
+                return False
 
-                matches += 1
+            matches += 1
 
-        if matches > 0:
-            return True
-        else:
+        # If no matching specification where found return false
+        if matches == 0:
             return False
+
+        return True
 
     @staticmethod
     def clean_string(text):

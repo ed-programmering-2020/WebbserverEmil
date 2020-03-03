@@ -76,6 +76,7 @@ class Laptop(BaseCategoryProduct):
             laptops = filtered_laptops
 
         print("before", laptops)
+        print("---")
 
         # Get usage score
         sorted_laptops = {}
@@ -91,6 +92,7 @@ class Laptop(BaseCategoryProduct):
                 name = specification["name"]
                 if eval("laptop.{} is not None and laptop.{}.to_rank is True".format(name, name)):
                     exec("score += laptop.{}.score * {}".format(name, multiplier))
+
 
             sorted_laptops[laptop] = score / laptop.price
         laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
