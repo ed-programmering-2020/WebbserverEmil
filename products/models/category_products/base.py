@@ -42,16 +42,21 @@ class BaseCategoryProduct(PolymorphicModel):
     def match(settings, **kwargs):
         """Matches the user with products based on their preferences/settings"""
 
+        # Get models or else exit
         model = kwargs.get("model", None)
-        model_instances = model.objects.filter(is_active=True)
-        if model:
-            price = json.loads(settings.get("price", None))
-            if price:
-                return model_instances.filter(Q(price__gte=price["min"]), Q(price__lte=price["max"]))
-            else:
-                return model_instances
+        if model is None:
+            return
 
-        return None
+        # Query for active model instances
+        model_instances = model.objects.filter(is_active=True)
+
+        # Get price range or else return instances without filtering
+        price_range = json.loads(settings.get("price", None))
+        if price_range is not None:
+            return model_instances
+
+        # Return price filtered model instances
+        return model_instances.filter(Q(price__gte=price_range["min"]), Q(price__lte=price_range["max"]))
 
     @classmethod
     def create(cls, product, extra=None):
@@ -273,10 +278,6 @@ class BaseCategoryProduct(PolymorphicModel):
                 specification_attribute_name = specification.to_attribute_name()
 
                 exec("self.{}_id = {}".format(specification_attribute_name, specification.id))
-                self.save()
-                specification.save()
-                print(eval("self.{}".format(specification_attribute_name)))
-
                 specifications_caught += 1
 
         if specifications_caught <= 2:
