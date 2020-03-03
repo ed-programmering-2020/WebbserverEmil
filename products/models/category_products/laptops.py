@@ -96,6 +96,7 @@ class Laptop(BaseCategoryProduct):
                     multiplier = specification.get("gaming", 1)
 
                 # Add score to the total
+                print(eval("laptop.{}.score ".format(name)))
                 score += eval("laptop.{}.score ".format(name)) * multiplier
 
             # Divide total score by price and save it to dict
