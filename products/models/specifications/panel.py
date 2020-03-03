@@ -52,8 +52,6 @@ class Resolution(BaseSpecification, IntegerSpecification):
 
 
 class ScreenSize(BaseSpecification, DecimalSpecification):
-    to_rank = False
-
     @property
     def value(self):
         return self._value

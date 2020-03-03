@@ -91,7 +91,7 @@ class Laptop(BaseCategoryProduct):
 
                 name = specification["name"]
                 print(eval("laptop.{} is not None".format(name)))
-                if eval("laptop.{} is not None".format(name)) and eval("laptop.{}.to_rank is True".format(name)):
+                if eval("laptop.{} is not None".format(name)):
                     score += eval("laptop.{}.score ".format(name)) * multiplier
                     print(score)
             sorted_laptops[laptop] = score / laptop.price
