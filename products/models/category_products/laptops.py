@@ -63,7 +63,8 @@ class Laptop(BaseCategoryProduct):
 
         laptops = BaseCategoryProduct.match(settings, Laptop)
         laptops = list(laptops)
-        price_range = json.loads(settings.get("price", None))
+        price_range = json.loads(settings["price"])
+        priorities = json.loads(settings["priorities"])
 
         # Filter with size range
         size = settings.get("size", None)
@@ -79,7 +80,7 @@ class Laptop(BaseCategoryProduct):
 
             laptops = filtered_laptops
 
-        # Score laptops based on usage
+        # Score laptops
         sorted_laptops = {}
         for laptop in laptops:
             score = 0
@@ -92,50 +93,21 @@ class Laptop(BaseCategoryProduct):
 
                 # Get usage multiplier
                 if settings["usage"] == "general":
-                    multiplier = specification.get("general", 1)
+                    usage_mult = specification.get("general", 1)
                 else:
-                    multiplier = specification.get("gaming", 1)
+                    usage_mult = specification.get("gaming", 1)
+
+                # Get priority multiplier
+                priority = priorities[specification["group"]]
+                priority_mult = priority / 5
 
                 # Add score to the total
-                score += eval("laptop.{}.score ".format(name)) * Decimal(multiplier)
+                score += eval("laptop.{}.score ".format(name)) * Decimal(usage_mult + priority_mult)
 
             # Divide total score by price and save it to dict
             sorted_laptops[laptop] = laptop.calculate_score(score, price_range)
 
         # sort laptops based on score
         laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
-
-        # Get top 10 products
-        if len(laptops) >= 10:
-            laptops = laptops[:10]
-        else:
-            laptops = laptops[:len(laptops)]
-
-        # Get priority score
-        priorities = settings.get("priorities", None)
-        if priorities is not None:
-            priorities = json.loads(priorities)
-
-            sorted_laptops = {}
-            for laptop, __ in laptops:
-                score = 0
-
-                for specification in Laptop.specifications:
-                    # Check if the laptop has the given specification
-                    name = specification["name"]
-                    if not laptop.has_ranked_specification(name):
-                        continue
-
-                    # Check if priority was given
-                    priority = priorities.get(specification["group"], None)
-                    if priority is None and priority is not 0:
-                        continue
-
-                    # Add score to the total
-                    score += eval("laptop.{}.score ".format(name)) * Decimal(priority / 5)
-
-                sorted_laptops[laptop] = laptop.calculate_score(score, price_range)
-
-            laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
 
         return laptops
