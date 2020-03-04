@@ -406,7 +406,7 @@ class BaseCategoryProduct(PolymorphicModel):
                 exec("self.{}_id = {}".format(specification_attribute_name, specification.id))
                 specifications_caught += 1
 
-        # Delete category product if no rank specification were found
+        # Delete category product if no specification were found
         if specifications_caught == 0:
             self.delete()
             return

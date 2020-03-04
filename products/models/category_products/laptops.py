@@ -138,7 +138,4 @@ class Laptop(BaseCategoryProduct):
 
             laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
 
-        for laptop, score in laptops:
-            print(laptop, score)
-
         return laptops
