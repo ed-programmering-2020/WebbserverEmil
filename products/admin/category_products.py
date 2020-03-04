@@ -1,5 +1,5 @@
 from django.contrib import admin
-from products.models import Laptop, AlternativeCategoryName, CategoryProductType, BaseCategoryProduct
+from products.models import Laptop, AlternativeCategoryName, CategoryProductType, Product
 from .tags import get_image_tag
 
 
@@ -16,12 +16,19 @@ class CategoryProductTypeAdmin(admin.ModelAdmin):
     list_display = ["name"]
 
 
+class ProductInline(admin.TabularInline):
+    model = Product
+    extra = 0
+    ordering = ["date_seen"]
+
+
 class BaseCategoryProductAdmin(admin.ModelAdmin):
     fieldsets = [
         ("Main info", {
             "fields": ["name", "manufacturing_name", "price"]
         })
     ]
+    inlines = [Product]
 
     list_display = ["name", "price", "serve_image"]
     search_fields = ["name", "manufacturing_name"]

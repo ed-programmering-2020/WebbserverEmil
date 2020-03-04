@@ -5,6 +5,8 @@ from django.contrib import admin
 
 class PriceInline(admin.TabularInline):
     model = Price
+    verbose_name_plural = "Price history"
+    extra = 0
 
 
 @admin.register(Product)
@@ -49,4 +51,5 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Price)
 class PriceAdmin(admin.ModelAdmin):
-    list_display = ["_value", "product"]
+    list_display = ["_value", "date_seen", "product"]
+    ordering = ["date_seen"]
