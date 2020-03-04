@@ -9,7 +9,9 @@ class GraphicsCard(BaseSpecification, BenchmarkSpecification):
 
     @value.setter
     def value(self, value):
-        self._value = value.lower()
+        value = value.lower()
+        value = value.replace(",", "").replace("(", "").replace(")", "")
+        self._value = value
 
     @staticmethod
     def collect_benchmarks():
@@ -44,7 +46,9 @@ class Processor(BaseSpecification, BenchmarkSpecification):
 
     @value.setter
     def value(self, value):
-        self._value = value.lower()
+        value = value.lower()
+        value = value.replace(",", "").replace("(", "").replace(")", "")
+        self._value = value
 
     @staticmethod
     def collect_benchmarks():

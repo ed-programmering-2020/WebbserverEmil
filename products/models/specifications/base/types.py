@@ -89,7 +89,7 @@ class BenchmarkSpecification(CharSpecification):
         return self.benchmark_score > BenchmarkSpecification.objects.get(id=kwargs["id"]).benchmark_score
 
     def is_equal(self, value, **kwargs):
-        return value in self.value
+        return value in self.value or self.value in value
 
     class Meta:
         abstract = True
