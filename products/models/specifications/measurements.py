@@ -21,7 +21,7 @@ class Weight(BaseSpecification, DecimalSpecification):
 
     @value.setter
     def value(self, value):
-        number = self.process_number(value)
+        number = self.process_value(value)
         if number is not None:
             if number >= 10:
                 number = number / 1000

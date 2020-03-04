@@ -173,8 +173,8 @@ class BaseSpecification(PolymorphicModel):
         value = re.sub("[^0-9]", "", first_value).replace(" ", "")
         if value != "":
             return int(value)
-        else:
-            return None
+
+        return None
 
     def process_text(self, value):
         value_lowercase = value.lower()
