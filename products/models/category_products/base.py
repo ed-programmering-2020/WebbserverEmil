@@ -405,7 +405,7 @@ class BaseCategoryProduct(PolymorphicModel):
                 exec("self.{}_id = {}".format(specification_attribute_name, specification.id))
 
                 # Check if specification is in the specification dictionary
-                for rank_specification in self.specification:
+                for rank_specification in self.specifications:
                     if rank_specification["name"] == specification_attribute_name:
                         specifications_caught += 1
                         break

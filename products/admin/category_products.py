@@ -19,6 +19,7 @@ class CategoryProductTypeAdmin(admin.ModelAdmin):
 class ProductInline(admin.TabularInline):
     model = Product
     extra = 0
+    exclude = ["image", "manufacturing_name", "category", "_specification"]
 
 
 class BaseCategoryProductAdmin(admin.ModelAdmin):
