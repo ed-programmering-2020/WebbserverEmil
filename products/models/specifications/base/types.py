@@ -78,6 +78,8 @@ class BenchmarkSpecification(CharSpecification):
             name, __ = benchmark
             score = len(benchmarks) - i
 
+            print(name)
+
             try:
                 specification = model.objects.get(name=name)
                 specification.benchmark_score = score

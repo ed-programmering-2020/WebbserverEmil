@@ -113,5 +113,5 @@ class Laptop(BaseCategoryProduct):
         # Return ten category products
         if len(laptops) >= 10:
             return laptops[:10]
-        
+
         return laptops
