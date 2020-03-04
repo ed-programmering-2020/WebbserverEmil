@@ -11,7 +11,7 @@ class BatteryTime(BaseSpecification, IntegerSpecification):
         self._value = self.process_number(value)
 
     def __str__(self):
-        return "<BatteryTime %s>" % self._value
+        return "<BatteryTime %sh>" % self._value
 
 
 class Weight(BaseSpecification, DecimalSpecification):
