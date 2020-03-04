@@ -117,15 +117,20 @@ class BaseCategoryProduct(PolymorphicModel):
         if similar_category_product is not None:
             return similar_category_product
 
-        print("here")
-        # Create a new category product with only 1 product
-        if product.category:
-            category_model, category_type = cls.get_category_model(product.category)
-            if category_model is not None:
-                print(product)
-                return category_model.polymorphic_create(category_product_type=category_type)
+        print(product.category)
+        # Check if product has a category name
+        if not product.category:
+            return
 
-        return None
+        # Check if the category name belongs to a category product type and model
+        category_model, category_type = cls.get_category_model(product.category)
+        print(category_model)
+        if category_model is None:
+            return
+
+        print(product)
+        # Return new category product
+        return category_model.polymorphic_create(category_product_type=category_type)
 
     @classmethod
     def create_dummy(cls):
