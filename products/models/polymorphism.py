@@ -28,11 +28,15 @@ class PolymorphicModel(models.Model):
     def polymorphic_create(cls, **kwargs):
         model_name = cls.__name__
 
+        print(model_name)
         # Create/get content type
         try:
             content_type = ContentType.objects.get(app_label="products", model=model_name)
         except ContentType.DoesNotExist:
             content_type = ContentType.objects.create(app_label="products", model=model_name)
+
+        print(content_type)
+        print(cls)
 
         return cls.objects.create(content_type=content_type, **kwargs)
 

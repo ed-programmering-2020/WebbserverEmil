@@ -90,9 +90,7 @@ class BaseCategoryProduct(PolymorphicModel):
         price_dist = abs(self.price - price_upper_mid)
         price_relative_dist = 1 - price_dist / dist_to_mid
 
-        print(score)
-        score = score * Decimal(price_relative_dist / 2)
-        print(score)
+        score = score * abs(Decimal(price_relative_dist / 2))
         return score / self.price
 
     @classmethod
@@ -126,7 +124,10 @@ class BaseCategoryProduct(PolymorphicModel):
             return
 
         # Return new category product
-        return category_model.polymorphic_create(category_product_type=category_type)
+        print(category_model)
+        cc = category_model.polymorphic_create(category_product_type=category_type)
+        print(cc)
+        return
 
     @classmethod
     def create_dummy(cls):
