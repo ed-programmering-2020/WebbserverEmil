@@ -408,6 +408,7 @@ class BaseCategoryProduct(PolymorphicModel):
                 for rank_specification in self.specification:
                     if rank_specification["name"] == specification_attribute_name:
                         specifications_caught += 1
+                        break
 
         # Delete category product if no rank specification were found
         if specifications_caught == 0:
