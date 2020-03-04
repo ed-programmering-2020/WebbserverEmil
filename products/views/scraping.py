@@ -18,6 +18,7 @@ class ProductsAPI(generics.GenericAPIView):
 
         for product_data in data_list:
             host = Website.objects.get(name=product_data.get("website"))
+            print(data_list["price"])
             product = Product.create_or_get(product_data, host, files_list)
 
             # Find matching product

@@ -1,6 +1,10 @@
-from products.models import Product, Price, Website
+from products.models import Product, Price
 from .tags import get_image_tag, get_url_tag
 from django.contrib import admin
+
+
+class PriceInline(admin.TabularInline):
+    model = Price
 
 
 @admin.register(Product)
@@ -14,6 +18,7 @@ class ProductAdmin(admin.ModelAdmin):
             "fields": ["category_product", "host"]
         })
     ]
+    inlines = [PriceInline]
 
     list_display = [
         "name",

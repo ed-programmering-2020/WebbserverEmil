@@ -141,7 +141,7 @@ class Price(models.Model):
         price = int(re.sub("\D", "", str(price)))
 
         # Set value with price
-        if price >= 100000:
+        if price <= 100000:
             self._value = price
 
     def __str__(self):
