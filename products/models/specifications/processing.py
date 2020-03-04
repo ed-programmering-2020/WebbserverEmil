@@ -9,7 +9,7 @@ class GraphicsCard(BaseSpecification, BenchmarkSpecification):
 
     @value.setter
     def value(self, value):
-        self._value = self.process_number(value)
+        self._value = value.lower()
 
     @staticmethod
     def collect_benchmarks():
@@ -44,7 +44,7 @@ class Processor(BaseSpecification, BenchmarkSpecification):
 
     @value.setter
     def value(self, value):
-        self._value = self.process_number(value)
+        self._value = value.lower()
 
     @staticmethod
     def collect_benchmarks():
