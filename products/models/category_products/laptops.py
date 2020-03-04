@@ -79,9 +79,6 @@ class Laptop(BaseCategoryProduct):
 
             laptops = filtered_laptops
 
-        print("before", laptops)
-        print("---")
-
         # Score laptops based on usage
         sorted_laptops = {}
         for laptop in laptops:
@@ -108,8 +105,6 @@ class Laptop(BaseCategoryProduct):
         # sort laptops based on score
         laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
 
-        print("after", laptops)
-
         # Get top 10 products
         if len(laptops) >= 10:
             laptops = laptops[:10]
@@ -133,7 +128,7 @@ class Laptop(BaseCategoryProduct):
 
                     # Check if priority was given
                     priority = priorities.get(specification["group"], None)
-                    if priority is None:
+                    if priority is None and priority is not 0:
                         continue
 
                     # Add score to the total
@@ -142,5 +137,8 @@ class Laptop(BaseCategoryProduct):
                 sorted_laptops[laptop] = laptop.calculate_score(score, price_range)
 
             laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
+
+        for laptop, score in laptops:
+            print(laptop, score)
 
         return laptops
