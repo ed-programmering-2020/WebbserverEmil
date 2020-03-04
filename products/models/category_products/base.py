@@ -95,7 +95,6 @@ class BaseCategoryProduct(PolymorphicModel):
         print(score)
         return score / self.price
 
-
     @classmethod
     def create(cls, product, another_product=None):
         """Creates a new category product with either one or two products
@@ -117,18 +116,15 @@ class BaseCategoryProduct(PolymorphicModel):
         if similar_category_product is not None:
             return similar_category_product
 
-        print(product.category)
         # Check if product has a category name
         if not product.category:
             return
 
         # Check if the category name belongs to a category product type and model
         category_model, category_type = cls.get_category_model(product.category)
-        print(category_model)
         if category_model is None:
             return
 
-        print(product)
         # Return new category product
         return category_model.polymorphic_create(category_product_type=category_type)
 
@@ -389,6 +385,8 @@ class BaseCategoryProduct(PolymorphicModel):
                 data["prices"].remove(min_price)
 
             self.price = min(data["prices"])
+        else:
+            self.price = data["prices"][0]
 
         # Update manufacturing name
         if self.manufacturing_name is None:
@@ -404,11 +402,15 @@ class BaseCategoryProduct(PolymorphicModel):
 
             for specification in specification_instances:
                 specification_attribute_name = specification.to_attribute_name()
-
                 exec("self.{}_id = {}".format(specification_attribute_name, specification.id))
-                specifications_caught += 1
 
-        if specifications_caught <= 2:
+                # Check if specification is in the specification dictionary
+                for rank_specification in self.specification:
+                    if rank_specification["name"] == specification_attribute_name:
+                        specifications_caught += 1
+
+        # Delete category product if no rank specification were found
+        if specifications_caught == 0:
             self.delete()
             return
 
