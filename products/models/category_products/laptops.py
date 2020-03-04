@@ -99,7 +99,7 @@ class Laptop(BaseCategoryProduct):
 
                 # Get priority multiplier
                 priority = priorities[specification["group"]]
-                priority_mult = priority / 5
+                priority_mult = priority / 2.5
 
                 # Add score to the total
                 score += eval("laptop.{}.score ".format(name)) * Decimal(usage_mult + priority_mult)
@@ -110,4 +110,8 @@ class Laptop(BaseCategoryProduct):
         # sort laptops based on score
         laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
 
+        # Return ten category products
+        if len(laptops) >= 10:
+            return laptops[:10]
+        
         return laptops
