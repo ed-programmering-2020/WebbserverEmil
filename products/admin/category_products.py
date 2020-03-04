@@ -27,7 +27,7 @@ class BaseCategoryProductAdmin(admin.ModelAdmin):
             "fields": ["name", "manufacturing_name", "price"]
         })
     ]
-    inlines = [Product]
+    inlines = [ProductInline]
 
     list_display = ["name", "price", "serve_image"]
     search_fields = ["name", "manufacturing_name"]
