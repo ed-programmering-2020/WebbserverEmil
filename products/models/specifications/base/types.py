@@ -83,7 +83,7 @@ class BenchmarkSpecification(CharSpecification):
                 specification.benchmark_score = score
                 specification.save()
             except model.DoesNotExist:
-                model.polymorphic_create(_value=name, score=score)
+                model.polymorphic_create(_value=name, benchmark_score=score)
 
     class Meta:
         abstract = True
