@@ -49,10 +49,10 @@ class TypeSpecification(CharSpecification):
                     return i
         return 0
 
-    def is_better(self, value):
+    def is_better(self, value, **kwargs):
         return self.get_rank(self.value) > self.get_rank(value)
 
-    def is_equal(self, value):
+    def is_equal(self, value, **kwargs):
         return self.get_rank(self.value) == self.get_rank(value)
 
     class Meta:
@@ -72,18 +72,24 @@ class BenchmarkSpecification(CharSpecification):
     def collect_benchmarks():
         raise NotImplementedError
 
-    @staticmethod
-    def save_benchmarks(benchmarks, model):
+    @classmethod
+    def save_benchmarks(cls, benchmarks):
         for i, benchmark in enumerate(benchmarks):
             name, __ = benchmark
             score = len(benchmarks) - i
 
             try:
-                specification = model.objects.get(_value=name)
+                specification = cls.objects.get(_value=name)
                 specification.benchmark_score = score
                 specification.save()
-            except model.DoesNotExist:
-                model.polymorphic_create(_value=name, benchmark_score=score)
+            except cls.DoesNotExist:
+                cls.polymorphic_create(_value=name, benchmark_score=score)
+
+    def is_better(self, value, **kwargs):
+        return self.benchmark_score > BenchmarkSpecification.objects.get(id=kwargs["id"]).benchmark_score
+
+    def is_equal(self, value, **kwargs):
+        return value in self.value
 
     class Meta:
         abstract = True

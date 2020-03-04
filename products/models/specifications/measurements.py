@@ -28,7 +28,7 @@ class Weight(BaseSpecification, DecimalSpecification):
 
             self._value = number
 
-    def is_better(self, value):
+    def is_better(self, value, **kwargs):
         return self.value < value
 
     def __str__(self):

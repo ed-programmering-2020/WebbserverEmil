@@ -31,7 +31,7 @@ class GraphicsCard(BaseSpecification, BenchmarkSpecification):
                 graphics_card_package = (name, score)
                 graphics_card_scores.append(graphics_card_package)
 
-        BenchmarkSpecification.save_benchmarks(graphics_card_scores, GraphicsCard)
+        GraphicsCard.save_benchmarks(graphics_card_scores)
 
     def __str__(self):
         return "<GraphicsCard %s>" % self.value
@@ -90,7 +90,7 @@ class Processor(BaseSpecification, BenchmarkSpecification):
                         processors.append(processor_package)
                         break
 
-        BenchmarkSpecification.save_benchmarks(processors, Processor)
+        Processor.save_benchmarks(processors)
 
     def __str__(self):
         return "<Processor %s>" % self.value

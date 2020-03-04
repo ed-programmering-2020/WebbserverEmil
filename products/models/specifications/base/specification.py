@@ -68,14 +68,14 @@ class BaseSpecification(PolymorphicModel):
                         sorted_specifications[key] = [[package]]
                     else:
                         for i, stored_specification in enumerate(sorted_specifications[key]):
-                            __, saved_value = stored_specification[0]
+                            specification_id, saved_value = stored_specification[0]
 
                             # Rank with value
-                            if inherited_specification.is_better(saved_value):
+                            if inherited_specification.is_better(saved_value, id=specification_id):
                                 sorted_specifications[key].insert(i, [package])
                                 break
 
-                            elif inherited_specification.is_equal(saved_value):
+                            elif inherited_specification.is_equal(saved_value, id=specification_id):
                                 sorted_specifications[key][i].append(package)
                                 break
 
@@ -181,10 +181,10 @@ class BaseSpecification(PolymorphicModel):
         value = re.sub('[^A-Za-z0-9 ]+', '', value_lowercase)
         return value
 
-    def is_better(self, value):
+    def is_better(self, value, **kwargs):
         return self.value > value
 
-    def is_equal(self, value):
+    def is_equal(self, value, **kwargs):
         return self.value == value
 
     def __str__(self):

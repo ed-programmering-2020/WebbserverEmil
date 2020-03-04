@@ -127,7 +127,7 @@ class BaseCategoryProduct(PolymorphicModel):
         print(category_model)
         cc = category_model.polymorphic_create(category_product_type=category_type)
         print(cc)
-        return
+        return cc
 
     @classmethod
     def create_dummy(cls):
