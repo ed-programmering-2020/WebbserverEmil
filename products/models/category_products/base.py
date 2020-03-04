@@ -385,7 +385,7 @@ class BaseCategoryProduct(PolymorphicModel):
                 data["prices"].remove(min_price)
 
             self.price = min(data["prices"])
-        else:
+        elif len(data["prices"]) == 1:
             self.price = data["prices"][0]
 
         # Update manufacturing name
