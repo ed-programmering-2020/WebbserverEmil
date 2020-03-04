@@ -117,6 +117,7 @@ class BaseCategoryProduct(PolymorphicModel):
         if similar_category_product is not None:
             return similar_category_product
 
+        print("here")
         # Create a new category product with only 1 product
         if product.category:
             category_model, category_type = cls.get_category_model(product.category)
