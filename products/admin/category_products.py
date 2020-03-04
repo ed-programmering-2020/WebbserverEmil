@@ -19,7 +19,6 @@ class CategoryProductTypeAdmin(admin.ModelAdmin):
 class ProductInline(admin.TabularInline):
     model = Product
     extra = 0
-    ordering = ["date_seen"]
 
 
 class BaseCategoryProductAdmin(admin.ModelAdmin):

@@ -52,4 +52,3 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(Price)
 class PriceAdmin(admin.ModelAdmin):
     list_display = ["_value", "date_seen", "product"]
-    ordering = ["date_seen"]
