@@ -26,11 +26,8 @@ class ProductsAPI(generics.GenericAPIView):
             # Create/combine into a category product
             category_product = BaseCategoryProduct.create(product, matching_product)  # May be none
             if category_product is not None:
-                continue
-
-            # Add product as a child to category product
-            category_product.update()
-            product.category_product = category_product
-            product.save()
+                category_product.update()
+                product.category_product = category_product
+                product.save()
 
         return Response({})
