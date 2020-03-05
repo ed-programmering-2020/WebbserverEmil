@@ -152,7 +152,7 @@ class BaseSpecification(PolymorphicModel):
                         processed_spec = specification_model()
                         processed_spec.value = value
 
-                        print(processed_spec)
+                        print("spec", processed_spec)
 
                         # Find existing specification instance, else create a new specification
                         for spec in specification_model.objects.all():
