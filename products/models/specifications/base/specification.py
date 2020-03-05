@@ -156,7 +156,7 @@ class BaseSpecification(PolymorphicModel):
 
                         # Find existing specification instance, else create a new specification
                         for spec in specification_model.objects.all():
-                            if spec.is_equal(processed_spec):
+                            if spec.value is not None and spec.is_equal(processed_spec):
                                 specification = spec
                                 print("equal", spec)
                                 break
