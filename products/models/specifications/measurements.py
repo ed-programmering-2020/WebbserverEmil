@@ -1,7 +1,7 @@
 from .base import BaseSpecification, IntegerSpecification, DecimalSpecification
 
 
-class BatteryTime(BaseSpecification, IntegerSpecification):
+class BatteryTime(IntegerSpecification, BaseSpecification):
     @property
     def value(self):
         return self._value
@@ -14,7 +14,7 @@ class BatteryTime(BaseSpecification, IntegerSpecification):
         return "<BatteryTime %sh>" % self._value
 
 
-class Weight(BaseSpecification, DecimalSpecification):
+class Weight(DecimalSpecification, BaseSpecification):
     @property
     def value(self):
         return self._value

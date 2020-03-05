@@ -2,7 +2,7 @@ from .base import BaseSpecification, TypeSpecification, IntegerSpecification, De
 import re
 
 
-class PanelType(BaseSpecification, TypeSpecification):
+class PanelType(TypeSpecification, BaseSpecification):
     types = [
         "tn",
         "va",
@@ -21,7 +21,7 @@ class PanelType(BaseSpecification, TypeSpecification):
         return "<PanelType %s>" % self._value
 
 
-class RefreshRate(BaseSpecification, IntegerSpecification):
+class RefreshRate(IntegerSpecification, BaseSpecification):
     @property
     def value(self):
         return self._value
@@ -34,7 +34,7 @@ class RefreshRate(BaseSpecification, IntegerSpecification):
         return "<RefreshRate %sHz>" % self._value
 
 
-class Resolution(BaseSpecification, IntegerSpecification):
+class Resolution(IntegerSpecification, BaseSpecification):
     @property
     def value(self):
         return self._value
@@ -51,7 +51,7 @@ class Resolution(BaseSpecification, IntegerSpecification):
         return "<Resolution %sp>" % self._value
 
 
-class ScreenSize(BaseSpecification, DecimalSpecification):
+class ScreenSize(DecimalSpecification, BaseSpecification):
     @property
     def value(self):
         return self._value

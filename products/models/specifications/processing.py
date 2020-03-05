@@ -2,7 +2,7 @@ from .base import BaseSpecification, BenchmarkSpecification
 from collections import defaultdict
 
 
-class GraphicsCard(BaseSpecification, BenchmarkSpecification):
+class GraphicsCard(BenchmarkSpecification, BaseSpecification):
     @property
     def value(self):
         return self._value
@@ -39,7 +39,7 @@ class GraphicsCard(BaseSpecification, BenchmarkSpecification):
         return "<GraphicsCard %s>" % self.value
 
 
-class Processor(BaseSpecification, BenchmarkSpecification):
+class Processor(BenchmarkSpecification, BaseSpecification):
     @property
     def value(self):
         return self._value
