@@ -158,6 +158,7 @@ class BaseSpecification(PolymorphicModel):
                         for spec in specification_model.objects.all():
                             if spec.is_equal(processed_spec):
                                 specification = spec
+                                print(spec)
                                 break
                         else:
                             specification = specification_model.polymorphic_create(specification_type=specification_type)
