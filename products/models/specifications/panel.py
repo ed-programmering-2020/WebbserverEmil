@@ -16,7 +16,14 @@ class PanelType(TypeSpecification, BaseSpecification):
 
     @value.setter
     def value(self, value):
-        self._value = self.process_text(value)
+        for panel_types in self.types:
+            if type(panel_types) is not list:
+                panel_types = [panel_types]
+
+            for panel_type in panel_types:
+                if panel_type in value:
+                    self._value = panel_type
+                    break
 
     def __str__(self):
         return "<PanelType %s>" % self._value

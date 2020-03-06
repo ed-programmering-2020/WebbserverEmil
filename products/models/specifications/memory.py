@@ -48,7 +48,14 @@ class StorageType(TypeSpecification, BaseSpecification):
 
     @value.setter
     def value(self, value):
-        self._value = self.process_text(value)
+        for storage_types in self.types:
+            if type(storage_types) is not list:
+                storage_types = [storage_types]
+
+            for storage_type in storage_types:
+                if storage_type in value:
+                    self._value = storage_type
+                    break
 
     def __str__(self):
         return "<StorageType %s>" % (self.value.capitalize() if self.value is not None else None)
