@@ -7,17 +7,17 @@ class PolymorphicManager(models.Manager):
         model_instances = super().get_queryset()
 
         first_model_instance = model_instances.first()
-        if first_model_instance:
-            inherited_model = first_model_instance.get_model()
-
-            inherited_model_instances = inherited_model.objects.none()
-            for model_instance in model_instances:
-                inherited_model_instance = inherited_model.objects.get(id=model_instance.id)
-                inherited_model_instances |= inherited_model_instance
-
-            return inherited_model_instances
-        else:
+        if not first_model_instance:
             return model_instances
+
+        inherited_model = first_model_instance.get_model()
+
+        inherited_model_instances = inherited_model.objects.none()
+        for model_instance in model_instances:
+            inherited_model_instance = inherited_model.objects.get(id=model_instance.id)
+            inherited_model_instances |= inherited_model_instance
+
+        return inherited_model_instances
 
 
 class PolymorphicModel(models.Model):
