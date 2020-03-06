@@ -14,6 +14,9 @@ class ProductAPI(generics.GenericAPIView):
             category_product = BaseCategoryProduct.objects.get(id=product_id)
             model = category_product.get_model()
             inherited_category_product = model.objects.get(id=product_id)
-            return Response(CategoryProductSerializer(inherited_category_product).data)
+            serialized_cateory_product = CategoryProductSerializer(inherited_category_product).data
+
+            print(serialized_cateory_product)
+            return Response(serialized_cateory_product)
         except BaseCategoryProduct.DoesNotExist:
             return Response({})
