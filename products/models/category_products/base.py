@@ -508,6 +508,7 @@ class BaseCategoryProduct(PolymorphicModel):
             attribute_name = specification["name"]
             instance = eval("self."+attribute_name)
             specifications[instance.name] = instance.value
+            print(specifications[instance.name])
 
         return specifications
 
