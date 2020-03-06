@@ -506,7 +506,9 @@ class BaseCategoryProduct(PolymorphicModel):
         specifications = {}
         for specification in self.specification_info:
             attribute_name = specification["name"]
+            print(attribute_name)
             instance = eval("self."+attribute_name)
+            print(instance)
             specifications[instance.name] = instance.value
             print(specifications[instance.name])
 
