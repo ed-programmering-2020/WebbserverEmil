@@ -44,8 +44,8 @@ class TypeSpecification(CharSpecification):
             if type(types) is not list:
                 types = [types]
 
-            for type in types:
-                if type in value:
+            for value_type in types:
+                if value_type in value:
                     return i
         return 0
 
