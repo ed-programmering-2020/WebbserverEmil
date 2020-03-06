@@ -526,11 +526,14 @@ class BaseCategoryProduct(PolymorphicModel):
             if price is None:
                 continue
 
-            website_data = (name, url, price)
-            websites.append(website_data)
+            websites.append({
+                "website_name": name,
+                "url": url,
+                "price": price
+            })
 
         # return sorted website list
-        sorted_list = sorted(websites, key=itemgetter(2))
+        sorted_list = sorted(websites, key=itemgetter("price"))
         return sorted_list
 
     @property
