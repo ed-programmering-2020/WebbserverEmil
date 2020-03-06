@@ -18,7 +18,7 @@ def get_foreign_key(model_name):
 
 
 class Laptop(BaseCategoryProduct):
-    specifications = [
+    specification_info = [
         {"name": "battery_time", "group": "battery", "general": 2, "gaming": 0.3},
         {"name": "weight", "group": "weight", "general": 1.6, "gaming": 0.6},
         {"name": "processor", "group": "performance", "gaming": 1.5},
@@ -85,7 +85,7 @@ class Laptop(BaseCategoryProduct):
         for laptop in laptops:
             score = 0
 
-            for specification in Laptop.specifications:
+            for specification in Laptop.specification_info:
                 # Check if the laptop has the given specification
                 name = specification["name"]
                 if not laptop.has_ranked_specification(name):
