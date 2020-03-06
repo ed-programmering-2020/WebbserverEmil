@@ -3,6 +3,8 @@ from collections import defaultdict
 
 
 class GraphicsCard(BenchmarkSpecification, BaseSpecification):
+    name = "grafikkort"
+
     @property
     def value(self):
         return self._value
@@ -40,6 +42,8 @@ class GraphicsCard(BenchmarkSpecification, BaseSpecification):
 
 
 class Processor(BenchmarkSpecification, BaseSpecification):
+    name = "processor"
+
     @property
     def value(self):
         return self._value

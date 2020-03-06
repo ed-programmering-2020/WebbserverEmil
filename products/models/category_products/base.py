@@ -494,27 +494,54 @@ class BaseCategoryProduct(PolymorphicModel):
 
         return sorted_prices[0] >= relative_min_price
 
-    def get_websites(self):
-        urls, prices = [], []
+    @property
+    def specifications(self):
+        """Returns a list specification key value pairs"""
+
+        # When called from base category product return a exception
+        if type(self) == BaseCategoryProduct:
+            raise TypeError
+
+        # Collect all specifications
+        specifications = []
+        for specification in self.specification:
+            attribute_name = specification["name"]
+            instance = eval("self."+attribute_name)
+            key_value = (instance.name, instance.value)
+            specifications.append(key_value)
+
+        return specifications
+
+    @property
+    def websites(self):
+        """Returns a sorted list of websites and its required attributes"""
+
+        # Gather all websites and its data
+        websites = []
         for product in self.products.all():
-            urls.append(product.url)
-
+            url = product.url
+            name = product.name
             price = product.price
-            if price is not None:
-                prices.append(price)
 
-        if len(prices) >= 2 and self.check_price_outlier(prices):
-            i = prices.index(min(prices))
-            urls.pop(i)
-            prices.pop(i)
+            if price is None:
+                continue
 
-        return list(zip(urls, prices))
+            website_data = (name, url, price)
+            websites.append(website_data)
 
-    def get_image(self):
-        images = [p.image for p in self.products.all() if p.image]
-        if len(images) > 0:
-            return images[0].url
-        return None
+        # return sorted website list
+        sorted_list = sorted(websites, key=itemgetter(2))
+        return sorted_list
+
+    @property
+    def images(self):
+        """Returns a list of image urls"""
+
+        # Gather image urls
+        image_urls = [p.image.url for p in self.products.all() if p.image]
+
+        # Return image urls
+        return image_urls
 
     def __str__(self):
         return "<CategoryProduct {self.name}>".format(self=self)

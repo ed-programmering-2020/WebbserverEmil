@@ -2,6 +2,8 @@ from .base import BaseSpecification, IntegerSpecification, DecimalSpecification
 
 
 class BatteryTime(IntegerSpecification, BaseSpecification):
+    name = "batteri tid"
+
     @property
     def value(self):
         return self._value
@@ -15,6 +17,8 @@ class BatteryTime(IntegerSpecification, BaseSpecification):
 
 
 class Weight(DecimalSpecification, BaseSpecification):
+    name = "vikt"
+
     @property
     def value(self):
         return self._value

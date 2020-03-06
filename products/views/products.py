@@ -11,7 +11,7 @@ class ProductAPI(generics.GenericAPIView):
 
     def get(self, request, product_id, *args, **kwargs):
         try:
-            category_product = BaseCategoryProduct.objects.get(id=product_id)
-            return Response({"main": CategoryProductSerializer(category_product).data})
+            category_product = BaseCategoryProduct.inherited_objects.get(id=product_id)
+            return Response(CategoryProductSerializer(category_product).data)
         except BaseCategoryProduct.DoesNotExist:
-            return Response({"main": None})
+            return Response({})

@@ -3,6 +3,7 @@ import re
 
 
 class PanelType(TypeSpecification, BaseSpecification):
+    name = "panel typ"
     types = [
         "tn",
         "va",
@@ -22,6 +23,8 @@ class PanelType(TypeSpecification, BaseSpecification):
 
 
 class RefreshRate(IntegerSpecification, BaseSpecification):
+    name = "uppdateringsfrekvens"
+
     @property
     def value(self):
         return self._value
