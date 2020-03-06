@@ -3,9 +3,9 @@ from .models import BaseCategoryProduct, Website
 
 
 class CategoryProductSerializer(serializers.ModelSerializer):
-    websites = serializers.Field(source="websites")
-    images = serializers.Field(source="images")
-    specifications = serializers.Field(source="specifications")
+    websites = serializers.SerializerMethodField("get_websites")
+    images = serializers.SerializerMethodField("get_images")
+    specifications = serializers.SerializerMethodField("get_specifications")
 
     class Meta:
         model = BaseCategoryProduct
