@@ -520,7 +520,7 @@ class BaseCategoryProduct(PolymorphicModel):
         websites = []
         for product in self.products.all():
             url = product.url
-            name = product.name
+            name = product.host.name
             price = product.price
 
             if price is None:
