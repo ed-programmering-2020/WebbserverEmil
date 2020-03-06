@@ -40,6 +40,9 @@ class CharSpecification(models.Model):
 
 class TypeSpecification(CharSpecification):
     def get_rank(self, value):
+        if value is None:
+            return 0
+
         for i, types in enumerate(self.types):
             if type(types) is not list:
                 types = [types]
