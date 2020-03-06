@@ -38,6 +38,8 @@ class RefreshRate(IntegerSpecification, BaseSpecification):
 
 
 class Resolution(IntegerSpecification, BaseSpecification):
+    name = "upplösning"
+
     @property
     def value(self):
         return self._value
@@ -55,6 +57,8 @@ class Resolution(IntegerSpecification, BaseSpecification):
 
 
 class ScreenSize(DecimalSpecification, BaseSpecification):
+    name = "skärmstorlek"
+
     @property
     def value(self):
         return self._value
