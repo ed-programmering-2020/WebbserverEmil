@@ -124,10 +124,7 @@ class BaseCategoryProduct(PolymorphicModel):
             return
 
         # Return new category product
-        print(category_model)
-        cc = category_model.polymorphic_create(category_product_type=category_type)
-        print(cc)
-        return cc
+        return category_model.polymorphic_create(category_product_type=category_type)
 
     @classmethod
     def create_dummy(cls):
@@ -327,7 +324,17 @@ class BaseCategoryProduct(PolymorphicModel):
         return max(similarity_list)
 
     @staticmethod
-    def matching_specs(specifications, product):
+    def matching_specs(specifications, category_product):
+        """Check if a category product has a matching set of specifications
+
+        Args:
+            specifications (list): A list of specification key value pairs
+            category_product: The category product which to check if it has matching specifications
+
+        Returns:
+             bool: True if category product and list match
+        """
+
         # If no specifications are given return false
         if specifications is None:
             return False
@@ -343,7 +350,7 @@ class BaseCategoryProduct(PolymorphicModel):
                 continue
 
             # Check if specifications match
-            product_specification = getattr(product, specification_attribute_name)
+            product_specification = getattr(category_product, specification_attribute_name)
             if product_specification.id != specification.id:
                 return False
 
@@ -357,8 +364,19 @@ class BaseCategoryProduct(PolymorphicModel):
 
     @staticmethod
     def clean_string(text):
+        """Prepare a string to be compared
+
+        Args:
+            text (str): The string to clean and prepare
+
+        Returns:
+            str: The resulting string
+        """
+
+        # Clean string
         text = "".join([word for word in text if word not in string.punctuation])
         text.lower()
+
         return text
 
     def update(self):
@@ -417,55 +435,40 @@ class BaseCategoryProduct(PolymorphicModel):
         self.save()
 
     def update_name(self, names):
-        if len(names) >= 3:
-            words = {}
-            for name in names:
-                split_words = name.split(" ")
+        """Takes a list of names and creates a combined version which it sets the category product name to
 
-                for other_name in names:
-                    if other_name != name:
-                        other_split_words = other_name.split(" ")
+        Args:
+            names (list): a list of names to combine together
+        """
 
-                        for pos, word in enumerate(other_split_words):
-                            for split_word in split_words:
-                                if SequenceMatcher(None, split_word, word).ratio() >= 0.9 and pos >= 0:
-                                    if word in words:
-                                        words[word].append(pos)
-                                    else:
-                                        words[word] = [pos]
+        # If there are multiple names
+        if len(names) >= 2:
+            # Convert names into sets of words
+            word_sets = [set(name.split(" ")) for name in names if name is not None]
 
-            words_copy = words.copy()
-            removed_words = []
-            for word in words_copy:
-                if word not in removed_words:
-                    for other_word in words_copy:
-                        if word != other_word:
-                            if SequenceMatcher(None, other_word, word).ratio() >= 0.9:
-                                length = len(words[word])
-                                other_word = words.get(other_word, None)
-                                if not other_word:
-                                    other_length = len(other_word)
+            # Find common words between names
+            last_set = None
+            for word_set in word_sets:
+                if word_set is None:
+                    last_set = word_set
+                    continue
 
-                                    if length >= other_length:
-                                        words.pop(other_word, None)
-                                        removed_words.append(other_word)
-                                    else:
-                                        words.pop(word, None)
-                                        removed_words.append(word)
+                last_set = last_set.intersection(word_set)
 
-            calc_words = {word: (sum(p) / len(p)) for (word, p) in words.items()}
-            sorted_words = sorted(calc_words.items(), key=lambda kv: kv[1])
-            name = ""
-            for word, pos in sorted_words:
-                if len(name) > 0:
-                    name += " " + word
-                else:
-                    name = word
+            # Combine words
+            if len(last_set) is not 0:
+                self.name = " ".join(last_set)
+                return
 
-            if name == "" and names != []:
-                name = names[0]
-        else:
-            name = names[0]
+        # In edge cases perform code below
+        # Calculate the best name based on a single input
+        name = names[0]
+
+        # Remove unnecessary information
+        splitters = ["/", "|", "-"]
+        for splitter in splitters:
+            if splitter in name:
+                name = name.split(splitter)[0]
 
         self.name = name
 
