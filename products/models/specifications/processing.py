@@ -3,11 +3,14 @@ from collections import defaultdict
 
 
 class GraphicsCard(BenchmarkSpecification, BaseSpecification):
-    name = "grafikkort"
+    name = "Grafikkort"
 
     @property
     def value(self):
-        return self._value
+        if self._value is not None:
+            return self._value.capitalize()
+
+        return None
 
     @value.setter
     def value(self, value):
@@ -42,11 +45,14 @@ class GraphicsCard(BenchmarkSpecification, BaseSpecification):
 
 
 class Processor(BenchmarkSpecification, BaseSpecification):
-    name = "processor"
+    name = "Processor"
 
     @property
     def value(self):
-        return self._value
+        if self._value is not None:
+            return self._value.capitalize()
+
+        return None
 
     @value.setter
     def value(self, value):

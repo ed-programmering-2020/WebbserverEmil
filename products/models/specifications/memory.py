@@ -2,7 +2,7 @@ from .base import BaseSpecification, IntegerSpecification, TypeSpecification
 
 
 class Ram(IntegerSpecification, BaseSpecification):
-    name = "ram minne"
+    name = "Ram minne (Gb)"
 
     @property
     def value(self):
@@ -17,7 +17,7 @@ class Ram(IntegerSpecification, BaseSpecification):
 
 
 class StorageSize(IntegerSpecification, BaseSpecification):
-    name = "hårddiskkapacitet"
+    name = "Hårddiskkapacitet (Gb)"
 
     @property
     def value(self):
@@ -39,7 +39,7 @@ class StorageSize(IntegerSpecification, BaseSpecification):
 
 
 class StorageType(TypeSpecification, BaseSpecification):
-    name = "hårddisktyp"
+    name = "Hårddisktyp"
     types = ["ssd", "hdd", "emmc"]
 
     @property

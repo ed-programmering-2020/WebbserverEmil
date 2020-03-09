@@ -45,8 +45,8 @@ class PolymorphicModel(models.Model):
 
         if content_type:
             return content_type.model_class()
-        else:
-            return None
+
+        return None
 
     def __hash__(self):
         return hash(self.id)
