@@ -3,7 +3,7 @@ import re
 
 
 class PanelType(TypeSpecification, BaseSpecification):
-    name = "pPanel typ"
+    name = "Panel typ"
     types = [
         "tn",
         "va",
