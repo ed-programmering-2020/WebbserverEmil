@@ -18,6 +18,9 @@ class GraphicsCard(BenchmarkSpecification, BaseSpecification):
         value = value.replace(",", "").replace("(", "").replace(")", "")
         self._value = value
 
+    def is_better(self, value, **kwargs):
+        return self.benchmark_score > Processor.objects.get(id=kwargs["id"]).benchmark_score
+
     @staticmethod
     def collect_benchmarks():
         url = "https://benchmarks.ul.com/compare/best-gpus"
@@ -59,6 +62,9 @@ class Processor(BenchmarkSpecification, BaseSpecification):
         value = value.lower()
         value = value.replace(",", "").replace("(", "").replace(")", "")
         self._value = value
+
+    def is_better(self, value, **kwargs):
+        return self.benchmark_score > Processor.objects.get(id=kwargs["id"]).benchmark_score
 
     @staticmethod
     def collect_benchmarks():
