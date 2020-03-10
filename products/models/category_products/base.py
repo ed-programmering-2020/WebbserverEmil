@@ -364,14 +364,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
     @staticmethod
     def clean_string(text):
-        """Prepare a string to be compared
-
-        Args:
-            text (str): The string to clean and prepare
-
-        Returns:
-            str: The resulting string
-        """
+        """Prepare a string to be compared"""
 
         # Clean string
         text = "".join([word for word in text if word not in string.punctuation])
@@ -380,6 +373,8 @@ class BaseCategoryProduct(PolymorphicModel):
         return text
 
     def update(self):
+        """Updates the category product with all of data from all of its belonging products"""
+
         # Gather meta data
         data = defaultdict(list)
         for product in self.products.all():
@@ -473,14 +468,7 @@ class BaseCategoryProduct(PolymorphicModel):
         self.name = name
 
     def has_ranked_specification(self, specification_name):
-        """Checks if the category product has a given specification and if that specification is ranked
-
-        Args:
-            specification_name: the name of the specification to check with
-
-        Returns:
-            bool: result
-        """
+        """Checks if the category product has a given specification and if that specification is ranked"""
 
         # Check if the self has a specification
         has_specification = eval("self.%s is not None" % specification_name)
@@ -492,6 +480,8 @@ class BaseCategoryProduct(PolymorphicModel):
         return is_ranked
 
     def check_price_outlier(self, prices):
+        """Checks if the smallest price in a list is not disproportionate to the other prices"""
+
         sorted_prices = sorted(prices)
         relative_min_price = sorted_prices[1] / 2
 
@@ -562,11 +552,7 @@ class CategoryProductType(ModelType):
     """Model used to identify which category product a category belongs to"""
 
     def get_model(self):
-        """Gets the model of its respective category product
-
-        Returns:
-            class: Category product model class
-        """
+        """Gets the model of its respective category product"""
 
         model_instance = BaseCategoryProduct.objects.filter(category_product_type_id=self.id).first()
         return model_instance.get_model()
