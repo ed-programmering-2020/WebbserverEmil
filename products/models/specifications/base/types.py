@@ -1,5 +1,6 @@
 from django.db import models
 from bs4 import BeautifulSoup
+from products.models.specifications.base import BaseSpecification
 import requests
 
 
@@ -89,7 +90,7 @@ class BenchmarkSpecification(CharSpecification):
                 cls.polymorphic_create(_value=name, benchmark_score=score)
 
     def is_better(self, value, **kwargs):
-        return self.benchmark_score > BenchmarkSpecification.objects.get(id=kwargs["id"]).benchmark_score
+        return self.benchmark_score > BaseSpecification.objects.get(id=kwargs["id"]).benchmark_score
 
     def is_equal(self, value, **kwargs):
         return value in self.value or self.value in value
