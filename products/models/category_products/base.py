@@ -444,7 +444,7 @@ class BaseCategoryProduct(PolymorphicModel):
             # Find common words between names
             last_set = None
             for word_set in word_sets:
-                if word_set is None:
+                if last_set is None:
                     last_set = word_set
                     continue
 
