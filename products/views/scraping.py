@@ -28,11 +28,7 @@ class ProductsAPI(generics.GenericAPIView):
             if category_product is None:
                 continue
 
-            # Save the new category product
-            category_product.save()
-
             # Assign product to category product
-            # This is done before category product update so that it can update with all of its given products
             product.category_product = category_product
             product.save()
 
