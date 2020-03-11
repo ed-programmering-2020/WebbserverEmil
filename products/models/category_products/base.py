@@ -346,7 +346,7 @@ class BaseCategoryProduct(PolymorphicModel):
             specification_attribute_name = specification.to_attribute_name
 
             # Check if product has specification attribute
-            if hasattr(specification, specification_attribute_name):
+            if not hasattr(specification, specification_attribute_name):
                 continue
 
             # Check if specifications match
