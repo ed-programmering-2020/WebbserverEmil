@@ -245,9 +245,11 @@ class BaseCategoryProduct(PolymorphicModel):
 
         # Return top meta product that is over the threshold
         if len(matching_category_products) != 0:
-            top_category_products = max(matching_category_products, key=itemgetter(0))
-            name_similarity, category_product = top_category_products
-            return category_product
+            top_category_product = max(matching_category_products, key=itemgetter(0))
+            name_similarity, category_product = top_category_product
+
+            if name_similarity >= 0.8: 
+                return category_product
 
         return None
 
