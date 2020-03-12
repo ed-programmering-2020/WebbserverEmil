@@ -23,7 +23,7 @@ class ProductsAPI(generics.GenericAPIView):
             # Find matching product
             matching_product = product.find_similar_product()
 
-            # Combine into a category product
+            # Create or combine into a category product
             category_product = BaseCategoryProduct.create(product, matching_product)  # May be none
             if category_product is None:
                 continue
