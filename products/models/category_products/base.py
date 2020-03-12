@@ -90,7 +90,7 @@ class BaseCategoryProduct(PolymorphicModel):
         price_dist = abs(self.price - price_upper_mid)
         price_relative_dist = 1 - (price_dist / dist_to_mid)
 
-        score = score * abs(Decimal(price_relative_dist))
+        score = score * abs(Decimal(price_relative_dist * 2))
         return score / self.price
 
     @classmethod
