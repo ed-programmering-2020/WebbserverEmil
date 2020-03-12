@@ -85,7 +85,7 @@ class BaseCategoryProduct(PolymorphicModel):
         """
 
         absolute_delta = price_range["max"] - price_range["min"]
-        upper_mid = absolute_delta * 0.66 + price_range["min"]
+        upper_mid = absolute_delta * 0.5 + price_range["min"]
         delta_price = abs(self.price - upper_mid)
         relative_distance = 1 - (delta_price / absolute_delta)
 
