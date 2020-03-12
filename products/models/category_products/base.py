@@ -420,7 +420,7 @@ class BaseCategoryProduct(PolymorphicModel):
                 specifications_caught += 1
 
         # Delete category product if no specification were found
-        if specifications_caught == 0:
+        if specifications_caught <= 2:
             self.delete()
             return
 
