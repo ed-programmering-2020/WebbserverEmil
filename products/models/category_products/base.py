@@ -559,4 +559,3 @@ class CategoryProductType(ModelType):
 
     def __str__(self):
         return "<CategoryProductType {self.name}>".format(self=self)
-
