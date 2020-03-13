@@ -2,7 +2,8 @@ from .base import BaseSpecification, IntegerSpecification, TypeSpecification
 
 
 class Ram(IntegerSpecification, BaseSpecification):
-    name = "Ram minne (Gb)"
+    name = "Ram minne"
+    unit = " GB"
 
     @property
     def value(self):
@@ -17,7 +18,8 @@ class Ram(IntegerSpecification, BaseSpecification):
 
 
 class StorageSize(IntegerSpecification, BaseSpecification):
-    name = "Hårddiskkapacitet (Gb)"
+    name = "Hårddiskkapacitet"
+    unit = " GB"
 
     @property
     def value(self):
@@ -44,7 +46,10 @@ class StorageType(TypeSpecification, BaseSpecification):
 
     @property
     def value(self):
-        return self._value
+        if self._value is None:
+            return None
+
+        return self._value.capitalize()
 
     @value.setter
     def value(self, value):

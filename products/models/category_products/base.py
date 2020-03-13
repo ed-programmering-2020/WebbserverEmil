@@ -507,6 +507,10 @@ class BaseCategoryProduct(PolymorphicModel):
             if instance.value is None:
                 continue
 
+            value = instance.value
+            if hasattr(instance, "unit"):
+                value += instance.unit
+
             specifications[instance.name] = instance.value
 
         return specifications

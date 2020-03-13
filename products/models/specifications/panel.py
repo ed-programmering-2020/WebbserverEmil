@@ -3,7 +3,7 @@ import re
 
 
 class PanelType(TypeSpecification, BaseSpecification):
-    name = "Panel typ"
+    name = "Paneltyp"
     types = [
         "tn",
         "va",
@@ -33,7 +33,8 @@ class PanelType(TypeSpecification, BaseSpecification):
 
 
 class RefreshRate(IntegerSpecification, BaseSpecification):
-    name = "Uppdateringsfrekvens (Hz)"
+    name = "Uppdateringsfrekvens"
+    unit = " Hz"
 
     @property
     def value(self):
@@ -49,6 +50,7 @@ class RefreshRate(IntegerSpecification, BaseSpecification):
 
 class Resolution(IntegerSpecification, BaseSpecification):
     name = "Upplösning"
+    unit = "p"
 
     @property
     def value(self):
@@ -67,7 +69,8 @@ class Resolution(IntegerSpecification, BaseSpecification):
 
 
 class ScreenSize(DecimalSpecification, BaseSpecification):
-    name = "Skärmstorlek (tum)"
+    name = "Skärmstorlek"
+    unit = "\""
 
     @property
     def value(self):
