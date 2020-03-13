@@ -507,7 +507,7 @@ class BaseCategoryProduct(PolymorphicModel):
             if instance.value is None:
                 continue
 
-            value = instance.value
+            value = str(instance.value)
             if hasattr(instance, "unit"):
                 value += instance.unit
 
