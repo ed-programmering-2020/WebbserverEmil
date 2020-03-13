@@ -77,12 +77,13 @@ class Product(models.Model):
 
     @property
     def price(self):
+        # Check if price history is empty
+        if self.price_history.count() == 0:
+            return None
+
         # Return latest price in price history
         price = self.price_history.latest("date_seen")
-        if price:
-            return price.value
-
-        return None
+        return price.value
 
     @price.setter
     def price(self, price):
