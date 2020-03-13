@@ -511,7 +511,7 @@ class BaseCategoryProduct(PolymorphicModel):
             if hasattr(instance, "unit"):
                 value += instance.unit
 
-            specifications[instance.name] = instance.value
+            specifications[instance.name] = value
 
         return specifications
 
