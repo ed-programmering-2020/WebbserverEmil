@@ -21,14 +21,14 @@ class Laptop(BaseCategoryProduct):
     specification_info = [
         {"name": "battery_time", "group": "battery", "general": 2, "gaming": 0.3},
         {"name": "weight", "group": "weight", "general": 1.6, "gaming": 0.6},
-        {"name": "processor", "group": "performance", "gaming": 1.5},
-        {"name": "graphics_card", "group": "performance", "general": 0.4, "gaming": 2.5},
-        {"name": "refresh_rate", "group": "screen", "general": 0.5, "gaming": 2},
-        {"name": "ram", "group": "performance", "general": 0.8, "gaming": 0.8},
+        {"name": "processor", "group": "performance", "general": 2, "gaming": 3},
+        {"name": "graphics_card", "group": "performance", "general": 1.4, "gaming": 5},
+        {"name": "refresh_rate", "group": "screen", "gaming": 3},
+        {"name": "ram", "group": "performance", "general": 1.6, "gaming": 2},
         {"name": "storage_type", "group": "performance"},
         {"name": "storage_size", "group": "storage"},
         {"name": "resolution", "group": "screen"},
-        {"name": "panel_type", "group": "screen", "general": 1.4}
+        {"name": "panel_type", "group": "screen", "general": 1.8}
     ]
 
     # Measurements
