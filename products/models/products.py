@@ -78,7 +78,7 @@ class Product(models.Model):
     @property
     def price(self):
         # Return latest price in price history
-        price = self.price_history.first()
+        price = self.price_history.latest("date_seen")
         if price:
             return price.value
 

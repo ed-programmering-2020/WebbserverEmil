@@ -84,13 +84,12 @@ class BaseCategoryProduct(PolymorphicModel):
             Decimal: resulting score
         """
 
-        price_upper_mid = (price_range["min"] + price_range["max"]) * 0.66
-        dist_to_mid = price_range["max"] - price_upper_mid
+        absolute_delta = price_range["max"] - price_range["min"]
+        upper_mid = absolute_delta * 0.5 + price_range["min"]
+        delta_price = abs(self.price - upper_mid)
+        relative_distance = 1 - (delta_price / absolute_delta)
 
-        price_dist = abs(self.price - price_upper_mid)
-        price_relative_dist = 1 - (price_dist / dist_to_mid)
-
-        score = score * abs(Decimal(price_relative_dist / 2))
+        score = score * Decimal(relative_distance)
         return score / self.price
 
     @classmethod
@@ -245,9 +244,11 @@ class BaseCategoryProduct(PolymorphicModel):
 
         # Return top meta product that is over the threshold
         if len(matching_category_products) != 0:
-            top_category_products = max(matching_category_products, key=itemgetter(0))
-            name_similarity, category_product = top_category_products
-            return category_product
+            top_category_product = max(matching_category_products, key=itemgetter(0))
+            name_similarity, category_product = top_category_product
+
+            if name_similarity >= 0.8:
+                return category_product
 
         return None
 
@@ -420,7 +421,7 @@ class BaseCategoryProduct(PolymorphicModel):
                 specifications_caught += 1
 
         # Delete category product if no specification were found
-        if specifications_caught == 0:
+        if specifications_caught <= 2:
             self.delete()
             return
 
@@ -559,4 +560,3 @@ class CategoryProductType(ModelType):
 
     def __str__(self):
         return "<CategoryProductType {self.name}>".format(self=self)
-

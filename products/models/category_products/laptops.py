@@ -20,7 +20,7 @@ def get_foreign_key(model_name):
 class Laptop(BaseCategoryProduct):
     specification_info = [
         {"name": "battery_time", "group": "battery", "general": 2, "gaming": 0.3},
-        {"name": "weight", "group": "weight", "general": 1.6, "gaming": 0.6},
+        {"name": "weight", "group": "weight", "general": 2.5, "gaming": 0.6},
         {"name": "processor", "group": "performance", "general": 2, "gaming": 3},
         {"name": "graphics_card", "group": "performance", "general": 1.4, "gaming": 5},
         {"name": "refresh_rate", "group": "screen", "gaming": 3},
