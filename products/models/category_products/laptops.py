@@ -102,13 +102,20 @@ class Laptop(BaseCategoryProduct):
                 priority_mult = priority / 2.5
 
                 # Add score to the total
-                score += eval("laptop.{}.score ".format(name)) * Decimal(usage_mult + priority_mult)
+                temp_score = eval("laptop.{}.score ".format(name)) * Decimal(usage_mult + priority_mult)
+                score += temp_score
+
+                print(laptop.name, name, temp_score)
 
             # Divide total score by price and save it to dict
             sorted_laptops[laptop] = laptop.calculate_score(score, price_range)
 
         # sort laptops based on score
         laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
+
+        print("ranked laptops")
+        for name, score in laptops:
+            print(name, score)
 
         # Return ten category products
         if len(laptops) >= 10:
