@@ -3,7 +3,7 @@ from .base import BaseSpecification, IntegerSpecification, DecimalSpecification
 
 class BatteryTime(IntegerSpecification, BaseSpecification):
     name = "Batteritid"
-    unit = " hr"
+    unit = " timmar"
 
     @property
     def value(self):
