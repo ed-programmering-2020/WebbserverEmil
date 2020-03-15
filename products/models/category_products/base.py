@@ -1,6 +1,6 @@
 """This module contains everything need to create and maintain different category products"""
 
-from products.models.polymorphism import PolymorphicModel, ModelType, AlternativeModelName
+from products.models.polymorphism import PolymorphicModel
 from products.models.specifications import BaseSpecification
 
 from sklearn.metrics.pairwise import cosine_similarity
@@ -17,21 +17,6 @@ import string
 import json
 
 
-class AlternativeCategoryName(AlternativeModelName):
-    """Model containing alternative names for categories from different websites"""
-
-    category_product_type = models.ForeignKey(
-        "products.CategoryProductType",
-        related_name="alternative_category_names",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL
-    )
-
-    def __str__(self):
-        return "<AlternativeCategoryName {self.name}>".format(self=self)
-
-
 class BaseCategoryProduct(PolymorphicModel):
     """Base class for all category product models"""
 
@@ -39,15 +24,6 @@ class BaseCategoryProduct(PolymorphicModel):
     manufacturing_name = models.CharField("manufacturing name", max_length=128, null=True, blank=True)
     price = models.PositiveIntegerField("price", null=True, blank=True)
     is_active = models.BooleanField(default=True)
-    is_ranked = models.BooleanField("is ranked", default=False)
-    category_product_type = models.ForeignKey(
-        "products.CategoryProductType",
-        related_name="category_products",
-        null=True,
-        on_delete=models.SET_NULL
-    )
-
-    objects = models.Manager()
 
     @staticmethod
     def match(settings, model):
@@ -93,7 +69,7 @@ class BaseCategoryProduct(PolymorphicModel):
         return score / self.price
 
     @classmethod
-    def create(cls, product, another_product=None):
+    def create_category_product(cls, product, another_product=None):
         """Creates a new category product with either one or two products
 
         Args:
@@ -118,24 +94,12 @@ class BaseCategoryProduct(PolymorphicModel):
             return
 
         # Check if the category name belongs to a category product type and model
-        category_model, category_type = cls.get_category_model(product.category)
+        category_model = cls.get_category_model(product.category)
         if category_model is None:
             return
 
         # Return new category product
-        return category_model.polymorphic_create(category_product_type=category_type)
-
-    @classmethod
-    def create_dummy(cls):
-        """Creates a dummy category product based on (non)inherited model """
-
-        try:
-            # Get dummy category product if it exists
-            cls.objects.get(name="dummy")
-        except cls.DoesNotExist:
-            # Create dummy category product
-            category_product_type = cls.get_category_product_type()
-            cls.polymorphic_create(name="dummy", price=0, category_product_type=category_product_type, is_active=False)
+        return category_model.create()
 
     @classmethod
     def combine(cls, first, second):
@@ -188,9 +152,9 @@ class BaseCategoryProduct(PolymorphicModel):
                 category_name = second.category
 
             # Create new category product
-            category_model, category_type = cls.get_category_model(category_name)
+            category_model = cls.get_model_with_name(category_name, first.host)
             if category_model is not None:
-                category_product = category_model.polymorphic_create(category_product_type=category_type)
+                category_product = category_model.create()
                 category_product.products.set([first, second])
                 return category_product
 
@@ -251,46 +215,6 @@ class BaseCategoryProduct(PolymorphicModel):
                 return category_product
 
         return None
-
-    @staticmethod
-    def get_category_model(category_name):
-        """Finds the category model belonging to a certain category name
-
-        Args:
-            category_name (str): the given category name
-
-        Returns:
-            CategoryProduct: resulting category product model
-            CategoryProductType: resulting category product type
-        """
-
-        try:
-            alternative_category_name = AlternativeCategoryName.objects.get(name=category_name)
-            category_product_type = alternative_category_name.category_product_type
-
-            # Get category product model
-            if category_product_type is not None:
-                category_product_model = category_product_type.get_model()
-                return category_product_model, category_product_type
-
-        except AlternativeCategoryName.DoesNotExist:
-            AlternativeCategoryName.objects.create(name=category_name)
-
-        return None, None
-
-    @classmethod
-    def get_category_product_type(cls):
-        """Finds the category product type belonging to category product
-
-        Returns:
-            CategoryProductType: resulting category product type
-        """
-
-        try:
-            # Return existing category product type
-            return CategoryProductType.objects.get(name=cls.__name__)
-        except CategoryProductType.DoesNotExist:
-            return None
 
     @staticmethod
     def name_similarity(name, other_names):
@@ -551,16 +475,3 @@ class BaseCategoryProduct(PolymorphicModel):
 
     def __str__(self):
         return "<CategoryProduct {self.name}>".format(self=self)
-
-
-class CategoryProductType(ModelType):
-    """Model used to identify which category product a category belongs to"""
-
-    def get_model(self):
-        """Gets the model of its respective category product"""
-
-        model_instance = BaseCategoryProduct.objects.filter(category_product_type_id=self.id).first()
-        return model_instance.get_model()
-
-    def __str__(self):
-        return "<CategoryProductType {self.name}>".format(self=self)

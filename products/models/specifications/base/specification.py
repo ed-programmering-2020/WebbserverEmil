@@ -1,33 +1,11 @@
-from ...polymorphism import PolymorphicModel, ModelType, AlternativeModelName
+from ...polymorphism import PolymorphicModel, AlternativeName
 from collections import defaultdict
 from django.db import models
 import re
 
 
-class AlternativeSpecificationName(AlternativeModelName):
-    specification_type = models.ForeignKey(
-        "products.SpecificationType",
-        related_name="alternative_specification_names",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL
-    )
-
-    def __str__(self):
-        return "<AlternativeSpecificationName {self.name}>".format(self=self)
-
-
 class BaseSpecification(PolymorphicModel):
     score = models.DecimalField("score", max_digits=9, decimal_places=9, null=True)
-    is_ranked = models.BooleanField("is ranked", default=False)
-    specification_type = models.ForeignKey(
-        "products.SpecificationType",
-        related_name="specifications",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL
-    )
-    objects = models.Manager()
 
     @property
     def value(self):
@@ -52,36 +30,43 @@ class BaseSpecification(PolymorphicModel):
     def rank():
         sorted_specifications = defaultdict()
 
-        # Sorting
+        # Gather and sort all specifications
         for specification in BaseSpecification.objects.all().iterator():
-            if not specification.is_ranked:
-                model = specification.get_model()
-                inherited_specification = model.objects.get(id=specification.id)
+            # Get inherited model instance
+            model = specification.content_type.model_class()
+            inherited_specification = model.objects.get(id=specification.id)
 
-                key = inherited_specification.__class__.__name__
-                value = inherited_specification.value
+            # Prepare sorting values
+            key = model.__name__
+            value = inherited_specification.value
+            package = (inherited_specification.id, value)
 
-                if value is not None:
-                    package = (inherited_specification.id, value)
+            # Skip if value property returns None
+            if value is None:
+                continue
 
-                    if key not in sorted_specifications:
-                        sorted_specifications[key] = [[package]]
-                    else:
-                        for i, stored_specification in enumerate(sorted_specifications[key]):
-                            specification_id, saved_value = stored_specification[0]
+            # Initiate list (if it doesn't exist) with the specification placed in it
+            if key not in sorted_specifications:
+                sorted_specifications[key] = [[package]]
 
-                            # Rank with value
-                            if inherited_specification.is_better(saved_value, id=specification_id):
-                                sorted_specifications[key].insert(i, [package])
-                                break
+            # Sort specification into its belonging list
+            for i, stored_specification in enumerate(sorted_specifications[key]):
+                specification_id, saved_value = stored_specification[0]
 
-                            elif inherited_specification.is_equal(saved_value, id=specification_id):
-                                sorted_specifications[key][i].append(package)
-                                break
+                # If the specification is better than the stored specification
+                if inherited_specification.is_better(saved_value, id=specification_id):
+                    sorted_specifications[key].insert(i, [package])
+                    continue
 
-                            elif i == (len(sorted_specifications[key]) - 1):
-                                sorted_specifications[key].append([package])
-                                break
+                # If the specifications are equal
+                if inherited_specification.is_equal(saved_value, id=specification_id):
+                    sorted_specifications[key][i].append(package)
+                    continue
+
+                # If the specification has the lowest value
+                if i == (len(sorted_specifications[key]) - 1):
+                    sorted_specifications[key].append([package])
+                    continue
 
         # Scoring
         scored_specifications = defaultdict()
@@ -111,60 +96,38 @@ class BaseSpecification(PolymorphicModel):
             specification.is_ranked = True
             specification.save()
 
-    @classmethod
-    def create_dummy(cls):
-        if cls.objects.count() == 0:
-            specification_type_name = cls.__name__
-
-            # Create/get category product type
-            try:
-                specification_type = SpecificationType.objects.get(name=specification_type_name)
-            except SpecificationType.DoesNotExist:
-                specification_type = SpecificationType.objects.polymorphic_create(name=specification_type_name)
-
-            # Create dummy category product
-            cls.polymorphic_create(specification_type=specification_type)
-
     @staticmethod
     def get_specification_instances(specifications, host=None):
         specification_instances = []
 
         for spec in specifications:
-            if len(spec) == 2:
-                key = spec[0]
-                value = spec[1]
+            # Check if the spec is a key value pair
+            if len(spec) != 2:
+                continue
 
-                # Get alternative specification name
-                if host is not None:
-                    alternative_specification_name = AlternativeSpecificationName.objects.filter(name__iexact=key).first()
-                else:
-                    alternative_specification_name = AlternativeSpecificationName.objects.filter(name__iexact=key, host=host).first()
+            # Split spec into key value pair
+            key, value = spec
 
-                if alternative_specification_name is not None:
-                    # Create/get specification if it belongs to specification type
-                    specification_type = alternative_specification_name.specification_type
+            # Check for correlating model
+            model_class = BaseSpecification.get_model_with_name(key, host)
+            if model_class is None:
+                continue
 
-                    if specification_type:
-                        # Get specification model
-                        specification_model = specification_type.get_specification_model()
+            # Process value for comparison
+            processed_spec = model_class()
+            processed_spec.value = value
 
-                        # Process value for comparison
-                        processed_spec = specification_model()
-                        processed_spec.value = value
+            # Find existing specification instance, else create a new specification
+            for spec_instance in model_class.objects.all():
+                if spec_instance.value is not None and spec_instance.is_equal(processed_spec.value):
+                    specification = spec_instance
+                    break
+            else:
+                specification = model_class.create()
+                specification.value = value
+                specification.save()
 
-                        # Find existing specification instance, else create a new specification
-                        for spec in specification_model.objects.all():
-                            if spec.value is not None and spec.is_equal(processed_spec.value):
-                                specification = spec
-                                break
-                        else:
-                            specification = specification_model.polymorphic_create(specification_type=specification_type)
-                            specification.value = value
-                            specification.save()
-
-                        specification_instances.append(specification)
-                else:
-                    AlternativeSpecificationName.objects.create(name=key, host=host)
+            specification_instances.append(specification)
 
         return specification_instances
 
@@ -189,12 +152,3 @@ class BaseSpecification(PolymorphicModel):
 
     def __str__(self):
         return "<BaseSpecification {self.score}>".format(self=self)
-
-
-class SpecificationType(ModelType):
-    def get_specification_model(self):
-        model_instance = BaseSpecification.objects.filter(specification_type_id=self.id).first()
-        return model_instance.get_model()
-
-    def __str__(self):
-        return "<SpecificationType {self.name}>".format(self=self)
