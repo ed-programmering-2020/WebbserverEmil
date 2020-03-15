@@ -1,4 +1,4 @@
-from ...polymorphism import PolymorphicModel, AlternativeName
+from ...polymorphism import PolymorphicModel
 from collections import defaultdict
 from django.db import models
 import re

@@ -1,5 +1,4 @@
 from django.db import models
-from products.models import SpecificationType
 from bs4 import BeautifulSoup
 import requests
 
