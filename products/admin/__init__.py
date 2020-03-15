@@ -1,4 +1,5 @@
-from .category_products import LaptopAdmin
-from .specifications import AlternativeSpecificationNameAdmin, BaseSpecificationAdmin
-from .products import ProductAdmin, PriceAdmin
-from .websites import WebsiteAdmin
+from .category_products import *
+from .specifications import *
+from .products import *
+from .websites import *
+from .polymorphism import *
