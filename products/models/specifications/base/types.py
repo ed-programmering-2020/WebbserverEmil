@@ -1,4 +1,5 @@
 from django.db import models
+from products.models import SpecificationType
 from bs4 import BeautifulSoup
 import requests
 
@@ -86,8 +87,8 @@ class BenchmarkSpecification(CharSpecification):
                 specification.benchmark_score = score
                 specification.save()
             except cls.DoesNotExist:
-                print(cls.__name__)
-                cls.polymorphic_create(_value=name, benchmark_score=score)
+                specification_type = SpecificationType.objects.get(name=cls.__name__)
+                cls.polymorphic_create(_value=name, benchmark_score=score, specification_type=specification_type)
 
     def is_better(self, value, **kwargs):
         raise NotImplementedError
