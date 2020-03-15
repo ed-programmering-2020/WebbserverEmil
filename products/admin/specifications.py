@@ -8,4 +8,4 @@ class AlternativeNameInline(admin.TabularInline):
 
 @admin.register(BaseSpecification)
 class BaseSpecificationAdmin(admin.ModelAdmin):
-    list_display = ["score", "specification_type"]
+    list_display = ["score", "content_type"]
