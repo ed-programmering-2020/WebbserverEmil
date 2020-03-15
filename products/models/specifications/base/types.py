@@ -86,6 +86,7 @@ class BenchmarkSpecification(CharSpecification):
                 specification.benchmark_score = score
                 specification.save()
             except cls.DoesNotExist:
+                print(cls.__name__)
                 cls.polymorphic_create(_value=name, benchmark_score=score)
 
     def is_better(self, value, **kwargs):
