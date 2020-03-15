@@ -1,19 +1,6 @@
 from django.contrib import admin
-from products.models import Laptop, AlternativeCategoryName, CategoryProductType, Product
+from products.models import Laptop, Product
 from .tags import get_image_tag
-
-
-@admin.register(AlternativeCategoryName)
-class AlternativeCategoryNameAdmin(admin.ModelAdmin):
-    search_fields = ["name"]
-    fields = ["name", "category_product_type"]
-    list_display = ["name", "category_product_type"]
-
-
-@admin.register(CategoryProductType)
-class CategoryProductTypeAdmin(admin.ModelAdmin):
-    fields = ["name"]
-    list_display = ["name"]
 
 
 class ProductInline(admin.TabularInline):
