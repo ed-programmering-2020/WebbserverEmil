@@ -13,9 +13,6 @@ class AlternativeName(models.Model):
     host = models.ForeignKey("products.Website", null=True, on_delete=models.CASCADE)
     model_type = models.ForeignKey(ContentType, editable=False, on_delete=models.SET_NULL, null=True)
 
-    class Meta:
-        abstract = True
-
 
 class PolymorphicManager(models.Manager):
     def create(self, *args, **kwargs):
