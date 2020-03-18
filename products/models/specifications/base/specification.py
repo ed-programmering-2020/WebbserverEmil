@@ -58,6 +58,7 @@ class BaseSpecification(PolymorphicModel):
 
             # Sort specification into its belonging list
             for i, stored_specifications in enumerate(sorted_specifications[key]):
+                # Get first specification from list
                 specification_id, saved_value = stored_specifications[0]
 
                 # If the specification is better than the stored specification
