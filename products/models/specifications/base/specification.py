@@ -34,7 +34,10 @@ class BaseSpecification(PolymorphicModel):
         last = time.time()
         for specification in BaseSpecification.objects.all().iterator():
             print(time.time() - last)
-            first = time.time()
+
+            print(": ", specification)
+
+
             # Get inherited model instance
             model = specification.content_type.model_class()
             inherited_specification = model.objects.get(id=specification.id)
@@ -44,8 +47,9 @@ class BaseSpecification(PolymorphicModel):
             value = inherited_specification.value
             package = (inherited_specification.id, value)
 
-            second = time.time()
-            print("- ", second - first)
+            print(": ", value)
+
+            print("- ", sorted_specifications[key])
 
             # Skip if value property returns None
             if value is None:
