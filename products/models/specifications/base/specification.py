@@ -48,14 +48,8 @@ class BaseSpecification(PolymorphicModel):
             if value is None:
                 continue
 
-            # append to list if it is empty
-            if len(sorted_specifications[key]) == 0:
-                sorted_specifications[key].append([package])
-                continue
-
             # Sort specification into its belonging list
             for i, stored_specifications in enumerate(sorted_specifications[key]):
-                print(i)
                 # Get first specification from list
                 specification_id, saved_value = stored_specifications[0]
 
@@ -69,7 +63,7 @@ class BaseSpecification(PolymorphicModel):
                     sorted_specifications[key][i].append(package)
                     break
 
-            # If the specification has the lowest value
+            # If the specification has the lowest value or list is empty
             else:
                 sorted_specifications[key].append([package])
 
