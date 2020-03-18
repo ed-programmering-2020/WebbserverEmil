@@ -44,10 +44,6 @@ class BaseSpecification(PolymorphicModel):
             value = inherited_specification.value
             package = (inherited_specification.id, value)
 
-            print(": ", key)
-            print(": ", value)
-            print("- ", sorted_specifications[key])
-
             # Skip if value property returns None
             if value is None:
                 continue
@@ -55,6 +51,7 @@ class BaseSpecification(PolymorphicModel):
             # append to list if it is empty
             if len(sorted_specifications[key]) == 0:
                 sorted_specifications[key].append([package])
+                continue
 
             # Sort specification into its belonging list
             for i, stored_specifications in enumerate(sorted_specifications[key]):
@@ -75,6 +72,8 @@ class BaseSpecification(PolymorphicModel):
                 if i == (len(sorted_specifications[key]) - 1):
                     sorted_specifications[key].append([package])
                     continue
+
+        print(sorted_specifications)
 
         # Scoring
         scored_specifications = defaultdict()
