@@ -1,7 +1,7 @@
 from ...polymorphism import PolymorphicModel
 from collections import defaultdict
 from django.db import models
-import re
+import re, time
 
 
 class BaseSpecification(PolymorphicModel):
@@ -31,7 +31,9 @@ class BaseSpecification(PolymorphicModel):
         sorted_specifications = defaultdict()
 
         # Gather and sort all specifications
+        last = time.time()
         for specification in BaseSpecification.objects.all().iterator():
+            print(last - time.time())
             # Get inherited model instance
             model = specification.content_type.model_class()
             inherited_specification = model.objects.get(id=specification.id)
