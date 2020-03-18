@@ -31,7 +31,7 @@ class BaseSpecification(PolymorphicModel):
         sorted_specifications = defaultdict()
 
         # Gather and sort all specifications
-        last = time.time()
+        last = time.time(list)
         for specification in BaseSpecification.objects.all().iterator():
             print(time.time() - last)
 
