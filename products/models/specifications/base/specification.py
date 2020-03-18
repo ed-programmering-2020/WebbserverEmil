@@ -58,23 +58,22 @@ class BaseSpecification(PolymorphicModel):
 
             # Sort specification into its belonging list
             for i, stored_specifications in enumerate(sorted_specifications[key]):
-                for stored_specification in stored_specifications:
-                    specification_id, saved_value = stored_specification[0]
+                specification_id, saved_value = stored_specifications[0]
 
-                    # If the specification is better than the stored specification
-                    if inherited_specification.is_better(saved_value, id=specification_id):
-                        sorted_specifications[key].insert(i, [package])
-                        continue
+                # If the specification is better than the stored specification
+                if inherited_specification.is_better(saved_value, id=specification_id):
+                    sorted_specifications[key].insert(i, [package])
+                    continue
 
-                    # If the specifications are equal
-                    if inherited_specification.is_equal(saved_value, id=specification_id):
-                        sorted_specifications[key][i].append(package)
-                        continue
+                # If the specifications are equal
+                if inherited_specification.is_equal(saved_value, id=specification_id):
+                    sorted_specifications[key][i].append(package)
+                    continue
 
-                    # If the specification has the lowest value
-                    if i == (len(sorted_specifications[key]) - 1):
-                        sorted_specifications[key].append([package])
-                        continue
+                # If the specification has the lowest value
+                if i == (len(sorted_specifications[key]) - 1):
+                    sorted_specifications[key].append([package])
+                    continue
 
         # Scoring
         scored_specifications = defaultdict()
