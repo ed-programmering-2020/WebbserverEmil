@@ -9,7 +9,7 @@ import os
 
 
 urlpatterns = [
-    path("clone-of-erik/", admin.site.urls),
+    path("clone-of-erik", admin.site.urls),
     path("api/", include("products.urls")),
     path("api/", include("content.urls")),
     path("api/auth/", include("users.urls")),

@@ -12,7 +12,7 @@ class ProductAPI(generics.GenericAPIView):
     def get(self, request, product_id, *args, **kwargs):
         try:
             category_product = BaseCategoryProduct.objects.get(id=product_id)
-            model = category_product.get_model()
+            model = category_product.content_type.model_class()
             inherited_category_product = model.objects.get(id=product_id)
             return Response(CategoryProductSerializer(inherited_category_product).data)
 
