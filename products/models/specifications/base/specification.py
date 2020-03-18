@@ -35,9 +35,6 @@ class BaseSpecification(PolymorphicModel):
         for specification in BaseSpecification.objects.all().iterator():
             print(time.time() - last)
 
-            print(": ", specification)
-
-
             # Get inherited model instance
             model = specification.content_type.model_class()
             inherited_specification = model.objects.get(id=specification.id)
@@ -47,18 +44,14 @@ class BaseSpecification(PolymorphicModel):
             value = inherited_specification.value
             package = (inherited_specification.id, value)
 
+            print(": ", key)
             print(": ", value)
-
             print("- ", sorted_specifications[key])
 
             # Skip if value property returns None
             if value is None:
                 continue
-
-            # Initiate list (if it doesn't exist) with the specification placed in it
-            if key not in sorted_specifications:
-                sorted_specifications[key] = [[package]]
-
+                
             # Sort specification into its belonging list
             for i, stored_specification in enumerate(sorted_specifications[key]):
                 specification_id, saved_value = stored_specification[0]
