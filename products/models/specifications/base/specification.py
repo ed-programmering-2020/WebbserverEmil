@@ -28,10 +28,10 @@ class BaseSpecification(PolymorphicModel):
 
     @staticmethod
     def rank():
-        sorted_specifications = defaultdict()
+        sorted_specifications = defaultdict(list)
 
         # Gather and sort all specifications
-        last = time.time(list)
+        last = time.time()
         for specification in BaseSpecification.objects.all().iterator():
             print(time.time() - last)
 
