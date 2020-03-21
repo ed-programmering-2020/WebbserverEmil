@@ -16,13 +16,18 @@ STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
 
 INSTALLED_APPS = [
+    # External
     "corsheaders",
     "rest_framework",
     "knox",
     "admin_reorder",
+
+    # Internal
     "users",
     "products",
     "content",
+
+    # Django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
