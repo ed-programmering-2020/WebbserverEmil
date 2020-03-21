@@ -109,7 +109,7 @@ ADMIN_REORDER = (
         "app": "contenttypes",
         "label": "Polymorphism",
         "models": (
-            "contenttypes.ContentType",
+            {"model": "contenttypes.ContentType", "label": "Models"},
             "products.AlternativeName"
         )
     }, {
