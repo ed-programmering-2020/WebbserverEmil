@@ -106,7 +106,7 @@ ADMIN_REORDER = (
             "products.Website",
         ),
     },  {
-        "app": "products",
+        "app": "content_types",
         "label": "Polymorphism",
         "models": (
             "content_types.ContentType",
@@ -128,7 +128,9 @@ ADMIN_REORDER = (
             "products.BatteryTime",
             "products.Weight"
         )
-    }
+    },
+    "users",
+    "content"
 )
 
 
