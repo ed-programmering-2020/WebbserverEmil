@@ -98,7 +98,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ADMIN_REORDER = (
     {
         "app": "products",
-        "label": "Main",
+        "label": "Products",
         "models": (
             "products.Laptop",
             "products.Product",
