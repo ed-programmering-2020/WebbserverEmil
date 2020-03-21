@@ -2,9 +2,6 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics
 
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
-
 from knox.models import AuthToken
 from users.models import User
 
@@ -28,7 +25,6 @@ class TokenAPI(generics.RetrieveAPIView):
         return Response({"token": AuthToken.objects.create(user)[1]})
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class RegistrationAPI(generics.GenericAPIView):
     authentication_classes = []
     permission_classes = [AllowAny]
@@ -44,7 +40,6 @@ class RegistrationAPI(generics.GenericAPIView):
         })
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class LoginAPI(generics.GenericAPIView):
     authentication_classes = []
     permission_classes = [AllowAny]
