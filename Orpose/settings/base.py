@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     "users",
     "products",
     "content",
+    "admin_reorder",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -32,6 +33,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    'admin_reorder.middleware.ModelAdminReorder',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -91,6 +93,43 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# Administration
+ADMIN_REORDER = (
+    {
+        "app": "products",
+        "label": "Main",
+        "models": (
+            "products.Laptop",
+            "products.Product",
+            "products.Price",
+            "products.Website",
+        ),
+    },  {
+        "app": "products",
+        "label": "Polymorphism",
+        "models": (
+            "content_types.ContentType",
+            "products.AlternativeName"
+        )
+    }, {
+        "app": "products",
+        "label": "Specifications",
+        "models": (
+            "products.Processor",
+            "products.GraphicsCard",
+            "products.PanelType",
+            "products.RefreshRate",
+            "products.Resolution",
+            "products.ScreenSize",
+            "products.Ram",
+            "products.StorageSize",
+            "products.StorageType",
+            "products.BatteryTime",
+            "products.Weight"
+        )
+    }
+)
 
 
 # Media

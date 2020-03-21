@@ -2,10 +2,12 @@ cffi==1.13.1
 cryptography==2.8
 Django==2.2.6
 django-cors-headers==3.1.1
+django-modeladmin-reorder==0.3.1
 django-rest-knox==4.1.0
 django-stubs==1.2.0
 djangorestframework==3.10.3
 djangorestframework-stubs==1.0.0
+freeze==1.0.10
 joblib==0.14.1
 mypy==0.720
 mypy-extensions==0.4.3
