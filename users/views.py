@@ -26,7 +26,6 @@ class TokenAPI(generics.RetrieveAPIView):
 
 
 class RegistrationAPI(generics.GenericAPIView):
-    authentication_classes = ()
     permission_classes = [AllowAny]
     serializer_class = RegisterUserSerializer
 
@@ -41,7 +40,6 @@ class RegistrationAPI(generics.GenericAPIView):
 
 
 class LoginAPI(generics.GenericAPIView):
-    authentication_classes = ()
     permission_classes = [AllowAny]
     serializer_class = LoginUserSerializer
 
