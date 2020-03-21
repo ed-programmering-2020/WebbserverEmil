@@ -1,6 +1,5 @@
 from .base import BaseSpecification
 from django.db import models
-from decimal import Decimal
 from bs4 import BeautifulSoup
 import requests
 
@@ -41,7 +40,7 @@ class BenchmarkSpecification(BaseSpecification):
         amount_of_benchmarks = sum(1 for _ in benchmarks)
         for i, benchmark in enumerate(benchmarks):
             name, __ = benchmark
-            score = Decimal(1 - (i / amount_of_benchmarks))  # Adjusts based on the amount of benchmarks
+            score = round(1 - (i / amount_of_benchmarks), 10)  # Adjusts based on the amount of benchmarks
 
             # Get/Create specification instance with the benchmark
             try:
