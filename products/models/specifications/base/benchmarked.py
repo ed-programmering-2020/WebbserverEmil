@@ -37,9 +37,10 @@ class BenchmarkSpecification(BaseSpecification):
             return
 
         benchmarks = cls.collect_benchmarks()
+        amount_of_benchmarks = sum(1 for _ in benchmarks)
         for i, benchmark in enumerate(benchmarks):
             name, __ = benchmark
-            score = 1 - i / len(benchmarks)  # Adjusts based on the amount of benchmarks
+            score = 1 - (i / amount_of_benchmarks)  # Adjusts based on the amount of benchmarks
 
             # Get/Create specification instance with the benchmark
             try:
