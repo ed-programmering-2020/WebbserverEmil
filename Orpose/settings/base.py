@@ -19,10 +19,10 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "knox",
+    "admin_reorder",
     "users",
     "products",
     "content",
-    "admin_reorder",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -33,7 +33,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
-    'admin_reorder.middleware.ModelAdminReorder',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -41,6 +40,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'admin_reorder.middleware.ModelAdminReorder',
 ]
 
 # Rest setup
@@ -98,7 +98,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ADMIN_REORDER = (
     {
         "app": "products",
-        "label": "Products",
+        "label": "Products (Products)",
         "models": (
             "products.Laptop",
             "products.Product",
