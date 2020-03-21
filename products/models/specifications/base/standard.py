@@ -1,33 +1,30 @@
-from ...polymorphism import PolymorphicModel
+from .base import BaseSpecification
 from collections import defaultdict
-from django.db import models
-import re, time
+import time, re
 
 
-class BaseSpecification(PolymorphicModel):
-    score = models.DecimalField("score", max_digits=9, decimal_places=9, null=True)
-
+class StandardSpecification(BaseSpecification):
     @property
     def value(self):
-        raise NotImplementedError
+        return self._value
 
     @value.setter
     def value(self, value):
-        raise NotImplementedError
+        first_value = value.split(" ")[0]
+        value = re.sub("[^0-9]", "", first_value).replace(" ", "")
+        if value != "":
+            self._value = int(value)
 
-    def to_attribute_name(self):
-        attribute_like_name = ""
-        class_name = self.__class__.__name__
-        for i, letter in enumerate(class_name):
-            if not letter.islower() and i != 0:
-                attribute_like_name += "_"
+    def is_better(self, value):
+        """This is needed because Django already uses the comparison operators"""
+        return self.value > value
 
-            attribute_like_name += letter
+    def is_equal(self, value):
+        """This is needed because Django already uses the comparison operators"""
+        return self.value == value
 
-        return attribute_like_name.lower()
-
-    @staticmethod
-    def rank():
+    @classmethod
+    def rank(cls, *args):
         sorted_specifications = defaultdict(list)
 
         # Gather and sort all specifications
@@ -96,60 +93,3 @@ class BaseSpecification(PolymorphicModel):
             specification.score = score
             specification.is_ranked = True
             specification.save()
-
-    @staticmethod
-    def get_specification_instances(specifications, host=None):
-        specification_instances = []
-
-        for spec in specifications:
-            # Check if the spec is a key value pair
-            if len(spec) != 2:
-                continue
-
-            # Split spec into key value pair
-            key, value = spec
-
-            # Check for correlating model
-            model_class = BaseSpecification.get_model_with_name(key, host)
-            if model_class is None:
-                continue
-
-            # Process value for comparison
-            processed_spec = model_class()
-            processed_spec.value = value
-
-            # Find existing specification instance, else create a new specification
-            for spec_instance in model_class.objects.all():
-                if spec_instance.value is not None and spec_instance.is_equal(processed_spec.value):
-                    specification = spec_instance
-                    break
-            else:
-                specification = model_class.create()
-                specification.value = value
-                specification.save()
-
-            specification_instances.append(specification)
-
-        return specification_instances
-
-    def process_number(self, value):
-        first_value = value.split(" ")[0]
-        value = re.sub("[^0-9]", "", first_value).replace(" ", "")
-        if value != "":
-            return int(value)
-
-        return None
-
-    def process_text(self, value):
-        value_lowercase = value.lower()
-        value = re.sub('[^A-Za-z0-9 ]+', '', value_lowercase)
-        return value
-
-    def is_better(self, value, **kwargs):
-        return self.value > value
-
-    def is_equal(self, value, **kwargs):
-        return self.value == value
-
-    def __str__(self):
-        return "<BaseSpecification {self.score}>".format(self=self)

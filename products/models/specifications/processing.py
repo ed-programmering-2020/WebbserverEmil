@@ -1,25 +1,10 @@
-from .base import BaseSpecification, BenchmarkSpecification
+from .base import BenchmarkSpecification
 from collections import defaultdict
 
 
-class GraphicsCard(BenchmarkSpecification, BaseSpecification):
+class GraphicsCard(BenchmarkSpecification):
+    # Settings
     name = "Grafikkort"
-
-    @property
-    def value(self):
-        if self._value is not None:
-            return self._value.capitalize()
-
-        return None
-
-    @value.setter
-    def value(self, value):
-        value = value.lower()
-        value = value.replace(",", "").replace("(", "").replace(")", "")
-        self._value = value
-
-    def is_better(self, value, **kwargs):
-        return self.benchmark_score > Processor.objects.get(id=kwargs["id"]).benchmark_score
 
     @staticmethod
     def collect_benchmarks():
@@ -41,30 +26,15 @@ class GraphicsCard(BenchmarkSpecification, BaseSpecification):
                 graphics_card_package = (name, score)
                 graphics_card_scores.append(graphics_card_package)
 
-        GraphicsCard.save_benchmarks(graphics_card_scores)
+        return graphics_card_scores
 
     def __str__(self):
         return "<GraphicsCard %s>" % self.value
 
 
-class Processor(BenchmarkSpecification, BaseSpecification):
+class Processor(BenchmarkSpecification):
+    # Settings
     name = "Processor"
-
-    @property
-    def value(self):
-        if self._value is not None:
-            return self._value.capitalize()
-
-        return None
-
-    @value.setter
-    def value(self, value):
-        value = value.lower()
-        value = value.replace(",", "").replace("(", "").replace(")", "")
-        self._value = value
-
-    def is_better(self, value, **kwargs):
-        return self.benchmark_score > Processor.objects.get(id=kwargs["id"]).benchmark_score
 
     @staticmethod
     def collect_benchmarks():
@@ -110,7 +80,7 @@ class Processor(BenchmarkSpecification, BaseSpecification):
                         processors.append(processor_package)
                         break
 
-        Processor.save_benchmarks(processors)
+        return processors
 
     def __str__(self):
         return "<Processor %s>" % self.value

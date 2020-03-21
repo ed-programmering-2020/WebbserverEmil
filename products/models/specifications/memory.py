@@ -1,25 +1,26 @@
-from .base import BaseSpecification, IntegerSpecification, TypeSpecification
+from .base import StandardSpecification, SpecifiedSpecification
+from django.db import models
 
 
-class Ram(IntegerSpecification, BaseSpecification):
+class Ram(StandardSpecification):
+    # Settings
     name = "Ram minne"
     unit = " GB"
 
-    @property
-    def value(self):
-        return self._value
-
-    @value.setter
-    def value(self, value):
-        self._value = self.process_number(value)
+    # Fields
+    _value = models.PositiveSmallIntegerField()
 
     def __str__(self):
         return "<Ram %sGb>" % self._value
 
 
-class StorageSize(IntegerSpecification, BaseSpecification):
+class StorageSize(StandardSpecification):
+    # Settings
     name = "Hårddiskkapacitet"
     unit = " GB"
+
+    # Fields
+    _value = models.PositiveSmallIntegerField
 
     @property
     def value(self):
@@ -32,7 +33,7 @@ class StorageSize(IntegerSpecification, BaseSpecification):
 
         # Convert to gigabyte
         if "tb" in value or number <= 4:
-            number *= 1000  # Not 1024 because a few websites formats that way already
+            number *= 1000  # Not 1024 because a few websites format the value in that way already
 
         self._value = number
 
@@ -40,27 +41,10 @@ class StorageSize(IntegerSpecification, BaseSpecification):
         return "<StorageSize %sGb>" % self._value
 
 
-class StorageType(TypeSpecification, BaseSpecification):
+class StorageType(SpecifiedSpecification):
+    # Settings
     name = "Hårddisktyp"
     types = ["ssd", "hdd", "emmc"]
-
-    @property
-    def value(self):
-        if self._value is None:
-            return None
-
-        return self._value.capitalize()
-
-    @value.setter
-    def value(self, value):
-        for storage_types in self.types:
-            if type(storage_types) is not list:
-                storage_types = [storage_types]
-
-            for storage_type in storage_types:
-                if storage_type in value:
-                    self._value = storage_type
-                    break
 
     def __str__(self):
         return "<StorageType %s>" % (self.value.capitalize() if self.value is not None else None)

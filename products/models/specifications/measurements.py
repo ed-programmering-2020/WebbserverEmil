@@ -1,25 +1,25 @@
-from .base import BaseSpecification, IntegerSpecification, DecimalSpecification
+from .base import StandardSpecification
+from django.db import models
 
 
-class BatteryTime(IntegerSpecification, BaseSpecification):
+class BatteryTime(StandardSpecification):
+    # Settings
     name = "Batteritid"
     unit = " timmar"
 
-    @property
-    def value(self):
-        return self._value
-
-    @value.setter
-    def value(self, value):
-        self._value = self.process_number(value)
+    # Fields
+    _value = models.PositiveSmallIntegerField()
 
     def __str__(self):
         return "<BatteryTime %sh>" % self._value
 
 
-class Weight(DecimalSpecification, BaseSpecification):
+class Weight(StandardSpecification):
     name = "Vikt"
     unit = " kg"
+
+    # Fields
+    _value = models.PositiveSmallIntegerField()
 
     @property
     def value(self):
@@ -27,14 +27,26 @@ class Weight(DecimalSpecification, BaseSpecification):
 
     @value.setter
     def value(self, value):
-        number = self.process_value(value)
-        if number is not None:
-            if number >= 10:
-                number = number / 1000
+        value = value.split(" ")[0]
+        value = ''.join(i for i in value if not i.isalpha())
 
-            self._value = number
+        # Change commas to dots for later float parsing
+        if "," in value:
+            value = value.replace(",", ".")
+
+        # Check if value is valid
+        if value is "":
+            return
+
+        # Convert number into the correct format
+        number = float(value)
+        if number >= 10:
+            number = number / 1000
+
+        self._value = number
 
     def is_better(self, value, **kwargs):
+        """Overridden because it is better if the weight is lighter"""
         return self.value < value
 
     def __str__(self):

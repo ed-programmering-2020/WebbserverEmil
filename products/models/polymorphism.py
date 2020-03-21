@@ -15,6 +15,12 @@ class AlternativeName(models.Model):
 
 
 class PolymorphicManager(models.Manager):
+    def inherited_models(self):
+        """Used to get all the inherited models"""
+
+        for instance in super().order_by().values("content_type").distinct():
+            yield instance.content_type.model_class()
+
     def create(self, *args, **kwargs):
         """Overridden create method to prevent creation without a content type"""
 
@@ -38,6 +44,8 @@ class PolymorphicModel(models.Model):
 
     @classmethod
     def get_model_with_name(cls, alternative_name, host=None):
+        """Finds matching model with a alternative name"""
+
         # Get/create alternative name
         try:
             model_instances = AlternativeName.objects.filter(name__iexact=alternative_name)

@@ -1,8 +1,10 @@
-from .base import BaseSpecification, TypeSpecification, IntegerSpecification, DecimalSpecification
+from .base import SpecifiedSpecification, StandardSpecification
+from django.db import models
 import re
 
 
-class PanelType(TypeSpecification, BaseSpecification):
+class PanelType(SpecifiedSpecification):
+    # Settings
     name = "Paneltyp"
     types = [
         "tn",
@@ -10,47 +12,29 @@ class PanelType(TypeSpecification, BaseSpecification):
         ["ips", "retina"]
     ]
 
-    @property
-    def value(self):
-        if self._value is not None:
-            return self._value.capitalize()
-
-        return None
-
-    @value.setter
-    def value(self, value):
-        for panel_types in self.types:
-            if type(panel_types) is not list:
-                panel_types = [panel_types]
-
-            for panel_type in panel_types:
-                if panel_type in value:
-                    self._value = panel_type
-                    break
-
     def __str__(self):
         return "<PanelType %s>" % self._value
 
 
-class RefreshRate(IntegerSpecification, BaseSpecification):
+class RefreshRate(StandardSpecification):
+    # Settings
     name = "Uppdateringsfrekvens"
     unit = " Hz"
 
-    @property
-    def value(self):
-        return self._value
-
-    @value.setter
-    def value(self, value):
-        self._value = self.process_number(value)
+    # Fields
+    _value = models.PositiveSmallIntegerField()
 
     def __str__(self):
-        return "<RefreshRate %sHz>" % self._value
+        return "<RefreshRate %sHz>" % self.value
 
 
-class Resolution(IntegerSpecification, BaseSpecification):
+class Resolution(StandardSpecification):
+    # Settings
     name = "Upplösning"
     unit = "p"
+
+    # Fields
+    _value = models.PositiveSmallIntegerField()
 
     @property
     def value(self):
@@ -65,12 +49,16 @@ class Resolution(IntegerSpecification, BaseSpecification):
             self._value = int(numbers[0])
 
     def __str__(self):
-        return "<Resolution %sp>" % self._value
+        return "<Resolution %sp>" % self.value
 
 
-class ScreenSize(DecimalSpecification, BaseSpecification):
+class ScreenSize(StandardSpecification):
+    # Settings
     name = "Skärmstorlek"
     unit = "\""
+
+    # Fields
+    _value = models.DecimalField(max_digits=3, decimal_places=1)
 
     @property
     def value(self):
@@ -85,4 +73,4 @@ class ScreenSize(DecimalSpecification, BaseSpecification):
         self._value = float(value)
 
     def __str__(self):
-        return "<ScreenSize %s\">" % self._value
+        return "<ScreenSize %s\">" % self.value
