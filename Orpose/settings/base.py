@@ -104,14 +104,8 @@ ADMIN_REORDER = (
             "products.Product",
             "products.Price",
             "products.Website",
-        ),
-    },  {
-        "app": "contenttypes",
-        "label": "Polymorphism",
-        "models": (
-            {"model": "contenttypes.ContentType", "label": "Models"},
             "products.AlternativeName"
-        )
+        ),
     }, {
         "app": "products",
         "label": "Specifications",
@@ -131,6 +125,7 @@ ADMIN_REORDER = (
     },
     "users",
     "content"
+    "contenttypes"
 )
 
 
