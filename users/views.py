@@ -2,6 +2,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics
 
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+
 from knox.models import AuthToken
 from users.models import User
 
@@ -25,9 +28,10 @@ class TokenAPI(generics.RetrieveAPIView):
         return Response({"token": AuthToken.objects.create(user)[1]})
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class RegistrationAPI(generics.GenericAPIView):
     authentication_classes = []
-    permission_classes = []
+    permission_classes = [AllowAny]
     serializer_class = RegisterUserSerializer
 
     def post(self, request, *args, **kwargs):
@@ -40,9 +44,10 @@ class RegistrationAPI(generics.GenericAPIView):
         })
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class LoginAPI(generics.GenericAPIView):
     authentication_classes = []
-    permission_classes = []
+    permission_classes = [AllowAny]
     serializer_class = LoginUserSerializer
 
     def post(self, request, *args, **kwargs):
@@ -57,13 +62,10 @@ class LoginAPI(generics.GenericAPIView):
 
 class LogoutAPI(generics.GenericAPIView):
     authentication_classes = []
-    permission_classes = ()
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         user = User.objects.get(id=request.GET.get("user_id"))
         AuthToken.objects.filter(user=user).delete()
 
         return Response({})
-
-
-

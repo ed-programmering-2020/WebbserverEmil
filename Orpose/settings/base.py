@@ -16,24 +16,24 @@ STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
 
 INSTALLED_APPS = [
-    # External
-    "corsheaders",
-    "rest_framework",
-    "knox",
-    "admin_reorder",
-
-    # Internal
-    "users",
-    "products",
-    "content",
-
-    # Django
+    # Django Apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third-Party Apps
+    "corsheaders",
+    "rest_framework",
+    "knox",
+    "admin_reorder",
+
+    # Local Apps
+    "users",
+    "products",
+    "content",
 ]
 
 MIDDLEWARE = [
