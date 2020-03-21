@@ -108,7 +108,7 @@ ADMIN_REORDER = (
         ),
     }, {
         "app": "products",
-        "label": "Specifications",
+        "label": "Specifications (Products)",
         "models": (
             "products.Processor",
             "products.GraphicsCard",
@@ -124,7 +124,7 @@ ADMIN_REORDER = (
         )
     },
     "users",
-    "content"
+    "content",
     "contenttypes"
 )
 
