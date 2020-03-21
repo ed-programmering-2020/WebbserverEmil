@@ -36,6 +36,8 @@ class BenchmarkSpecification(BaseSpecification):
         if cls is BenchmarkSpecification:
             return
 
+        print(cls)
+
         benchmarks = cls.collect_benchmarks()
         amount_of_benchmarks = sum(1 for _ in benchmarks)
         for i, benchmark in enumerate(benchmarks):
