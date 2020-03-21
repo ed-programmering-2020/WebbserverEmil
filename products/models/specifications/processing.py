@@ -23,8 +23,7 @@ class GraphicsCard(BenchmarkSpecification):
                 if "1060-" in name:
                     name.replace("1060-", "1060 ")
 
-                graphics_card_package = (name, score)
-                graphics_card_scores.append(graphics_card_package)
+                yield (name, score)
 
         return graphics_card_scores
 

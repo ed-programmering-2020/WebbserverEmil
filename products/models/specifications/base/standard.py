@@ -4,6 +4,9 @@ import time, re
 
 
 class StandardSpecification(BaseSpecification):
+    class Meta:
+        abstract = True
+
     @property
     def value(self):
         return self._value
@@ -25,11 +28,15 @@ class StandardSpecification(BaseSpecification):
 
     @classmethod
     def rank(cls, *args):
-        sorted_specifications = defaultdict(list)
+        # Check if inherited
+        if cls is StandardSpecification:
+            return
+
+        last = time.time()
 
         # Gather and sort all specifications
-        last = time.time()
-        for specification in BaseSpecification.objects.all().iterator():
+        sorted_specifications = []
+        for specification in cls.objects.all().iterator():
             print(time.time() - last)
 
             # Get inherited model instance
@@ -37,7 +44,6 @@ class StandardSpecification(BaseSpecification):
             inherited_specification = model.objects.get(id=specification.id)
 
             # Prepare sorting values
-            key = model.__name__
             value = inherited_specification.value
             package = (inherited_specification.id, value)
 
@@ -46,50 +52,28 @@ class StandardSpecification(BaseSpecification):
                 continue
 
             # Sort specification into its belonging list
-            for i, stored_specifications in enumerate(sorted_specifications[key]):
+            for i, stored_specifications in enumerate(sorted_specifications):
                 # Get first specification from list
                 specification_id, saved_value = stored_specifications[0]
 
                 # If the specification is better than the stored specification
                 if inherited_specification.is_better(saved_value, id=specification_id):
-                    sorted_specifications[key].insert(i, [package])
+                    sorted_specifications.insert(i, [package])
                     break
 
                 # If the specifications are equal
                 if inherited_specification.is_equal(saved_value, id=specification_id):
-                    sorted_specifications[key][i].append(package)
+                    sorted_specifications[i].append(package)
                     break
 
             # If the specification has the lowest value or list is empty
             else:
-                sorted_specifications[key].append([package])
+                sorted_specifications.append([package])
 
         print(sorted_specifications)
 
-        # Scoring
-        scored_specifications = defaultdict()
-        for key, values in sorted_specifications.items():
-            values_length = len(values)
-
-            for pos, value_list in enumerate(values):
-                for id, value in value_list:
-                    id = str(id)
-                    value = pos / values_length
-
-                    if id not in scored_specifications:
-                        scored_specifications[id] = {key: value}
-                    else:
-                        scored_specifications[id][key] = value
-
-        # Saving
-        key_count = len(scored_specifications)
-        for id, values in scored_specifications.items():
-            specification = BaseSpecification.objects.get(id=id)
-
-            score = 0
-            for key, value in values.items():
-                score += value / key_count
-
-            specification.score = score
-            specification.is_ranked = True
-            specification.save()
+        # Save specification instances
+        for i, values in enumerate(sorted_specifications):
+            for specification_id, value in values:
+                specification = cls.objects.get(id=specification_id)
+                specification.score = i / len(sorted_specifications)

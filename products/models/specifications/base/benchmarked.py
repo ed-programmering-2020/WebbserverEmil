@@ -7,6 +7,9 @@ import requests
 class BenchmarkSpecification(BaseSpecification):
     _value = models.CharField("value", null=True, max_length=128)
 
+    class Meta:
+        abstract = True
+
     @property
     def value(self):
         if self._value is not None:
@@ -29,20 +32,22 @@ class BenchmarkSpecification(BaseSpecification):
 
     @classmethod
     def rank(cls):
-        for model in BenchmarkSpecification.objects.inherited_models():
-            benchmarks = model.collect_benchmarks()
+        # Check if inherited
+        if cls is BenchmarkSpecification:
+            return
 
-            for i, benchmark in enumerate(benchmarks):
-                name, __ = benchmark
-                score = 1 - i / len(benchmarks)  # Adjusts based on the amount of benchmarks
+        benchmarks = cls.collect_benchmarks()
+        for i, benchmark in enumerate(benchmarks):
+            name, __ = benchmark
+            score = 1 - i / len(benchmarks)  # Adjusts based on the amount of benchmarks
 
-                # Get/Create specification instance with the benchmark
-                try:
-                    specification = model.objects.get(_value=name)
-                    specification.score = score
-                    specification.save()
-                except model.DoesNotExist:
-                    model.create(_value=name, score=score)
+            # Get/Create specification instance with the benchmark
+            try:
+                specification = cls.objects.get(_value=name)
+                specification.score = score
+                specification.save()
+            except cls.DoesNotExist:
+                cls.create(_value=name, score=score)
 
     @staticmethod
     def collect_benchmarks():

@@ -3,7 +3,10 @@ from django.db import models
 
 
 class BaseSpecification(PolymorphicModel):
-    score = models.DecimalField("score", max_digits=9, decimal_places=9, null=True)
+    score = models.DecimalField("score", max_digits=10, decimal_places=10, null=True)
+
+    class Meta:
+        abstract = True
 
     @property
     def value(self):
@@ -64,6 +67,3 @@ class BaseSpecification(PolymorphicModel):
 
     def __str__(self):
         return "<BaseSpecification>"
-
-    class Meta:
-        abstract = True

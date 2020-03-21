@@ -6,6 +6,7 @@ from products.models.specifications import BaseSpecification
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 
+from django.utils.text import slugify
 from django.db.models import Q
 from django.db import models
 
@@ -23,7 +24,11 @@ class BaseCategoryProduct(PolymorphicModel):
     name = models.CharField('name', max_length=128)
     manufacturing_name = models.CharField("manufacturing name", max_length=128, null=True, blank=True)
     price = models.PositiveIntegerField("price", null=True, blank=True)
+    slug = models.SlugField(unique=True)
     is_active = models.BooleanField(default=True)
+
+    class Meta:
+        abstract = True
 
     @staticmethod
     def match(settings, model):
@@ -70,15 +75,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
     @classmethod
     def create_category_product(cls, product, another_product=None):
-        """Creates a new category product with either one or two products
-
-        Args:
-            product (Product): main product
-            another_product (Product): additional product to combine with
-
-        Returns:
-            CategoryProduct: created or matching category product
-        """
+        """Creates a new category product with either one or two products"""
 
         # When 2 products were given, return the combined category product
         if another_product is not None:
@@ -103,16 +100,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
     @classmethod
     def combine(cls, first, second):
-        """Combines products into category products
-
-        Args:
-            first (Product): first product
-            second: (Product): second product
-
-        Returns:
-            CategoryProduct: combination for the 2 products
-
-        """
+        """Combines products into category products"""
 
         first_category_product = first.category_product
         second_category_product = second.category_product
@@ -162,14 +150,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
     @classmethod
     def find_similar(cls, product):
-        """Finds a similar category product to a product
-
-        Args:
-            product (Product): the product to find similar products with
-
-        Returns:
-            CategoryProduct: similar category product
-        """
+        """Finds a similar category product to a product"""
 
         price = product.price
         if price is None:
@@ -218,15 +199,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
     @staticmethod
     def name_similarity(name, other_names):
-        """Get the similarity between different names
-
-        Args:
-            name (str): main name to compare with
-            other_names (list): a list of names to compare with
-
-        Returns:
-            int: top similarity metric
-        """
+        """Get the similarity between different names"""
 
         similarity_list = []
         for other_name in other_names:
@@ -250,15 +223,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
     @staticmethod
     def matching_specs(specifications, category_product):
-        """Check if a category product has a matching set of specifications
-
-        Args:
-            specifications (list): A list of specification key value pairs
-            category_product: The category product which to check if it has matching specifications
-
-        Returns:
-             bool: True if category product and list match
-        """
+        """Check if a category product has a matching set of specifications"""
 
         # If no specifications are given return false
         if specifications is None:
@@ -349,19 +314,8 @@ class BaseCategoryProduct(PolymorphicModel):
             self.delete()
             return
 
-        # Update the rest of the category product
-        self.update_name(data["names"])
-        self.is_ranked = False
-        self.save()
-
-    def update_name(self, names):
-        """Takes a list of names and creates a combined version which it sets the category product name to
-
-        Args:
-            names (list): a list of names to combine together
-        """
-
-        # If there are multiple names
+        # Update name
+        names = data["names"]
         if len(names) >= 2:
             # Convert names into sets of words
             word_sets = [set(name.split(" ")) for name in names if name is not None]
@@ -378,19 +332,21 @@ class BaseCategoryProduct(PolymorphicModel):
             # Combine words
             if len(last_set) is not 0:
                 self.name = " ".join(last_set)
-                return
+        else:
+            name = names[0]
 
-        # In edge cases perform code below
-        # Calculate the best name based on a single input
-        name = names[0]
+            # Remove unnecessary information
+            splitters = ["/", "|", "-"]
+            for splitter in splitters:
+                if splitter in name:
+                    name = name.split(splitter)[0]
 
-        # Remove unnecessary information
-        splitters = ["/", "|", "-"]
-        for splitter in splitters:
-            if splitter in name:
-                name = name.split(splitter)[0]
+            self.name = name
 
-        self.name = name
+        # Update the last stuff
+        self.slug = slugify(self.name)
+        self.is_ranked = False
+        self.save()
 
     def has_ranked_specification(self, specification_name):
         """Checks if the category product has a given specification and if that specification is ranked"""

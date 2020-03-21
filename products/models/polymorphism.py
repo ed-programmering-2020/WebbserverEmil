@@ -15,12 +15,6 @@ class AlternativeName(models.Model):
 
 
 class PolymorphicManager(models.Manager):
-    def inherited_models(self):
-        """Used to get all the inherited models"""
-
-        for instance in super().order_by().values("content_type").distinct():
-            yield instance.content_type.model_class()
-
     def create(self, *args, **kwargs):
         """Overridden create method to prevent creation without a content type"""
 
@@ -33,6 +27,9 @@ class PolymorphicManager(models.Manager):
 class PolymorphicModel(models.Model):
     content_type = models.ForeignKey(ContentType, editable=False, on_delete=models.SET_NULL, null=True)
     objects = PolymorphicManager()
+
+    class Meta:
+        abstract = True
 
     @classmethod
     def create(cls, *args, **kwargs):
@@ -64,6 +61,3 @@ class PolymorphicModel(models.Model):
                 return model_class
 
         return None
-
-    class Meta:
-        abstract = True
