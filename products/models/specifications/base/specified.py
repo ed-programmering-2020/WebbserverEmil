@@ -41,7 +41,3 @@ class SpecifiedSpecification(BaseSpecification):
                 # If no matching type was found
                 specification.score = 0
                 specification.save()
-
-    class Meta:
-        abstract = True
-
