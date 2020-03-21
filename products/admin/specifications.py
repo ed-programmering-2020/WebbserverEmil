@@ -2,18 +2,12 @@ from ..models.specifications.measurements import BatteryTime, Weight
 from ..models.specifications.memory import Ram, StorageSize, StorageType
 from ..models.specifications.panel import PanelType, RefreshRate, Resolution, ScreenSize
 from ..models.specifications.processing import Processor, GraphicsCard
-from ..models import BaseCategoryProduct
 
 from django.contrib import admin
 
 
-class BaseCategoryProductInline(admin.TabularInline):
-    model = BaseCategoryProduct
-
-
 class SpecificationAdmin(admin.ModelAdmin):
     list_display = ["value", "score"]
-    inlines = [BaseCategoryProductInline]
 
 
 @admin.register(BatteryTime)
