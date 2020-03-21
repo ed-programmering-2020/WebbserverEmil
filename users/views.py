@@ -26,7 +26,8 @@ class TokenAPI(generics.RetrieveAPIView):
 
 
 class RegistrationAPI(generics.GenericAPIView):
-    permission_classes = [AllowAny]
+    authentication_classes = []
+    permission_classes = []
     serializer_class = RegisterUserSerializer
 
     def post(self, request, *args, **kwargs):
@@ -40,7 +41,8 @@ class RegistrationAPI(generics.GenericAPIView):
 
 
 class LoginAPI(generics.GenericAPIView):
-    permission_classes = [AllowAny]
+    authentication_classes = []
+    permission_classes = []
     serializer_class = LoginUserSerializer
 
     def post(self, request, *args, **kwargs):
@@ -54,7 +56,7 @@ class LoginAPI(generics.GenericAPIView):
 
 
 class LogoutAPI(generics.GenericAPIView):
-    authentication_classes = ()
+    authentication_classes = []
     permission_classes = ()
 
     def post(self, request, *args, **kwargs):

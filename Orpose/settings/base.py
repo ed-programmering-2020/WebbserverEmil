@@ -130,7 +130,8 @@ ADMIN_REORDER = (
     },
     "users",
     "content",
-    "contenttypes"
+    "contenttypes",
+    "knox"
 )
 
 
