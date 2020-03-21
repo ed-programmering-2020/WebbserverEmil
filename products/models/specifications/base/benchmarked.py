@@ -6,6 +6,7 @@ import requests
 
 class BenchmarkSpecification(BaseSpecification):
     _value = models.CharField("value", null=True, max_length=128)
+    full_score = models.PositiveSmallIntegerField()
 
     class Meta:
         abstract = True
@@ -38,16 +39,17 @@ class BenchmarkSpecification(BaseSpecification):
 
         benchmarks = cls.collect_benchmarks()
         for i, benchmark in enumerate(benchmarks):
-            name, __ = benchmark
+            name, full_score = benchmark
             score = 1 - i / len(benchmarks)  # Adjusts based on the amount of benchmarks
 
             # Get/Create specification instance with the benchmark
             try:
                 specification = cls.objects.get(_value=name)
                 specification.score = score
+                specification.full_score = full_score
                 specification.save()
             except cls.DoesNotExist:
-                cls.create(_value=name, score=score)
+                cls.create(_value=name, score=score, full_score=full_score)
 
     @staticmethod
     def collect_benchmarks():

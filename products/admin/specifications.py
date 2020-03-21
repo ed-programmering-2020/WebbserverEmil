@@ -10,6 +10,10 @@ class SpecificationAdmin(admin.ModelAdmin):
     list_display = ["value", "score"]
 
 
+class BenchmarkedSpecificationAdmin(SpecificationAdmin):
+    SpecificationAdmin.list_display += ["full_score"]
+
+
 @admin.register(BatteryTime)
 class BatteryTimeAdmin(SpecificationAdmin):
     pass
@@ -56,10 +60,10 @@ class ScreenSizeAdmin(SpecificationAdmin):
 
 
 @admin.register(Processor)
-class ProcessorAdmin(SpecificationAdmin):
+class ProcessorAdmin(BenchmarkedSpecificationAdmin):
     pass
 
 
 @admin.register(GraphicsCard)
-class GraphicsCardAdmin(SpecificationAdmin):
+class GraphicsCardAdmin(BenchmarkedSpecificationAdmin):
     pass
