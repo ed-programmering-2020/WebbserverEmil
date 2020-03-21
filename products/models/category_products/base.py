@@ -27,9 +27,6 @@ class BaseCategoryProduct(PolymorphicModel):
     slug = models.SlugField(unique=True)
     is_active = models.BooleanField(default=True)
 
-    class Meta:
-        abstract = True
-
     @staticmethod
     def match(settings, model):
         """Matches the user with products based on their preferences/settings
