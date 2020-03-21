@@ -10,6 +10,9 @@ class Ram(StandardSpecification):
     # Fields
     _value = models.PositiveSmallIntegerField()
 
+    class Meta:
+        verbose_name_plural = "Ram storage"
+
     def __str__(self):
         return "<Ram %sGb>" % self._value
 
