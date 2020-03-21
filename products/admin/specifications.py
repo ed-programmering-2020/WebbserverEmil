@@ -11,7 +11,7 @@ class SpecificationAdmin(admin.ModelAdmin):
 
 
 class BenchmarkedSpecificationAdmin(SpecificationAdmin):
-    SpecificationAdmin.list_display += ["full_score"]
+    list_display = SpecificationAdmin.list_display + ["full_score"]
 
 
 @admin.register(BatteryTime)
