@@ -64,3 +64,6 @@ class PolymorphicModel(models.Model):
                 return model_class
 
         return None
+
+    class Meta:
+        abstract = True

@@ -64,3 +64,6 @@ class BaseSpecification(PolymorphicModel):
 
     def __str__(self):
         return "<BaseSpecification>"
+
+    class Meta:
+        abstract = True
