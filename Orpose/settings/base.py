@@ -106,10 +106,10 @@ ADMIN_REORDER = (
             "products.Website",
         ),
     },  {
-        "app": "content_types",
+        "app": "contenttypes",
         "label": "Polymorphism",
         "models": (
-            "content_types.ContentType",
+            "contenttypes.ContentType",
             "products.AlternativeName"
         )
     }, {
