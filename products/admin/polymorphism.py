@@ -6,9 +6,9 @@ from products.models import AlternativeName
 @admin.register(AlternativeName)
 class AlternativeNameAdmin(admin.ModelAdmin):
     search_fields = ["name"]
-    list_display = ["name", "model_type", "host"]
+    list_display = ["name", "model_type"]
 
-    fields = ["name", "host"]
+    fields = ["name"]
 
 
 class AlternativeNameInline(admin.TabularInline):
