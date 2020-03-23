@@ -39,6 +39,7 @@ class PolymorphicModel(models.Model):
 
         model_name = cls.__name__
         content_type = ContentType.objects.get(app_label="products", model=model_name)
+        print(args, kwargs)
         return cls.objects.create(*args, content_type=content_type, **kwargs)
 
     @classmethod
