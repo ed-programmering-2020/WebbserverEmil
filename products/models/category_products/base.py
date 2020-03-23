@@ -71,7 +71,7 @@ class BaseCategoryProduct(PolymorphicModel):
         return score / self.price
 
     @classmethod
-    def create_category_product(cls, product, another_product=None):
+    def create(cls, product, another_product=None):
         """Creates a new category product with either one or two products"""
 
         # When 2 products were given, return the combined category product
