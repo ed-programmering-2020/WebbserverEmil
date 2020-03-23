@@ -30,7 +30,7 @@ class PolymorphicModel(models.Model):
 
         # Get/create alternative name
         try:
-            model_instances = AlternativeName.objects.filter(name__iexact=alternative_name)
+            model_instances = AlternativeName.objects.get(name__iexact=alternative_name)
         except AlternativeName.DoesNotExist:
             AlternativeName.objects.create(name=alternative_name)
             return None
