@@ -88,7 +88,7 @@ class BaseCategoryProduct(PolymorphicModel):
             return
 
         # Check if the category name belongs to a category product type and model
-        category_model = cls.get_category_model(product.category)
+        category_model = cls.get_model_with_name(product.category)
         if category_model is None:
             return
 
