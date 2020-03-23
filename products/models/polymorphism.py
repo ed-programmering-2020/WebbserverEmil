@@ -21,6 +21,8 @@ class PolymorphicManager(models.Manager):
         if "content_type" not in kwargs:
             raise self.NoContentTypeError
 
+        print(args, kwargs)
+
         return super().create(*args, **kwargs)
 
 
