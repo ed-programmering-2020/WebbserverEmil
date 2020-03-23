@@ -6,7 +6,6 @@ from django.db import models
 
 class AlternativeName(models.Model):
     name = models.CharField("name", max_length=64)
-    host = models.ForeignKey("products.Website", null=True, on_delete=models.CASCADE)
     model_type = models.ForeignKey(ContentType, editable=False, on_delete=models.SET_NULL, null=True)
 
 
@@ -26,14 +25,14 @@ class PolymorphicModel(models.Model):
         abstract = True
 
     @classmethod
-    def get_model_with_name(cls, alternative_name, host=None):
+    def get_model_with_name(cls, alternative_name):
         """Finds matching model with a alternative name"""
 
         # Get/create alternative name
         try:
             model_instances = AlternativeName.objects.filter(name__iexact=alternative_name)
         except AlternativeName.DoesNotExist:
-            AlternativeName.objects.create(name=alternative_name, host=host)
+            AlternativeName.objects.create(name=alternative_name)
             return None
 
         # Find a matching alternative name

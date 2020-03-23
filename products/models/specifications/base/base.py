@@ -21,7 +21,7 @@ class BaseSpecification(PolymorphicModel):
         raise NotImplementedError
 
     @staticmethod
-    def get_specification_instances(specifications, host=None):
+    def get_specification_instances(specifications):
         specification_instances = []
 
         for spec in specifications:
@@ -32,7 +32,7 @@ class BaseSpecification(PolymorphicModel):
                 continue
 
             # Check for correlating model
-            model_class = BaseSpecification.get_model_with_name(key, host)
+            model_class = BaseSpecification.get_model_with_name(key)
             if model_class is None:
                 continue
 

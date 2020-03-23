@@ -21,10 +21,10 @@ class ProductsAPI(generics.GenericAPIView):
             product = Product.create_or_get(product_data, host, files_list)
 
             # Find matching product
-            matching_product = product.find_similar_product()
+            matching_product = product.find_similar_product()  # May be none
 
             # Create or combine into a category product
-            category_product = BaseCategoryProduct.create(product, matching_product)  # May be none
+            category_product = BaseCategoryProduct.create(product, matching_product)
             if category_product is None:
                 continue
 
