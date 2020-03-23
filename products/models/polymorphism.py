@@ -15,15 +15,13 @@ class AlternativeName(models.Model):
 
 
 class PolymorphicManager(models.Manager):
-    def create(self, *args, **kwargs):
+    def create(self, **kwargs):
         """Overridden create method to prevent creation without a content type"""
 
         if "content_type" not in kwargs:
             raise self.NoContentTypeError
 
-        print(args, kwargs)
-
-        return super().create(*args, **kwargs)
+        return super().create(**kwargs)
 
 
 class PolymorphicModel(models.Model):
@@ -34,13 +32,12 @@ class PolymorphicModel(models.Model):
         abstract = True
 
     @classmethod
-    def create(cls, *args, **kwargs):
+    def create(cls, **kwargs):
         """Creates a new instance with a corresponding content type"""
 
         model_name = cls.__name__
         content_type = ContentType.objects.get(app_label="products", model=model_name)
-        print(args, kwargs)
-        return cls.objects.create(*args, content_type=content_type, **kwargs)
+        return cls.objects.create(content_type=content_type, **kwargs)
 
     @classmethod
     def get_model_with_name(cls, alternative_name, host=None):
