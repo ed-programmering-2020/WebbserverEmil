@@ -6,7 +6,7 @@ from django.db import models
 
 class AlternativeName(models.Model):
     name = models.CharField("name", max_length=64)
-    model_type = models.ForeignKey(ContentType, editable=False, on_delete=models.SET_NULL, null=True)
+    model_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)
 
 
 class PolymorphicManager(models.Manager):
