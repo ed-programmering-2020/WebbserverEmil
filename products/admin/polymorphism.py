@@ -8,7 +8,7 @@ class AlternativeNameAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     list_display = ["name", "model_type"]
 
-    fields = ["name"]
+    fields = ["name", "model_type"]
 
 
 class AlternativeNameInline(admin.TabularInline):
