@@ -47,4 +47,4 @@ class Weight(StandardSpecification):
         return self.value < value
 
     def __str__(self):
-        return "<Weight %s>" % self._value
+        return "<Weight %s>" % self.value
