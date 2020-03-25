@@ -28,21 +28,14 @@ class PolymorphicModel(models.Model):
     def get_model_with_name(cls, alternative_name):
         """Finds matching model with a alternative name"""
 
-        # Get/create alternative name
         try:
-            model_instances = AlternativeName.objects.get(name__iexact=alternative_name)
+            alternative_name_instance = AlternativeName.objects.get(name__iexact=alternative_name)
         except AlternativeName.DoesNotExist:
             AlternativeName.objects.create(name=alternative_name)
             return None
 
-        # Find a matching alternative name
-        for instance in model_instances:
-            model_type = instance.model_type
-            if model_type is None:
-                continue
-
-            model_class = model_type.model_class()
-            if isinstance(model_class, cls):
-                return model_class
-
-        return None
+        model_type = alternative_name_instance.model_type
+        if model_type is not None:
+            return model_type.model_class()
+        else:
+            return None
