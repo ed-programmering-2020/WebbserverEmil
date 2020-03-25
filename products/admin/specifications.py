@@ -7,7 +7,7 @@ from django.contrib import admin
 
 
 class SpecificationAdmin(admin.ModelAdmin):
-    list_display = ["value", "score"]
+    list_display = ["raw_value", "score"]
 
 
 class BenchmarkedSpecificationAdmin(SpecificationAdmin):

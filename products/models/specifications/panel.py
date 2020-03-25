@@ -64,4 +64,4 @@ class ScreenSize(StandardSpecification):
         self.raw_value = float(value)
 
     def __str__(self):
-        return "<ScreenSize %s>" % self.value
+        return "<ScreenSize %s>" % float(self.value)
