@@ -144,7 +144,7 @@ class BaseCategoryProduct(PolymorphicModel):
             # Create new category product
             category_model = cls.get_model_with_name(category_name)
             if category_model is not None:
-                category_product = category_model.create()
+                category_product = category_model.objects.create()
                 category_product.products.set([first, second])
                 return category_product
 
