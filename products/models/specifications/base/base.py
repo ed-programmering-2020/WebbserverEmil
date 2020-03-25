@@ -71,7 +71,9 @@ class BaseSpecification(PolymorphicModel):
             raw_value = spec_instance.raw_value
             if type(raw_value) == Decimal:
                 raw_value = float(raw_value)
-            
+
+            print(raw_value, value, value == raw_value, type(raw_value))
+
             if raw_value == value:
                 return spec_instance
 
