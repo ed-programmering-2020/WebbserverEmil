@@ -318,6 +318,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
         # Update name
         names = data["names"]
+        print("here")
         if len(names) >= 2:
             # Convert names into sets of words
             word_sets = [set(name.split(" ")) for name in names if name is not None]
