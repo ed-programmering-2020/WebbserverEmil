@@ -17,12 +17,12 @@ class MatchAPI(generics.GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = CategoryProductSerializer
 
-    def get(self, request, name, *args, **kwargs):
+    def get(self, request, category, *args, **kwargs):
         settings = request.GET.dict()
 
         print("1")
         if settings is not None:
-            model = import_model(name)
+            model = import_model(category)
             products = model.match(settings)
             print("2")
 
