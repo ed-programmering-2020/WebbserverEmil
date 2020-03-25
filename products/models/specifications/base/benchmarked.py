@@ -6,7 +6,7 @@ import requests
 
 class BenchmarkSpecification(BaseSpecification):
     _value = models.CharField("value", null=True, max_length=128)
-    full_score = models.PositiveSmallIntegerField()
+    full_score = models.PositiveSmallIntegerField(null=True)
 
     class Meta:
         abstract = True
