@@ -21,7 +21,10 @@ class GraphicsCard(BenchmarkSpecification):
             if name:
                 name = name.get_text().strip().lower()
                 if "1060-" in name:
-                    name.replace("1060-", "1060 ")
+                    name = name.replace("1060-", "1060 ")
+
+                if "(" in name:
+                    name = name.split("(")[0]
 
                 graphics_card_scores.append((name, score))
 

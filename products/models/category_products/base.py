@@ -334,7 +334,7 @@ class BaseCategoryProduct(PolymorphicModel):
             # Combine words
             if len(last_set) is not 0:
                 self.name = " ".join(last_set)
-        else:
+        if self.name is None:
             name = names[0]
 
             # Remove unnecessary information

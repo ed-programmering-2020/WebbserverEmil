@@ -46,7 +46,7 @@ class BaseSpecification(PolymorphicModel):
                     specification = spec_instance
                     break
             else:
-                specification = model_class.create()
+                specification = model_class.objects.create()
                 specification.value = value
                 specification.save()
 

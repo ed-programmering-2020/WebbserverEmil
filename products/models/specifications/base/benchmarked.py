@@ -37,6 +37,7 @@ class BenchmarkSpecification(BaseSpecification):
         if cls is BenchmarkSpecification:
             return
 
+        # Collect and save benchmarks
         benchmarks = cls.collect_benchmarks()
         for i, benchmark in enumerate(benchmarks):
             name, full_score = benchmark
@@ -49,7 +50,7 @@ class BenchmarkSpecification(BaseSpecification):
                 specification.full_score = full_score
                 specification.save()
             except cls.DoesNotExist:
-                cls.create(_value=name, score=score, full_score=full_score)
+                cls.objects.create(_value=name, score=score, full_score=full_score)
 
     @staticmethod
     def collect_benchmarks():
