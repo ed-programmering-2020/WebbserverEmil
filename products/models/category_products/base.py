@@ -337,7 +337,8 @@ class BaseCategoryProduct(PolymorphicModel):
                 self.name = " ".join(last_set)
 
             print("1", self.name)
-        if self.name is None:
+
+        if self.name is None or self.name is "":
             name = names[0]
 
             print("1.5", name)
