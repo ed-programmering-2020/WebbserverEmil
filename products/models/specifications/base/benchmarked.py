@@ -21,7 +21,7 @@ class BenchmarkSpecification(BaseSpecification):
     def value(self, value):
         # Remove special characters
         for character in [",", "(", ")"]:
-            value.replace(character, "")
+            value = value.replace(character, "")
 
         self.raw_value = value.lower()
 

@@ -16,7 +16,7 @@ class BatteryTime(StandardSpecification):
 
 class Weight(StandardSpecification):
     name = "Vikt"
-    raw_value = models.PositiveSmallIntegerField()
+    raw_value = models.DecimalField(max_digits=2, decimal_places=1)
 
     @property
     def value(self):

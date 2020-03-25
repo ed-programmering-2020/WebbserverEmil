@@ -64,7 +64,8 @@ class BaseSpecification(PolymorphicModel):
     @classmethod
     def find_existing(cls, value):
         for spec_instance in cls.objects.all():
-            if spec_instance.raw_value == value:
+            raw_value = spec_instance.raw_value
+            if raw_value == value:
                 return spec_instance
 
         return None
