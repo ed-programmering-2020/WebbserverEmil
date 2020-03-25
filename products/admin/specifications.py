@@ -9,6 +9,8 @@ from django.contrib import admin
 class SpecificationAdmin(admin.ModelAdmin):
     list_display = ["raw_value", "score"]
 
+    search_fields = ["raw_value"]
+
 
 class BenchmarkedSpecificationAdmin(SpecificationAdmin):
     list_display = SpecificationAdmin.list_display + ["full_score"]
