@@ -19,7 +19,7 @@ class Ram(StandardSpecification):
 
 class StorageSize(StandardSpecification):
     name = "Hårddiskkapacitet"
-    raw_value = models.PositiveSmallIntegerField
+    raw_value = models.PositiveSmallIntegerField()
 
     @property
     def value(self):
