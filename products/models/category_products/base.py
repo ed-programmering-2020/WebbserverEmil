@@ -98,7 +98,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
         # Return new category product
         print("Create new", product)
-        return category_model.create()
+        return category_model.objects.create()
 
     @classmethod
     def combine(cls, first, second):
