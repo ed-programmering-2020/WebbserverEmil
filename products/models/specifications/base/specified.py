@@ -10,9 +10,7 @@ class SpecifiedSpecification(BaseSpecification):
 
     @property
     def value(self):
-        if self.raw_value is not None:
-            return self.raw_value.capitalize()
-        return None
+        return self.raw_value.upper()
 
     @value.setter
     def value(self, value):

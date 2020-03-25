@@ -3,31 +3,27 @@ from django.db import models
 
 
 class Ram(StandardSpecification):
-    # Settings
     name = "Ram minne"
-    unit = " GB"
-
-    # Fields
     raw_value = models.PositiveSmallIntegerField()
 
     class Meta:
         verbose_name_plural = "Ram storage"
 
+    @StandardSpecification.value.getter
+    def value(self):
+        return str(self.raw_value) + " GB"
+
     def __str__(self):
-        return "<Ram %sGb>" % self._value
+        return "<Ram %s>" % self.value
 
 
 class StorageSize(StandardSpecification):
-    # Settings
     name = "Hårddiskkapacitet"
-    unit = " GB"
-
-    # Fields
     raw_value = models.PositiveSmallIntegerField
 
     @property
     def value(self):
-        return self.raw_value
+        return str(self.raw_value) + " GB"
 
     @value.setter
     def value(self, value):
@@ -41,17 +37,12 @@ class StorageSize(StandardSpecification):
         self.raw_value = number
 
     def __str__(self):
-        return "<StorageSize %sGb>" % self._value
+        return "<StorageSize %s>" % self.value
 
 
 class StorageType(SpecifiedSpecification):
-    # Settings
     name = "Hårddisktyp"
     types = ["ssd", "hdd", "emmc"]
-
-    @property
-    def value(self):
-        return self.raw_value.upper()
 
     def __str__(self):
         return "<StorageType %s>" % self.value

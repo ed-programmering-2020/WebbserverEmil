@@ -19,7 +19,7 @@ class RefreshRate(StandardSpecification):
     name = "Uppdateringsfrekvens"
     raw_value = models.PositiveSmallIntegerField()
 
-    @property
+    @StandardSpecification.value.getter
     def value(self):
         return str(self.raw_value) + " Hz"
 

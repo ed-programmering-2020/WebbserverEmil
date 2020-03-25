@@ -6,7 +6,7 @@ class BatteryTime(StandardSpecification):
     name = "Batteritid"
     raw_value = models.PositiveSmallIntegerField()
 
-    @property
+    @StandardSpecification.value.getter
     def value(self):
         return str(self.raw_value) + " timmar"
 

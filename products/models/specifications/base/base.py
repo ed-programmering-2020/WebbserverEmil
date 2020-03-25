@@ -48,13 +48,13 @@ class BaseSpecification(PolymorphicModel):
                 continue
 
             # Process value for comparison
-            processed_spec = model_class()
-            processed_spec.value = value
+            temporary_specification = model_class()
+            temporary_specification.value = value
 
             # Find existing specification instance, else create a new specification
-            specification = model_class.find_existing(processed_spec.raw_value)
+            specification = model_class.find_existing(temporary_specification.raw_value)
             if specification is None:
-                specification = processed_spec
+                specification = temporary_specification
                 specification.save()
 
             specification_instances.append(specification)
