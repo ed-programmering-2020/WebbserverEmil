@@ -8,7 +8,7 @@ class Ram(StandardSpecification):
     unit = " GB"
 
     # Fields
-    _value = models.PositiveSmallIntegerField()
+    raw_value = models.PositiveSmallIntegerField()
 
     class Meta:
         verbose_name_plural = "Ram storage"
@@ -23,11 +23,11 @@ class StorageSize(StandardSpecification):
     unit = " GB"
 
     # Fields
-    _value = models.PositiveSmallIntegerField
+    raw_value = models.PositiveSmallIntegerField
 
     @property
     def value(self):
-        return self._value
+        return self.raw_value
 
     @value.setter
     def value(self, value):
@@ -36,9 +36,9 @@ class StorageSize(StandardSpecification):
 
         # Convert to gigabyte
         if "tb" in value or number <= 4:
-            number *= 1000  # Not 1024 because a few websites format the value in that way already
+            number *= 1000  # Not 1024 because a few websites formats it that way already
 
-        self._value = number
+        self.raw_value = number
 
     def __str__(self):
         return "<StorageSize %sGb>" % self._value
@@ -49,5 +49,9 @@ class StorageType(SpecifiedSpecification):
     name = "Hårddisktyp"
     types = ["ssd", "hdd", "emmc"]
 
+    @property
+    def value(self):
+        return self.raw_value.upper()
+
     def __str__(self):
-        return "<StorageType %s>" % (self.value.capitalize() if self.value is not None else None)
+        return "<StorageType %s>" % self.value

@@ -1,6 +1,6 @@
 from .base import BaseSpecification
-from collections import defaultdict
-import time, re
+import time
+import re
 
 
 class StandardSpecification(BaseSpecification):
@@ -9,22 +9,22 @@ class StandardSpecification(BaseSpecification):
 
     @property
     def value(self):
-        return self._value
+        return self.raw_value
 
     @value.setter
     def value(self, value):
         first_value = value.split(" ")[0]
         value = re.sub("[^0-9]", "", first_value).replace(" ", "")
         if value != "":
-            self._value = int(value)
+            self.raw_value = int(value)
 
-    def is_better(self, value):
+    def is_better(self, raw_value):
         """This is needed because Django already uses the comparison operators"""
-        return self.value > value
+        return self.raw_value > raw_value
 
-    def is_equal(self, value):
+    def is_equal(self, raw_value):
         """This is needed because Django already uses the comparison operators"""
-        return self.value == value
+        return self.raw_value == raw_value
 
     @classmethod
     def rank(cls, *args):

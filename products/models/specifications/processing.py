@@ -3,7 +3,6 @@ from collections import defaultdict
 
 
 class GraphicsCard(BenchmarkSpecification):
-    # Settings
     name = "Grafikkort"
 
     @staticmethod
@@ -35,7 +34,6 @@ class GraphicsCard(BenchmarkSpecification):
 
 
 class Processor(BenchmarkSpecification):
-    # Settings
     name = "Processor"
 
     @staticmethod

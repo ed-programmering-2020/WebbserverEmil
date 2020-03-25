@@ -5,7 +5,7 @@ import requests
 
 
 class BenchmarkSpecification(BaseSpecification):
-    _value = models.CharField("value", null=True, max_length=128)
+    raw_value = models.CharField("value", null=True, max_length=128)
     full_score = models.PositiveSmallIntegerField(null=True)
 
     class Meta:
@@ -13,8 +13,8 @@ class BenchmarkSpecification(BaseSpecification):
 
     @property
     def value(self):
-        if self._value is not None:
-            return self._value.capitalize()
+        if self.raw_value is not None:
+            return self.raw_value.capitalize()
         return None
 
     @value.setter
@@ -23,13 +23,25 @@ class BenchmarkSpecification(BaseSpecification):
         for character in [",", "(", ")"]:
             value.replace(character, "")
 
-        self._value = value.lower()
+        self.raw_value = value.lower()
 
     @staticmethod
     def get_soup(url):
         fp = requests.get(url)
         html_doc = fp.text
         return BeautifulSoup(html_doc, "html.parser")
+
+    @staticmethod
+    def collect_benchmarks():
+        raise NotImplementedError
+
+    @classmethod
+    def find_existing(cls, value):
+        for spec_instance in cls.objects.all():
+            if spec_instance.raw_value in value or value in spec_instance.raw_value:
+                return spec_instance
+
+        return None
 
     @classmethod
     def rank(cls):
@@ -51,7 +63,3 @@ class BenchmarkSpecification(BaseSpecification):
                 specification.save()
             except cls.DoesNotExist:
                 cls.objects.create(_value=name, score=score, full_score=full_score)
-
-    @staticmethod
-    def collect_benchmarks():
-        raise NotImplementedError

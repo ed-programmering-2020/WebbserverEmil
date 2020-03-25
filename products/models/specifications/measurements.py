@@ -3,27 +3,24 @@ from django.db import models
 
 
 class BatteryTime(StandardSpecification):
-    # Settings
     name = "Batteritid"
-    unit = " timmar"
+    raw_value = models.PositiveSmallIntegerField()
 
-    # Fields
-    _value = models.PositiveSmallIntegerField()
+    @property
+    def value(self):
+        return str(self.raw_value) + " timmar"
 
     def __str__(self):
-        return "<BatteryTime %sh>" % self._value
+        return "<BatteryTime %s>" % self.value
 
 
 class Weight(StandardSpecification):
     name = "Vikt"
-    unit = " kg"
-
-    # Fields
-    _value = models.PositiveSmallIntegerField()
+    raw_value = models.PositiveSmallIntegerField()
 
     @property
     def value(self):
-        return self._value
+        return str(self.raw_value) + " kg"
 
     @value.setter
     def value(self, value):
@@ -43,11 +40,11 @@ class Weight(StandardSpecification):
         if number >= 10:
             number = number / 1000
 
-        self._value = number
+        self.raw_value = number
 
     def is_better(self, value, **kwargs):
         """Overridden because it is better if the weight is lighter"""
         return self.value < value
 
     def __str__(self):
-        return "<Weight %skg>" % self._value
+        return "<Weight %s>" % self._value

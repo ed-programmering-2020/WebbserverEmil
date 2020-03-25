@@ -3,20 +3,20 @@ from django.db import models
 
 
 class SpecifiedSpecification(BaseSpecification):
-    _value = models.CharField("value", null=True, max_length=128)
+    raw_value = models.CharField("value", null=True, max_length=128)
 
     class Meta:
         abstract = True
 
     @property
     def value(self):
-        if self._value is not None:
-            return self._value.capitalize()
+        if self.raw_value is not None:
+            return self.raw_value.capitalize()
         return None
 
     @value.setter
     def value(self, value):
-        self._value = value
+        self.raw_value = value
 
     @classmethod
     def rank(cls, *args):
