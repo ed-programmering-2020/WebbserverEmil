@@ -316,9 +316,8 @@ class BaseCategoryProduct(PolymorphicModel):
             self.delete()
             return
 
-        # Update name
+        # Update name with multiple product names
         names = data["names"]
-        print("here")
         if len(names) >= 2:
             # Convert names into sets of words
             word_sets = [set(name.split(" ")) for name in names if name is not None]
@@ -336,12 +335,10 @@ class BaseCategoryProduct(PolymorphicModel):
             if len(last_set) is not 0:
                 self.name = " ".join(last_set)
 
-            print("1", self.name)
-
-        if self.name is None or self.name is "":
+        # If multiple names fail or there is only one name
+        if self.name is None or self.name is "":  # With a singular product name
             name = names[0]
 
-            print("1.5", name)
             # Remove unnecessary information
             splitters = ["/", "|", "-"]
             for splitter in splitters:
@@ -349,7 +346,6 @@ class BaseCategoryProduct(PolymorphicModel):
                     name = name.split(splitter)[0]
 
             self.name = name
-            print("2", self.name)
 
         # Update the last stuff
         self.slug = slugify(self.name)
