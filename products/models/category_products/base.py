@@ -76,28 +76,23 @@ class BaseCategoryProduct(PolymorphicModel):
 
         # When 2 products were given, return the combined category product
         if another_product is not None:
-            print("combine", product, another_product)
             return cls.combine(product, another_product)
 
         # Find similar category product
         similar_category_product = cls.find_similar(product)
         if similar_category_product is not None:
-            print("Found", product, similar_category_product)
             return similar_category_product
 
         # Check if product has a category name
         if not product.category:
-            print("No category name", product, product.category)
             return
 
         # Check if the category name belongs to a category product type and model
         category_model = cls.get_model_with_name(product.category)
         if category_model is None:
-            print("No matching category", product, product.category)
             return
 
         # Return new category product
-        print("Create new", product)
         return category_model.objects.create()
 
     @classmethod

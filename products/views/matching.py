@@ -20,18 +20,14 @@ class MatchAPI(generics.GenericAPIView):
     def get(self, request, category, *args, **kwargs):
         settings = request.GET.dict()
 
-        print("1")
         if settings is not None:
             model = import_model(category)
             products = model.match(settings)
-            print("2")
 
             if products:
                 serialized_products = []
                 for product, __ in products:
                     serialized_products.append(CategoryProductSerializer(product).data)
-
-                print("MATCHING:", products)
 
                 return Response({
                     "products": serialized_products,
