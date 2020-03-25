@@ -42,7 +42,7 @@ class BaseSpecification(PolymorphicModel):
 
             # Find existing specification instance, else create a new specification
             for spec_instance in model_class.objects.all():
-                if spec_instance.value is not None and spec_instance.is_equal(processed_spec.value):
+                if spec_instance.value is not None and spec_instance.value == processed_spec.value:
                     specification = spec_instance
                     break
             else:
