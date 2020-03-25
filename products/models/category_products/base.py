@@ -334,9 +334,12 @@ class BaseCategoryProduct(PolymorphicModel):
             # Combine words
             if len(last_set) is not 0:
                 self.name = " ".join(last_set)
+
+            print("1", self.name)
         if self.name is None:
             name = names[0]
 
+            print("1.5", name)
             # Remove unnecessary information
             splitters = ["/", "|", "-"]
             for splitter in splitters:
@@ -344,6 +347,7 @@ class BaseCategoryProduct(PolymorphicModel):
                     name = name.split(splitter)[0]
 
             self.name = name
+            print("2", self.name)
 
         # Update the last stuff
         self.slug = slugify(self.name)
