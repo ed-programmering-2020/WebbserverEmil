@@ -49,7 +49,7 @@ class Resolution(StandardSpecification):
 
 class ScreenSize(StandardSpecification):
     name = "Skärmstorlek"
-    _value = models.DecimalField(max_digits=3, decimal_places=1)
+    raw_value = models.DecimalField(max_digits=3, decimal_places=1)
 
     @property
     def value(self):
