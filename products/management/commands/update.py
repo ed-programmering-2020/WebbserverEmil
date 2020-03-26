@@ -6,7 +6,7 @@ class Command(BaseCommand):
     help = "Update all category products"
 
     def handle(self, *args, **kwargs):
-        for laptop in Laptop.objects.filter(is_active=True).iterator():
+        for laptop in Laptop.objects.filter():
             laptop.update()
 
         self.stdout.write(self.style.SUCCESS("Successfully updated category products"))
