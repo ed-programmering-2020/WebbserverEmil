@@ -57,9 +57,9 @@ class BenchmarkSpecification(BaseSpecification):
 
             # Get/Create specification instance with the benchmark
             try:
-                specification = cls.objects.get(_value=name)
+                specification = cls.objects.get(raw_value=name)
                 specification.score = score
                 specification.full_score = full_score
                 specification.save()
             except cls.DoesNotExist:
-                cls.objects.create(_value=name, score=score, full_score=full_score)
+                cls.objects.create(raw_value=name, score=score, full_score=full_score)
