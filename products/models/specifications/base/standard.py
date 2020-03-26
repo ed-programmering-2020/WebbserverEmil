@@ -40,7 +40,7 @@ class StandardSpecification(BaseSpecification):
             print(time.time() - last)
 
             # Prepare sorting values
-            value = specification.value
+            value = specification.raw_value
             package = (specification.id, value)
 
             # Skip if value property returns None
