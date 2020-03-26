@@ -13,7 +13,6 @@ class Command(BaseCommand):
 
             rank = getattr(model_class, "rank", None)
             if callable(rank):
-                print(model_class)
                 model_class.rank()
 
         self.stdout.write(self.style.SUCCESS("Successfully updated all rankings"))
