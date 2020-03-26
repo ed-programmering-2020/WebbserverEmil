@@ -22,10 +22,14 @@ class BaseCategoryProduct(PolymorphicModel):
     """Base class for all category product models"""
 
     name = models.CharField('name', max_length=128)
-    slug = models.SlugField()
+    slug = models.SlugField(null=True, blank=True)
     manufacturing_name = models.CharField("manufacturing name", max_length=128, null=True, blank=True)
     price = models.PositiveIntegerField("price", null=True, blank=True)
     is_active = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(models.Model, self).save(*args, **kwargs)
 
     @staticmethod
     def match(settings, model):
