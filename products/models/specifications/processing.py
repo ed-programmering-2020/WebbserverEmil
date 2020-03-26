@@ -54,6 +54,9 @@ class Processor(BenchmarkSpecification):
                 if name:
                     name = name.get_text().strip().replace("-", " ").lower()
 
+                    if "iris " in name:
+                        name = name.replace("iris ", "")
+
                     if name in processor_scores:
                         processor_scores[name].append(score)
                     else:

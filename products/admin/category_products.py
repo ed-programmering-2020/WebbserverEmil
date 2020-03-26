@@ -12,7 +12,7 @@ class ProductInline(admin.TabularInline):
 class BaseCategoryProductAdmin(admin.ModelAdmin):
     fieldsets = [
         ("Main info", {
-            "fields": ["name", "manufacturing_name", "slug", "price", "is_active"]
+            "fields": ["name", "slug", "manufacturing_name", "price", "is_active"]
         })
     ]
     inlines = [ProductInline]
