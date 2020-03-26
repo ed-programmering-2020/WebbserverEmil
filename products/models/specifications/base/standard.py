@@ -67,3 +67,4 @@ class StandardSpecification(BaseSpecification):
             for specification_id, value in values:
                 specification = cls.objects.get(id=specification_id)
                 specification.score = i / len(sorted_specifications)
+                specification.save()

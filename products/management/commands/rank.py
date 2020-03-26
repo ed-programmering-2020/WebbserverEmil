@@ -1,7 +1,5 @@
 from django.core.management.base import BaseCommand
 from django.contrib.contenttypes.models import ContentType
-import inspect
-import sys
 
 
 class Command(BaseCommand):
