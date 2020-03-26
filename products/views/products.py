@@ -11,10 +11,7 @@ class ProductAPI(generics.GenericAPIView):
 
     def get(self, request, category, slug, *args, **kwargs):
         try:
-            category_product = Laptop.objects.get(slug=slug)
-            model = category_product.content_type.model_class()
-            inherited_category_product = model.objects.get(slug=slug)
-            return Response(CategoryProductSerializer(inherited_category_product).data)
-
+            laptop = Laptop.objects.get(slug=slug)
+            return Response(CategoryProductSerializer(laptop).data)
         except Laptop.DoesNotExist:
             return Response({})
