@@ -9,18 +9,7 @@ class AlternativeName(models.Model):
     model_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)
 
 
-class PolymorphicManager(models.Manager):
-    def create(self, *args, **kwargs):
-        """Overridden create method to prevent creation without a content type"""
-
-        content_type = ContentType.objects.get(app_label="products", model=self.model.__name__)
-        return super().create(*args, content_type=content_type, **kwargs)
-
-
 class PolymorphicModel(models.Model):
-    content_type = models.ForeignKey(ContentType, editable=False, on_delete=models.SET_NULL, null=True)
-    objects = PolymorphicManager()
-
     class Meta:
         abstract = True
 

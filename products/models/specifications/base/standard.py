@@ -39,18 +39,9 @@ class StandardSpecification(BaseSpecification):
         for specification in cls.objects.all().iterator():
             print(time.time() - last)
 
-            # Get inherited model instance
-            model_type = specification.content_type
-            print(specification, model_type)
-            if model_type is None:
-                continue
-
-            model = model_type.model_class()
-            inherited_specification = model.objects.get(id=specification.id)
-
             # Prepare sorting values
-            value = inherited_specification.value
-            package = (inherited_specification.id, value)
+            value = specification.value
+            package = (specification.id, value)
 
             # Skip if value property returns None
             if value is None:
@@ -62,12 +53,12 @@ class StandardSpecification(BaseSpecification):
                 specification_id, saved_value = stored_specifications[0]
 
                 # If the specification is better than the stored specification
-                if inherited_specification.is_better(saved_value, id=specification_id):
+                if specification.is_better(saved_value, id=specification_id):
                     sorted_specifications.insert(i, [package])
                     break
 
                 # If the specifications are equal
-                if inherited_specification.is_equal(saved_value, id=specification_id):
+                if specification.is_equal(saved_value, id=specification_id):
                     sorted_specifications[i].append(package)
                     break
 
