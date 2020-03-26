@@ -40,7 +40,7 @@ class StandardSpecification(BaseSpecification):
             print(time.time() - last)
 
             # Get inherited model instance
-            model = specification.content_type.model_class()
+            model = specification.model_type.model_class()
             inherited_specification = model.objects.get(id=specification.id)
 
             # Prepare sorting values
