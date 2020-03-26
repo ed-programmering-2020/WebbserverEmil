@@ -22,10 +22,10 @@ class BaseCategoryProduct(PolymorphicModel):
     """Base class for all category product models"""
 
     name = models.CharField('name', max_length=128)
+    slug = models.SlugField()
     manufacturing_name = models.CharField("manufacturing name", max_length=128, null=True, blank=True)
     price = models.PositiveIntegerField("price", null=True, blank=True)
-    slug = models.SlugField(unique=True)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
 
     @staticmethod
     def match(settings, model):
@@ -311,40 +311,6 @@ class BaseCategoryProduct(PolymorphicModel):
             self.delete()
             return
 
-        # Update name with multiple product names
-        names = data["names"]
-        if len(names) >= 2:
-            # Convert names into sets of words
-            word_sets = [set(name.split(" ")) for name in names if name is not None]
-
-            # Find common words between names
-            last_set = None
-            for word_set in word_sets:
-                if last_set is None:
-                    last_set = word_set
-                    continue
-
-                last_set = last_set.intersection(word_set)
-
-            # Combine words
-            if len(last_set) is not 0:
-                self.name = " ".join(last_set)
-
-        # If multiple names fail or there is only one name
-        if self.name is None or self.name is "":  # With a singular product name
-            name = names[0]
-
-            # Remove unnecessary information
-            splitters = ["/", "|", "-"]
-            for splitter in splitters:
-                if splitter in name:
-                    name = name.split(splitter)[0]
-
-            self.name = name
-
-        # Update the last stuff
-        self.slug = slugify(self.name)
-        self.is_ranked = False
         self.save()
 
     def has_ranked_specification(self, specification_name):

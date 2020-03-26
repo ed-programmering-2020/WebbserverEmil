@@ -12,12 +12,13 @@ class ProductInline(admin.TabularInline):
 class BaseCategoryProductAdmin(admin.ModelAdmin):
     fieldsets = [
         ("Main info", {
-            "fields": ["name", "manufacturing_name", "price"]
+            "fields": ["name", "manufacturing_name", "slug", "price", "is_active"]
         })
     ]
     inlines = [ProductInline]
 
-    list_display = ["name", "price", "serve_image"]
+    list_display = ["name", "price", "serve_image", "is_active"]
+    list_filter = ["is_active"]
     search_fields = ["name", "manufacturing_name"]
 
     def serve_image(self, obj):
