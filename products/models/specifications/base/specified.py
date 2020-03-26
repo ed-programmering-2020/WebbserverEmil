@@ -14,24 +14,7 @@ class SpecifiedSpecification(BaseSpecification):
 
     @value.setter
     def value(self, value):
-        equivalent_value = SpecifiedSpecification.get_equivalent_value(value)
-        if equivalent_value is not None:
-            self.raw_value = equivalent_value["type"]
-
-    @classmethod
-    def get_equivalent_value(cls, value):
-        value = value.lower()
-
-        for i, types in enumerate(cls.types):
-            if type(types) is not list:
-                types = [types]
-
-            for value_type in types:
-                if value_type in value:
-                    return {"type": value_type,
-                            "index": i}
-
-        return None
+        self.raw_value = value
 
     @classmethod
     def rank(cls, *args):
@@ -47,7 +30,15 @@ class SpecifiedSpecification(BaseSpecification):
                 continue
 
             # Get specification ranking
-            equivalent_value = cls.get_equivalent_value(specification.value)
-            if equivalent_value is not None:
-                specification.score = equivalent_value["index"] / len(specification.types)
-                specification.save()
+            value = specification.value.lower()
+            for i, types in enumerate(specification.types):
+                if type(types) is not list:
+                    types = [types]
+
+                for value_type in types:
+                    value_type = value_type.lower()
+
+                    if value_type in value:
+                        specification.score = i / len(specification.types)
+                        specification.save()
+                        break
