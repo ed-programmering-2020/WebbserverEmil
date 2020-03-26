@@ -44,7 +44,7 @@ class Weight(StandardSpecification):
 
     def is_better(self, value, **kwargs):
         """Overridden because it is better if the weight is lighter"""
-        return self.value < value
+        return self.raw_value < value
 
     def __str__(self):
         return "<Weight %s>" % self.value

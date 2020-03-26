@@ -32,13 +32,9 @@ class StandardSpecification(BaseSpecification):
         if cls is StandardSpecification:
             return
 
-        last = time.time()
-
         # Gather and sort all specifications
         sorted_specifications = []
         for specification in cls.objects.all().iterator():
-            print(time.time() - last)
-
             # Prepare sorting values
             value = specification.raw_value
             package = (specification.id, value)
@@ -65,8 +61,6 @@ class StandardSpecification(BaseSpecification):
             # If the specification has the lowest value or list is empty
             else:
                 sorted_specifications.append([package])
-
-        print(sorted_specifications)
 
         # Save specification instances
         for i, values in enumerate(sorted_specifications):
