@@ -53,12 +53,12 @@ class StandardSpecification(BaseSpecification):
                 specification_id, saved_value = stored_specifications[0]
 
                 # If the specification is better than the stored specification
-                if specification.is_better(saved_value, id=specification_id):
+                if specification.is_better(saved_value):
                     sorted_specifications.insert(i, [package])
                     break
 
                 # If the specifications are equal
-                if specification.is_equal(saved_value, id=specification_id):
+                if specification.is_equal(saved_value):
                     sorted_specifications[i].append(package)
                     break
 
