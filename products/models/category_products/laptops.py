@@ -51,6 +51,12 @@ class Laptop(BaseCategoryProduct):
     resolution = get_foreign_key("Resolution")
     screen_size = get_foreign_key("ScreenSize")
 
+    def save(self, *args, **kwargs):
+        if self.refresh_rate is None:
+            self.refresh_rate = RefreshRate.objects.get(raw_value=60)
+
+        super(Laptop, self).save(*args, **kwargs)
+
     @staticmethod
     def match(settings, **kwargs):
         """Matches the user with products based on their preferences/settings
@@ -126,13 +132,3 @@ class Laptop(BaseCategoryProduct):
             return laptops[:10]
 
         return laptops
-
-    def update(self):
-        super(Laptop, self).update()
-
-        # Default refresh rate
-        if self.refresh_rate is None:
-            self.refresh_rate = RefreshRate.objects.get(raw_value=60)
-
-        self.save()
-
