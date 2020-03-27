@@ -128,7 +128,7 @@ class Laptop(BaseCategoryProduct):
         return laptops
 
     def update(self):
-        super(BaseCategoryProduct, self).update()
+        super(Laptop, self).update()
 
         # Default refresh rate
         if self.refresh_rate is None:
