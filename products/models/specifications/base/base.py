@@ -1,6 +1,5 @@
 from ...polymorphism import PolymorphicModel
 from django.db import models
-from decimal import Decimal
 
 
 class BaseSpecification(PolymorphicModel):
@@ -32,6 +31,10 @@ class BaseSpecification(PolymorphicModel):
     def rank():
         raise NotImplementedError
 
+    @classmethod
+    def find_existing(cls, value):
+        raise NotImplementedError
+
     @staticmethod
     def get_specification_instances(specifications):
         specification_instances = []
@@ -61,21 +64,6 @@ class BaseSpecification(PolymorphicModel):
             specification_instances.append(specification)
 
         return specification_instances
-
-    @classmethod
-    def find_existing(cls, value):
-        if type(value) == Decimal:
-            value = float(value)
-
-        for spec_instance in cls.objects.all():
-            raw_value = spec_instance.raw_value
-            if type(raw_value) == Decimal:
-                raw_value = float(raw_value)
-
-            if raw_value == value:
-                return spec_instance
-
-        return None
 
     def __str__(self):
         return "<BaseSpecification>"

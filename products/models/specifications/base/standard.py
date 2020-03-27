@@ -1,5 +1,5 @@
 from .base import BaseSpecification
-import time
+from decimal import Decimal
 import re
 
 
@@ -25,6 +25,21 @@ class StandardSpecification(BaseSpecification):
     def is_equal(self, raw_value):
         """This is needed because Django already uses the comparison operators"""
         return self.raw_value == raw_value
+
+    @classmethod
+    def find_existing(cls, value):
+        if type(value) == Decimal:
+            value = float(value)
+
+        for spec_instance in cls.objects.all():
+            raw_value = spec_instance.raw_value
+            if type(raw_value) == Decimal:
+                raw_value = float(raw_value)
+
+            if raw_value == value:
+                return spec_instance
+
+        return None
 
     @classmethod
     def rank(cls, *args):

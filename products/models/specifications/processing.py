@@ -7,25 +7,28 @@ class GraphicsCard(BenchmarkSpecification):
 
     @staticmethod
     def collect_benchmarks():
-        url = "https://benchmarks.ul.com/compare/best-gpus"
+        url = "https://www.notebookcheck.net/Mobile-Graphics-Cards-Benchmark-List.844.0.html?type=&sort=&showClassDescription=1&deskornote=2&archive=1&perfrating=1&or=0&showBars=1&3dmark13_ice_gpu=1&3dmark13_cloud_gpu=1&3dmark13_fire_gpu=1&3dmark11_gpu=1&gpu_fullname=1&architecture=1&pixelshaders=1&vertexshaders=1&corespeed=1&boostspeed=1&memoryspeed=1&memorybus=1&memorytype=1"
         soup = BenchmarkSpecification.get_soup(url)
         graphics_card_scores = []
 
         # Get all scores
-        graphics_cards = soup.find("tbody").find_all("tr")
-        for i, graphics_card in enumerate(graphics_cards):
-            score = len(graphics_cards) - i
-            name = graphics_card.find("a")
+        elements = soup.find_all("tr")
+        for element in elements:
+            # Get name and score elements
+            score = element.find("span", {"class": "gg_pos"})
+            name = element.find("td", {"class": "fullname"})
+            if score is None or name is None:
+                continue
 
-            if name:
-                name = name.get_text().strip().lower()
-                if "1060-" in name:
-                    name = name.replace("1060-", "1060 ")
+            # Format values
+            score = int(score.get_text())
+            name = name.get_text().strip().lower()
+            if "1060-" in name:
+                name = name.replace("1060-", "1060 ")
+            if "(" in name:
+                name = name.split(" (")[0]
 
-                if "(" in name:
-                    name = name.split("(")[0]
-
-                graphics_card_scores.append((name, score))
+            graphics_card_scores.append((name, score))
 
         return graphics_card_scores
 

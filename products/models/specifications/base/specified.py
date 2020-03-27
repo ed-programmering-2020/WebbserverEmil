@@ -42,3 +42,15 @@ class SpecifiedSpecification(BaseSpecification):
                         specification.score = i / len(specification.types)
                         specification.save()
                         break
+
+    @classmethod
+    def find_existing(cls, value):
+        value = value.lower()
+
+        for spec_instance in cls.objects.all():
+            raw_value = spec_instance.raw_value.lower()
+
+            if raw_value in value or value in raw_value:
+                return spec_instance
+
+        return None
