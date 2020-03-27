@@ -13,9 +13,9 @@ class StandardSpecification(BaseSpecification):
 
     @value.setter
     def value(self, value):
-        first_value = value.split(" ")[0]
+        first_value = value.split(" ")[0].split(",")[0]
         value = re.sub("[^0-9]", "", first_value).replace(" ", "")
-        if value != "":
+        if value is not "":
             self.raw_value = int(value)
 
     def is_better(self, raw_value):

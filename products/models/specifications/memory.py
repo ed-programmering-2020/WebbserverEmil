@@ -42,7 +42,7 @@ class StorageSize(StandardSpecification):
 
 class StorageType(SpecifiedSpecification):
     name = "Hårddisktyp"
-    types = ["ssd", "hdd", "emmc"]
+    types = ["emmc", "hdd", "ssd"]
 
     def __str__(self):
         return "<StorageType %s>" % self.value

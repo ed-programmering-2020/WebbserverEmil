@@ -2,6 +2,7 @@ from operator import itemgetter
 from decimal import Decimal
 
 from products.models.category_products.base import BaseCategoryProduct
+from products.models.specifications.panel import RefreshRate
 from django.db import models
 
 import json
@@ -19,16 +20,16 @@ def get_foreign_key(model_name):
 
 class Laptop(BaseCategoryProduct):
     specification_info = [
-        {"name": "battery_time", "group": "battery", "general": 2, "gaming": 0.3},
-        {"name": "weight", "group": "weight", "general": 2.5, "gaming": 0.6},
-        {"name": "processor", "group": "performance", "general": 2, "gaming": 3},
-        {"name": "graphics_card", "group": "performance", "general": 1.4, "gaming": 5},
-        {"name": "refresh_rate", "group": "screen", "gaming": 3},
-        {"name": "ram", "group": "performance", "general": 1.6, "gaming": 2},
-        {"name": "storage_type", "group": "performance"},
-        {"name": "storage_size", "group": "storage"},
-        {"name": "resolution", "group": "screen"},
-        {"name": "panel_type", "group": "screen", "general": 1.8}
+        {"name": "battery_time", "group": "battery", "general": 1.5, "gaming": 0.5},
+        {"name": "weight", "group": "weight", "general": 1.5, "gaming": 0.25},
+        {"name": "processor", "group": "performance", "general": 0.5, "gaming": 1.75},
+        {"name": "graphics_card", "group": "performance", "general": 0.5, "gaming": 1.5},
+        {"name": "refresh_rate", "group": "screen", "general": 0.25, "gaming": 0.5},
+        {"name": "ram", "group": "performance", "all": 0.25},
+        {"name": "storage_type", "group": "performance", "all": 1.5},
+        {"name": "storage_size", "group": "storage", "all": 1.5},
+        {"name": "resolution", "group": "screen", "all": 0.5},
+        {"name": "panel_type", "group": "screen", "all": 1.5}
     ]
 
     # Measurements
@@ -97,6 +98,9 @@ class Laptop(BaseCategoryProduct):
                 else:
                     usage_mult = specification.get("gaming", 1)
 
+                if usage_mult == 1:
+                    usage_mult = specification.get("all", 1)
+
                 # Get priority multiplier
                 priority = priorities[specification["group"]]
                 priority_mult = priority / 2.5
@@ -122,3 +126,13 @@ class Laptop(BaseCategoryProduct):
             return laptops[:10]
 
         return laptops
+
+    def update(self):
+        super(BaseCategoryProduct, self).update()
+
+        # Default refresh rate
+        if self.refresh_rate is None:
+            self.refresh_rate = RefreshRate.objects.get(raw_value=60)
+
+        self.save()
+
