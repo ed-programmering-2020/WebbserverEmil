@@ -29,7 +29,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        super(models.Model, self).save(*args, **kwargs)
+        super(BaseCategoryProduct, self).save(*args, **kwargs)
 
     @staticmethod
     def match(settings, model):

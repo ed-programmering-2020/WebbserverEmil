@@ -23,7 +23,7 @@ class Laptop(BaseCategoryProduct):
         {"name": "battery_time", "group": "battery", "general": 1.5, "gaming": 0.5},
         {"name": "weight", "group": "weight", "general": 1.5, "gaming": 0.25},
         {"name": "processor", "group": "performance", "general": 0.5, "gaming": 1.75},
-        {"name": "graphics_card", "group": "performance", "general": 0.5, "gaming": 1.5},
+        {"name": "graphics_card", "group": "performance", "general": 0.5, "gaming": 1.75},
         {"name": "refresh_rate", "group": "screen", "general": 0.25, "gaming": 0.5},
         {"name": "ram", "group": "performance", "all": 0.25},
         {"name": "storage_type", "group": "performance", "all": 1.5},
