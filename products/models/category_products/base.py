@@ -284,7 +284,10 @@ class BaseCategoryProduct(PolymorphicModel):
                 data["prices"].append(price)
 
         # Update price
-        self.price = min(data["prices"])
+        if len(data["prices"]) >= 2:
+            self.price = min(data["prices"])
+        elif len(data["prices"]) == 1:
+            self.price = data["prices"][0]
 
         # Update manufacturing name
         if self.manufacturing_name is None:
