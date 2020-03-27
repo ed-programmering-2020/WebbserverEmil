@@ -284,14 +284,7 @@ class BaseCategoryProduct(PolymorphicModel):
                 data["prices"].append(price)
 
         # Update price
-        if len(data["prices"]) >= 2:
-            if self.check_price_outlier(data["prices"]):
-                min_price = min(data["prices"])
-                data["prices"].remove(min_price)
-
-            self.price = min(data["prices"])
-        elif len(data["prices"]) == 1:
-            self.price = data["prices"][0]
+        self.price = min(data["prices"])
 
         # Update manufacturing name
         if self.manufacturing_name is None:
