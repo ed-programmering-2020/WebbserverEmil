@@ -5,13 +5,13 @@ from products.serializers import CategoryProductSerializer
 from products.models import Laptop
 
 
-class ProductAPI(generics.GenericAPIView):
+class LaptopAPI(generics.GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = CategoryProductSerializer
 
-    def get(self, request, category, slug, *args, **kwargs):
+    def get(self, request, laptop_id, slug, *args, **kwargs):
         try:
-            laptop = Laptop.objects.get(slug=slug)
+            laptop = Laptop.objects.get(id=laptop_id)
             return Response(CategoryProductSerializer(laptop).data)
         except Laptop.DoesNotExist:
             return Response({})
