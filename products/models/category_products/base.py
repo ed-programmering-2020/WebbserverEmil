@@ -43,6 +43,7 @@ class BaseCategoryProduct(PolymorphicModel):
     name = models.CharField('name', max_length=128)
     slug = models.SlugField(null=True, blank=True)
     manufacturing_name = models.CharField("manufacturing name", max_length=128, null=True, blank=True)
+    disclaimer = models.CharField("disclaimer", max_length=128, null=True, blank=True)
     active_price = models.PositiveIntegerField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
 
@@ -72,12 +73,12 @@ class BaseCategoryProduct(PolymorphicModel):
     @property
     def images(self):
         """Returns a list of image urls"""
-        image_urls = []
+        images = []
         for instance in self._images.all():
-            url = instance.image.url
-            image_urls.insert(instance.placement - 1, url)
+            image = {"website_name": instance.host.name, "url": instance.image.url}
+            images.insert(instance.placement - 1, image)
 
-        return image_urls
+        return images
 
     def save(self, *args, **kwargs):
         """Overridden save method to automatically update slug field"""

@@ -33,7 +33,7 @@ class BaseCategoryProductAdmin(admin.ModelAdmin):
         if len(images) == 0:
             return None
 
-        return get_image_tag(images[0])
+        return get_image_tag(images[0]["url"])
     serve_image.short_description = 'Image'
     serve_image.allow_tags = True
 
