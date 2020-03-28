@@ -33,7 +33,7 @@ class Image(models.Model):
     category_product = models.ForeignKey(
         "products.BaseCategoryProduct",
         on_delete=models.CASCADE,
-        related_name="images"
+        related_name="_images"
     )
 
 
@@ -66,7 +66,7 @@ class BaseCategoryProduct(PolymorphicModel):
     def images(self):
         """Returns a list of image urls"""
         image_urls = []
-        for instance in self.images:
+        for instance in self._images:
             url = instance.image.url
 
             if instance.is_primary is True:
