@@ -70,7 +70,7 @@ class BaseCategoryProduct(PolymorphicModel):
             url = instance.image.url
 
             if instance.is_primary is True:
-                image_urls.index(url, 0)
+                image_urls.insert(0, url)
             else:
                 image_urls.append(url)
 
