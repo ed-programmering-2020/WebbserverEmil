@@ -50,8 +50,13 @@ class BaseCategoryProduct(PolymorphicModel):
         if type(self) == BaseCategoryProduct:
             return None
 
-        instances = [eval("self."+specification["name"]) for specification in self.specification_info]
-        serialized = {instance.name: str(instance.value) for instance in instances if instance is not None}
+        instances = []
+        for specification in self.specification_info:
+            instance = eval("self."+specification["name"])
+            if instance is not None:
+                instances.append(instance)
+
+        serialized = {instance.name: str(instance.value) for instance in instances}
         return serialized
 
     @property
