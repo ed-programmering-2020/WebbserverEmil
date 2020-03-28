@@ -28,7 +28,7 @@ def create_file_path(instance, filename):
 
 class Image(models.Model):
     image = models.ImageField(upload_to=create_file_path, blank=True, null=True)
-    is_primary = models.BooleanField(default=False)
+    placement = models.PositiveSmallIntegerField()
     host = models.ForeignKey("products.Website", on_delete=models.CASCADE)
     category_product = models.ForeignKey(
         "products.BaseCategoryProduct",
@@ -73,11 +73,7 @@ class BaseCategoryProduct(PolymorphicModel):
         image_urls = []
         for instance in self._images.all():
             url = instance.image.url
-
-            if instance.is_primary is True:
-                image_urls.insert(0, url)
-            else:
-                image_urls.append(url)
+            image_urls.insert(instance.placement - 1, url)
 
         return image_urls
 
@@ -164,7 +160,12 @@ class BaseCategoryProduct(PolymorphicModel):
                     r = requests.get(image_url)
                     image_data = io.BytesIO(r.read())
                     image = PilImage.open(image_data)
-                    Image.objects.create(image=image, host_id=host_id, category_product_id=self.id)
+                    Image.objects.create(
+                        image=image,
+                        host_id=host_id,
+                        category_product_id=self.id,
+                        placement=(image_count + i)
+                    )
 
     @staticmethod
     def match(settings, model):
