@@ -36,7 +36,7 @@ class BaseCategoryProductAdmin(admin.ModelAdmin):
     serve_image.allow_tags = True
 
     def serve_url(self, obj):
-        return '<a href="/laptop/{obj.id}/{obj.slug}"'.format(obj=obj)
+        return '<a href="/laptop/{obj.id}/{obj.slug}">Go to</a>'.format(obj=obj)
     serve_url.short_description = "Url"
     serve_url.allow_tags = True
 
