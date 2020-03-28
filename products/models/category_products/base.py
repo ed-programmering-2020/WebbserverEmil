@@ -153,6 +153,7 @@ class BaseCategoryProduct(PolymorphicModel):
                 return
 
             # Update images
+            self.save()
             image_count = self.images.count()
             if image_count < 4 and len(meta_data["image_urls"]) is not 0:
                 images_needed = 4 - image_count
@@ -168,6 +169,8 @@ class BaseCategoryProduct(PolymorphicModel):
                         category_product_id=self.id,
                         placement=(image_count + i)
                     )
+        else:
+            self.save()
 
     @staticmethod
     def match(settings, model):
