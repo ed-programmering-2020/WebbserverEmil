@@ -11,10 +11,11 @@ from django.utils.text import slugify
 from django.db.models import Q
 from django.db import models
 
-from operator import itemgetter
+from collections import defaultdict
 from difflib import SequenceMatcher
-from decimal import Decimal
 from PIL import Image as PilImage
+from operator import itemgetter
+from decimal import Decimal
 
 import requests
 import json
@@ -109,38 +110,36 @@ class BaseCategoryProduct(PolymorphicModel):
 
     def update(self):
         """Updates the category product with all of data from all of its belonging products"""
-        names = manufacturing_names = specifications = prices = image_urls = []
+        meta_data = defaultdict(list)
         for product in self.products.all():
-            names.append(product.name)
-            manufacturing_names.append(product.manufacturing_name)
-            specifications.append(specifications)
+            meta_data["names"].append(product.name)
+            meta_data["manufacturing_names"].append(product.manufacturing_name)
+            meta_data["specifications"].append(product.specifications)
 
             price = product.price
             if price is not None:
-                prices.append(price)
-                print(price, type(price))
+                meta_data["prices"].append(price)
 
             image_urls = product.image_urls.all()
             if image_urls.count() is not 0:
-                image_urls.extend([(image_url.url, image_url.host.id) for image_url in image_urls])
+                meta_data["image_urls"].extend([(image_url.url, image_url.host.id) for image_url in image_urls])
 
         # Update price
-        if len(prices) >= 2:
-            print(prices)
-            self.active_price = min(prices)
-        elif len(prices) == 1:
-            self.active_price = prices[0]
+        if len(meta_data["prices"]) >= 2:
+            self.active_price = min(meta_data["prices"])
+        elif len(meta_data["prices"]) == 1:
+            self.active_price = meta_data["prices"][0]
 
         # Update manufacturing name
         if self.manufacturing_name is None:
-            for manufacturing_name in manufacturing_names:
+            for manufacturing_name in meta_data["manufacturing_names"]:
                 if manufacturing_name:
                     self.manufacturing_name = manufacturing_name
                     break
 
         if self.is_active is False:
             specifications_caught = 0
-            for specifications in specifications:
+            for specifications in meta_data["specifications"]:
                 specification_instances = BaseSpecification.get_specification_instances(specifications)
 
                 for specification in specification_instances:
@@ -155,11 +154,11 @@ class BaseCategoryProduct(PolymorphicModel):
 
             # Update images
             image_count = self.images.count()
-            if image_count < 4 and len(image_urls) is not 0:
+            if image_count < 4 and len(meta_data["image_urls"]) is not 0:
                 images_needed = 4 - image_count
 
                 for i in range(images_needed):
-                    image_url, host_id = image_urls[i]
+                    image_url, host_id = meta_data["image_urls"][i]
                     r = requests.get(image_url)
                     image_data = io.BytesIO(r.read())
                     image = PilImage.open(image_data)
