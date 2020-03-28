@@ -85,11 +85,11 @@ class BaseCategoryProduct(PolymorphicModel):
         """Calculates score with a bias towards prices closer to the upper 75% line of the price range given"""
         absolute_delta = price_range["max"] - price_range["min"]
         upper_mid = absolute_delta * 0.5 + price_range["min"]
-        delta_price = abs(self.lowest_price - upper_mid)
+        delta_price = abs(self.active_price - upper_mid)
         relative_distance = (1 - (delta_price / absolute_delta))**2
 
         score = score * Decimal(relative_distance)
-        return score / self.lowest_price
+        return score / self.active_price
 
     def has_ranked_specification(self, specification_name):
         """Checks if the category product has a given specification and if that specification is ranked"""
@@ -123,9 +123,9 @@ class BaseCategoryProduct(PolymorphicModel):
 
         # Update price
         if len(prices) >= 2:
-            self.lowest_price = min(prices)
+            self.active_price = min(prices)
         elif len(prices) == 1:
-            self.lowest_price = prices[0]
+            self.active_price = prices[0]
 
         # Update manufacturing name
         if self.manufacturing_name is None:
@@ -164,7 +164,7 @@ class BaseCategoryProduct(PolymorphicModel):
     @staticmethod
     def match(settings, model):
         """Matches the user with products based on their preferences/settings"""
-        model_instances = model.objects.exclude(price=None).filter(is_active=True)
+        model_instances = model.objects.exclude(active_price=None).filter(is_active=True)
 
         # Get price range or else return instances without filtering
         price_range = settings.get("price", None)
@@ -173,7 +173,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
         # Return price filtered model instances
         price_range_dict = json.loads(price_range)
-        return model_instances.filter(Q(lowest_price__gte=price_range_dict["min"]), Q(lowest_price__lte=price_range_dict["max"]))
+        return model_instances.filter(Q(active_price__gte=price_range_dict["min"]), Q(active_price__lte=price_range_dict["max"]))
 
     @classmethod
     def create(cls, product, another_product=None):
