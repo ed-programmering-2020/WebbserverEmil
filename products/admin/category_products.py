@@ -1,12 +1,17 @@
 from django.contrib import admin
-from products.models import Laptop, Product
+from products.models import Laptop, Product, Image
 from .tags import get_image_tag
 
 
 class ProductInline(admin.TabularInline):
     model = Product
     extra = 0
-    exclude = ["image", "manufacturing_name", "category"]
+    exclude = ["manufacturing_name", "category"]
+
+
+class ImageInline(admin.TabularInline):
+    model = Image
+    extra = 0
 
 
 class BaseCategoryProductAdmin(admin.ModelAdmin):
@@ -15,7 +20,7 @@ class BaseCategoryProductAdmin(admin.ModelAdmin):
             "fields": ["name", "manufacturing_name", "price", "is_active"]
         })
     ]
-    inlines = [ProductInline]
+    inlines = [ImageInline, ProductInline]
 
     list_display = ["name", "price", "serve_image", "is_active"]
     list_filter = ["is_active"]

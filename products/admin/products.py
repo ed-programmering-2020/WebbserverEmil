@@ -22,33 +22,7 @@ class ProductAdmin(admin.ModelAdmin):
     ]
     inlines = [PriceInline]
 
-    list_display = [
-        "name",
-        "view_price",
-        "serve_url",
-        "serve_image",
-        "host",
-    ]
-    list_filter = [
-        "host"
-    ]
+    list_display = ["name", "price", "url", "host"]
+    list_filter = ["host"]
     search_fields = ["name", "manufacturing_name"]
 
-    def serve_url(self, obj):
-        return get_url_tag(obj.url)
-    serve_url.short_description = 'Url'
-    serve_url.allow_tags = True
-
-    def serve_image(self, obj):
-        return get_image_tag(obj.image)
-    serve_image.short_description = 'Image'
-    serve_image.allow_tags = True
-
-    def view_price(self, obj):
-        return "%s kr" % obj.price
-    view_price.short_description = "Price"
-
-
-@admin.register(Price)
-class PriceAdmin(admin.ModelAdmin):
-    list_display = ["_value", "date_seen", "product"]

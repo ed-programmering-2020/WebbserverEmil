@@ -27,12 +27,12 @@ class BaseSpecification(PolymorphicModel):
 
         return attribute_like_name.lower()
 
-    @staticmethod
-    def rank():
-        raise NotImplementedError
-
     @classmethod
     def find_existing(cls, value):
+        raise NotImplementedError
+
+    @staticmethod
+    def rank():
         raise NotImplementedError
 
     @staticmethod

@@ -1,9 +1,9 @@
-from operator import itemgetter
-from decimal import Decimal
-
 from products.models.category_products.base import BaseCategoryProduct
 from products.models.specifications.panel import RefreshRate
 from django.db import models
+
+from operator import itemgetter
+from decimal import Decimal
 
 import json
 
@@ -52,7 +52,7 @@ class Laptop(BaseCategoryProduct):
     screen_size = get_foreign_key("ScreenSize")
 
     def save(self, *args, **kwargs):
-        if self.refresh_rate is None:
+        if self.refresh_rate is None:  # When None set default refresh rate
             self.refresh_rate = RefreshRate.objects.get(raw_value=60)
 
         super(Laptop, self).save(*args, **kwargs)
