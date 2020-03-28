@@ -13,14 +13,11 @@ from django.db import models
 
 from collections import defaultdict
 from difflib import SequenceMatcher
-from PIL import Image as PilImage
 from operator import itemgetter
 from decimal import Decimal
 
-import requests
 import json
 import uuid
-import io
 
 
 def create_file_path(instance, filename):
@@ -29,6 +26,7 @@ def create_file_path(instance, filename):
 
 
 class Image(models.Model):
+    image = models.ImageField(upload_to=create_file_path, blank=True, null=True)
     url = models.CharField('url', max_length=256)
     host = models.ForeignKey("products.Website", on_delete=models.CASCADE)
     placement = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(4)])
