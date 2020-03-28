@@ -29,9 +29,9 @@ def create_file_path(instance, filename):
 
 
 class Image(models.Model):
-    image = models.ImageField(upload_to=create_file_path, blank=True, null=True)
-    placement = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(4)])
+    url = models.CharField('url', max_length=256)
     host = models.ForeignKey("products.Website", on_delete=models.CASCADE)
+    placement = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(4)])
     category_product = models.ForeignKey(
         "products.BaseCategoryProduct",
         on_delete=models.CASCADE,
@@ -75,7 +75,7 @@ class BaseCategoryProduct(PolymorphicModel):
         """Returns a list of image urls"""
         images = []
         for instance in self._images.all():
-            image = {"website_name": instance.host.name, "url": instance.image.url}
+            image = {"website_name": instance.host.name, "url": instance.url}
             images.insert(instance.placement - 1, image)
 
         return images
@@ -161,11 +161,8 @@ class BaseCategoryProduct(PolymorphicModel):
 
                 for i in range(images_needed):
                     image_url, host_id = meta_data["image_urls"][i]
-                    r = requests.get(image_url)
-                    image_data = io.BytesIO(r.read())
-                    image = PilImage.open(image_data)
                     Image.objects.create(
-                        image=image,
+                        url=image_url,
                         host_id=host_id,
                         category_product_id=self.id,
                         placement=(image_count + i)
