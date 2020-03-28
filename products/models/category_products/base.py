@@ -126,6 +126,7 @@ class BaseCategoryProduct(PolymorphicModel):
 
         # Update price
         if len(prices) >= 2:
+            print(prices)
             self.active_price = min(prices)
         elif len(prices) == 1:
             self.active_price = prices[0]
