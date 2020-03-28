@@ -73,7 +73,7 @@ class BaseCategoryProduct(PolymorphicModel):
         """Returns a list of image urls"""
         images = []
         for instance in self._images.all():
-            image = {"website_name": instance.host.name, "url": instance.url}
+            image = {"website_name": instance.host.name, "url": instance.image.url}
             images.insert(instance.placement - 1, image)
 
         return images
