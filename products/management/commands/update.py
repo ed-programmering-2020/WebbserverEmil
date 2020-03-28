@@ -8,6 +8,5 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         for laptop in Laptop.objects.filter():
             laptop.update()
-            laptop.save()
 
         self.stdout.write(self.style.SUCCESS("Successfully updated category products"))
