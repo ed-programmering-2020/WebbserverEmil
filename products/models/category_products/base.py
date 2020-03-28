@@ -62,7 +62,7 @@ class BaseCategoryProduct(PolymorphicModel):
     @property
     def websites(self):
         """Returns a sorted list of websites and its required attributes"""
-        websites = [{"website_name": product.name, "url": product.url, "price": product.price}
+        websites = [{"website_name": product.host.name, "url": product.url, "price": product.price}
                     for product in self.products.all() if product.price is not None]
         sorted_list = sorted(websites, key=itemgetter("price"))
         return sorted_list
