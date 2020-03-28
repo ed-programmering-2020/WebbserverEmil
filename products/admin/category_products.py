@@ -22,7 +22,7 @@ class BaseCategoryProductAdmin(admin.ModelAdmin):
     ]
     inlines = [ImageInline, ProductInline]
 
-    list_display = ["name", "active_price", "serve_image", "is_active"]
+    list_display = ["name", "active_price", "serve_image", "serve_url", "is_active"]
     list_filter = ["is_active"]
     search_fields = ["name", "manufacturing_name"]
 
@@ -34,6 +34,11 @@ class BaseCategoryProductAdmin(admin.ModelAdmin):
         return get_image_tag(images[0])
     serve_image.short_description = 'Image'
     serve_image.allow_tags = True
+
+    def serve_url(self, obj):
+        return '<a href="/laptop/{obj.id}/{obj.slug}"'.format(obj=obj)
+    serve_url.short_description = "Url"
+    serve_url.allow_tags = True
 
 
 @admin.register(Laptop)

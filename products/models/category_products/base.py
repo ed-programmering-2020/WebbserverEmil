@@ -6,6 +6,7 @@ from products.models.specifications import BaseSpecification
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.text import slugify
 from django.db.models import Q
 from django.db import models
@@ -28,7 +29,7 @@ def create_file_path(instance, filename):
 
 class Image(models.Model):
     image = models.ImageField(upload_to=create_file_path, blank=True, null=True)
-    placement = models.PositiveSmallIntegerField()
+    placement = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(4)])
     host = models.ForeignKey("products.Website", on_delete=models.CASCADE)
     category_product = models.ForeignKey(
         "products.BaseCategoryProduct",
@@ -117,6 +118,7 @@ class BaseCategoryProduct(PolymorphicModel):
             price = product.price
             if price is not None:
                 prices.append(price)
+                print(price, type(price))
 
             image_urls = product.image_urls.all()
             if image_urls.count() is not 0:
@@ -152,8 +154,8 @@ class BaseCategoryProduct(PolymorphicModel):
 
             # Update images
             image_count = self.images.count()
-            if image_count < 5 and len(image_urls) is not 0:
-                images_needed = 5 - image_count
+            if image_count < 4 and len(image_urls) is not 0:
+                images_needed = 4 - image_count
 
                 for i in range(images_needed):
                     image_url, host_id = image_urls[i]
