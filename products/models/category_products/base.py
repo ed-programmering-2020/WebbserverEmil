@@ -66,7 +66,7 @@ class BaseCategoryProduct(PolymorphicModel):
     def images(self):
         """Returns a list of image urls"""
         image_urls = []
-        for instance in self._images:
+        for instance in self._images.all():
             url = instance.image.url
 
             if instance.is_primary is True:
@@ -117,7 +117,7 @@ class BaseCategoryProduct(PolymorphicModel):
             if price is not None:
                 prices.append(price)
 
-            image_urls = product.image_urls
+            image_urls = product.image_urls.all()
             if image_urls.count() is not 0:
                 image_urls.extend([(image_url.url, image_url.host.id) for image_url in image_urls])
 

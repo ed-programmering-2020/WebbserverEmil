@@ -8,11 +8,6 @@ import json
 import re
 
 
-def get_file_path(instance, filename):
-    """Generates a random unique filepath"""
-    return "%s.%s" % (uuid.uuid4(), "jpg")
-
-
 class Price(models.Model):
     product = models.ForeignKey("products.Product", related_name="price_history", null=True, on_delete=models.CASCADE)
     _value = models.PositiveIntegerField(null=True)
