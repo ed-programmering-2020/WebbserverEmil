@@ -84,11 +84,11 @@ class BaseCategoryProduct(PolymorphicModel):
         super(BaseCategoryProduct, self).save(*args, **kwargs)
 
     def calculate_score(self, score, price_range):
-        """Calculates score with a bias towards prices closer to the upper 75% line of the price range given"""
+        """Calculates score with a bias towards prices closer to the mid of the price range given"""
         absolute_delta = price_range["max"] - price_range["min"]
         upper_mid = absolute_delta * 0.5 + price_range["min"]
         delta_price = abs(self.active_price - upper_mid)
-        relative_distance = (1 - (delta_price / absolute_delta))**2
+        relative_distance = 1 - (delta_price / absolute_delta)
 
         score = score * Decimal(relative_distance)
         return score / self.active_price
