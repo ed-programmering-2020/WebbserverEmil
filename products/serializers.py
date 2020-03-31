@@ -15,4 +15,4 @@ class CategoryProductSerializer(serializers.ModelSerializer):
 class WebsiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Website
-        fields = ["id", "name", "url", "description"]
+        fields = ["id", "name", "short_url", "url", "description"]
