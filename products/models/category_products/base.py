@@ -2,7 +2,6 @@
 
 from products.models.polymorphism import PolymorphicModel
 from products.models.specifications import BaseSpecification
-from products.serializers import WebsiteSerializer
 
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
@@ -64,7 +63,8 @@ class BaseCategoryProduct(PolymorphicModel):
     @property
     def websites(self):
         """Returns a sorted list of websites and its required attributes"""
-        websites = [{"website": WebsiteSerializer(product.host).data, "url": product.url, "price": product.price}
+        websites = [{"website": {"short_url": product.host.short_url, "description": product.host.description},
+                    "url": product.url, "price": product.price}
                     for product in self.products.all() if product.price is not None]
         sorted_list = sorted(websites, key=itemgetter("price"))
         return sorted_list
