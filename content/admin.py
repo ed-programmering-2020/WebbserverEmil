@@ -20,9 +20,7 @@ class CategorySurveyAnswerAdmin(admin.ModelAdmin):
 
 class ParagraphForm(forms.ModelForm):
     text = forms.CharField(widget=forms.Textarea)
-
-    class Meta:
-        model = Paragraph
+    model = Paragraph
 
 
 class ParagraphInline(admin.StackedInline):
