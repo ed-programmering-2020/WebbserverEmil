@@ -2,7 +2,7 @@ from ...polymorphism import PolymorphicModel
 from django.db import models
 
 
-class BaseSpecification(models.Model):
+class BaseSpecification(PolymorphicModel):
     score = models.DecimalField("score", max_digits=10, decimal_places=9, null=True)
 
     class Meta:
