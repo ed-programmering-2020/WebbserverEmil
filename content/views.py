@@ -1,8 +1,8 @@
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import generics
-from .serializers import FeedbackSerializer, CategorySurveyAnswerSerializer
-from .models import Feedback, CategorySurveyAnswer
+from .serializers import FeedbackSerializer, CategorySurveyAnswerSerializer, NewsletterSerializer
+from .models import Feedback, CategorySurveyAnswer, Newsletter
 
 
 class FeedbackAPI(generics.GenericAPIView):
@@ -24,3 +24,12 @@ class CategorySurveyAPI(generics.GenericAPIView):
             category=category
         )
         return Response({"message": "success"})
+
+
+class NewslettersAPI(generics.GenericAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = NewsletterSerializer
+
+    def get(self, *args, **kwargs):
+        newsletters = Newsletter.objects.all().order_by("creation_date")
+        return Response({"newsletters": NewsletterSerializer(newsletters, many=True).data})
