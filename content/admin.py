@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Feedback, CategorySurveyAnswer, Newsletter
+from .models import Feedback, CategorySurveyAnswer, Newsletter, Paragraph
 
 
 @admin.register(Feedback)
@@ -16,8 +16,14 @@ class CategorySurveyAnswerAdmin(admin.ModelAdmin):
     ordering = ["creation_date"]
 
 
+class ParagraphInline(admin.TabularInline):
+    model = Paragraph
+    extra = 1
+
+
 @admin.register(Newsletter)
 class NewsletterAdmin(admin.ModelAdmin):
     list_display = ["title", "author", "creation_date"]
     search_fields = ["title"]
     ordering = ["creation_date"]
+    inlines = [ParagraphInline]
