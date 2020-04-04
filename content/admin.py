@@ -18,6 +18,6 @@ class CategorySurveyAnswerAdmin(admin.ModelAdmin):
 
 @admin.register(Newsletter)
 class NewsletterAdmin(admin.ModelAdmin):
-    list_display = ["title", "author", "date"]
+    list_display = ["title", "author", "creation_date"]
     search_fields = ["title"]
     ordering = ["creation_date"]
