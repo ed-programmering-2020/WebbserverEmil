@@ -1,5 +1,7 @@
-from django.contrib import admin
 from .models import Feedback, CategorySurveyAnswer, Newsletter, Paragraph
+
+from django.contrib import admin
+from django import forms
 
 
 @admin.register(Feedback)
@@ -16,7 +18,15 @@ class CategorySurveyAnswerAdmin(admin.ModelAdmin):
     ordering = ["creation_date"]
 
 
+class ParagraphForm(forms.ModelForm):
+    text = forms.CharField(widget=forms.Textarea)
+
+    class Meta:
+        model = Paragraph
+
+
 class ParagraphInline(admin.TabularInline):
+    form = ParagraphForm
     model = Paragraph
     extra = 1
 
