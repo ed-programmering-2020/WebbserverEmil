@@ -25,7 +25,7 @@ class ParagraphForm(forms.ModelForm):
         model = Paragraph
 
 
-class ParagraphInline(admin.TabularInline):
+class ParagraphInline(admin.StackedInline):
     form = ParagraphForm
     model = Paragraph
     extra = 1
