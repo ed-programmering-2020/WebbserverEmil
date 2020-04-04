@@ -1,5 +1,5 @@
-from products.models.category_products.base import BaseCategoryProduct
-from products.models.specifications.panel import RefreshRate
+from products.models.products.base import BaseCategoryProduct
+from products.models.specifications.screen.panel_types import RefreshRate
 from django.db import models
 
 from operator import itemgetter
@@ -60,10 +60,8 @@ class Laptop(BaseCategoryProduct):
     @staticmethod
     def match(settings, **kwargs):
         """Matches the user with products based on their preferences/settings
-
         Args:
             settings (dict): settings with matching preferences
-
         Returns:
             QuerySet: Matched laptops in ranked order
         """
@@ -93,9 +91,8 @@ class Laptop(BaseCategoryProduct):
             score = 0
 
             for specification in Laptop.specification_info:
-                # Check if the laptop has the given specification
                 name = specification["name"]
-                if not laptop.has_ranked_specification(name):
+                if eval("self.{0} is not None or self.{0}.score is not None".format(name)):
                     continue
 
                 # Get usage multiplier

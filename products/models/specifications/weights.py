@@ -1,20 +1,8 @@
-from .base import StandardSpecification
+from products.models.specifications.base import BaseSpecification
 from django.db import models
 
 
-class BatteryTime(StandardSpecification):
-    name = "Batteritid"
-    raw_value = models.PositiveSmallIntegerField()
-
-    @StandardSpecification.value.getter
-    def value(self):
-        return str(self.raw_value) + " timmar"
-
-    def __str__(self):
-        return "<BatteryTime %s>" % self.value
-
-
-class Weight(StandardSpecification):
+class Weight(BaseSpecification):
     name = "Vikt"
     raw_value = models.DecimalField(max_digits=3, decimal_places=2)
 
@@ -43,7 +31,6 @@ class Weight(StandardSpecification):
         self.raw_value = number
 
     def is_better(self, value, **kwargs):
-        """Overridden because it is better if the weight is lighter"""
         return self.raw_value < value
 
     def __str__(self):
