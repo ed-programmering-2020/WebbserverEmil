@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Feedback, CategorySurveyAnswer
+from .models import Feedback, CategorySurveyAnswer, Newsletter
 
 
 @admin.register(Feedback)
@@ -13,4 +13,11 @@ class FeedbackAdmin(admin.ModelAdmin):
 class CategorySurveyAnswerAdmin(admin.ModelAdmin):
     list_display = ["answer", "creation_date", "category"]
     search_fields = ["answer"]
+    ordering = ["creation_date"]
+
+
+@admin.register(Newsletter)
+class NewsletterAdmin(admin.ModelAdmin):
+    list_display = ["title", "author", "date"]
+    search_fields = ["title"]
     ordering = ["creation_date"]
