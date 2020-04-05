@@ -7,7 +7,7 @@ class Height(DynamicSpecification):
     baseline_value = 15.0
     reverse = True
 
-    value = models.DecimalField(max_digits=3, decimal_places=1)
+    value = models.DecimalField(max_digits=4, decimal_places=1)
 
     @property
     def formatted_value(self):
@@ -24,7 +24,7 @@ class Height(DynamicSpecification):
 
         # Convert number into the correct format
         number = float(value)
-        print(number)
+
         return number
 
     def __str__(self):
