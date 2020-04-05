@@ -68,6 +68,7 @@ class BaseProduct(models.Model):
             attribute_name = mod.to_attribute_name()
             attribute = getattr(self, attribute_name)
             if attribute is None:
+                print(self.url)
                 value = mod.process_value(value)
                 try:
                     existing = mod.objects.get(value=value)
@@ -75,6 +76,7 @@ class BaseProduct(models.Model):
                 except mod.DoesNotExist:
                     if issubclass(mod, DynamicSpecification):
                         existing = mod.objects.create(value=value)
+                        existing.update_score()
                         setattr(self, attribute_name, existing)
 
     def update_rating(self):

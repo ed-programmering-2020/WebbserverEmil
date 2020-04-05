@@ -24,9 +24,6 @@ class Height(DynamicSpecification):
 
         # Convert number into the correct format
         number = float(value)
-        if number <= 5:
-            number *= 10
-
         print(number)
         return number
 
