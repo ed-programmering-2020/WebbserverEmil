@@ -35,7 +35,7 @@ class MatchAPI(generics.GenericAPIView):
         settings = request.GET.dict()
 
         if settings is not None:
-            model = import_model(category)
+            model = import_model(category.capitalize())
             products = model.match(settings)
 
             if products:

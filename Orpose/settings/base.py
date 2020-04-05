@@ -122,7 +122,8 @@ ADMIN_REORDER = (
             "products.StorageSize",
             "products.StorageType",
             "products.BatteryTime",
-            "products.Weight"
+            "products.Weight",
+            "products.Height"
         )
     },
     "users",
