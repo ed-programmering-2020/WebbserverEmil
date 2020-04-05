@@ -1,5 +1,5 @@
-from products.models.products.base import BaseCategoryProduct
-from products.models.specifications.screen.panel_types import RefreshRate
+from products.models.products.base import BaseProduct
+from products.models.specifications.screen import RefreshRate
 from django.db import models
 
 from operator import itemgetter
@@ -18,7 +18,7 @@ def get_foreign_key(model_name):
     )
 
 
-class Laptop(BaseCategoryProduct):
+class Laptop(BaseProduct):
     specification_info = [
         {"name": "battery_time", "group": "battery", "general": 1.5, "gaming": 0.5},
         {"name": "weight", "group": "weight", "general": 1.5, "gaming": 0.5},
