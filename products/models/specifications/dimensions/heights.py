@@ -23,9 +23,7 @@ class Height(DynamicSpecification):
             value = value.replace(",", ".")
 
         # Convert number into the correct format
-        number = float(value)
-
-        return number
+        return float(value)
 
     def __str__(self):
         return "<Height %s>" % self.formatted_value

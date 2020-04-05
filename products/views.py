@@ -3,7 +3,7 @@ from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import generics
 
-from products.models import Laptop, Website, MetaProduct, Image, BaseProduct
+from products.models import Laptop, Website, MetaProduct, Image, BaseProduct, DynamicSpecification
 from products.serializers import ProductSerializer
 
 from django.http.response import HttpResponse
@@ -86,7 +86,12 @@ class ScrapingAPI(generics.GenericAPIView):
                     specification_model = import_model(key)
                     attribute_name = specification_model.to_attribute_name()
                     existing = specification_model.find_existing(value)
-                    if existing is None or eval("product_instance.{}.id is not {}".format(attribute_name, existing.id)):
+                    if existing is None:
+                        if issubclass(specification_model, DynamicSpecification):
+                            existing = specification_model.objects.create(value=value)
+                            existing.update_score()
+                        break
+                    elif eval("product_instance.{}.id is not {}".format(attribute_name, existing.id)):
                         break
                 else:
                     meta_product.is_active = False
