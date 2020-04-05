@@ -36,7 +36,7 @@ class BenchmarkSpecification(BaseSpecification):
         return self.value.capitalize()
 
     @staticmethod
-    def process_value(self, value):
+    def process_value(value):
         for character in [",", "(", ")"]:
             value = value.replace(character, "")
         return value.lower()
