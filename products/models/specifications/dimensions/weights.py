@@ -33,8 +33,5 @@ class Weight(DynamicSpecification):
 
         return number
 
-    def is_better(self, value, **kwargs):
-        return self.raw_value < value
-
     def __str__(self):
         return "<Weight %s>" % self.formatted_value

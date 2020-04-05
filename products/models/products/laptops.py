@@ -29,23 +29,21 @@ class Laptop(BaseProduct):
         {"name": "storage_type", "group": "performance", "all": 1.5},
         {"name": "storage_size", "group": "storage", "all": 1.5},
         {"name": "resolution", "group": "screen", "all": 0.5},
-        {"name": "panel_type", "group": "screen", "all": 1.5}
+        {"name": "panel_type", "group": "screen", "all": 1.5},
+        {"name": "height", "all": 1}
     ]
 
-    # Measurements
     battery_time = get_foreign_key("BatteryTime")
+    height = get_foreign_key("Height")
     weight = get_foreign_key("Weight")
 
-    # Processing
     processor = get_foreign_key("Processor")
     graphics_card = get_foreign_key("GraphicsCard")
 
-    # Memory
     storage_size = get_foreign_key("StorageSize")
     storage_type = get_foreign_key("StorageType")
     ram = get_foreign_key("Ram")
 
-    # Panel
     panel_type = get_foreign_key("PanelType")
     refresh_rate = get_foreign_key("RefreshRate")
     resolution = get_foreign_key("Resolution")
@@ -82,7 +80,11 @@ class Laptop(BaseProduct):
                 else:
                     usage_mult = specification.get("all", 1)
 
-                priority = priorities[specification["group"]]
+                if "group" in specification:
+                    priority = priorities[specification["group"]]
+                else:
+                    priority = 0
+
                 score += attribute.score * Decimal(usage_mult + priority / 2.5)
 
             sorted_laptops[laptop] = laptop.calculate_score(score, price_range)
