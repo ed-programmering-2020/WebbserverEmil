@@ -79,7 +79,7 @@ class ScrapingAPI(generics.GenericAPIView):
             except model_class.DoesNotExist:
                 pass
 
-        for product_instance in model_class.objects.all():
+        for product_instance in model_class.objects.filter(is_active=True):
             name_similarity = SequenceMatcher(None, meta_product.name, product_instance.name).ratio()
             if name_similarity >= 0.5:
                 for key, value in specifications.items():
