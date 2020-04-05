@@ -94,6 +94,9 @@ class DynamicSpecification(BaseSpecification):
     reverse = False
     baseline_value = None
 
+    class Meta:
+        abstract = True
+
     def update_score(self):
         if self.no_score is True:
             return
