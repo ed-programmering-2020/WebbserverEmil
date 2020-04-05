@@ -5,3 +5,4 @@ from products.models.specifications.ram_sizes import *
 from .storage import *
 from .screen import *
 from .processing import *
+from .dimensions import *
