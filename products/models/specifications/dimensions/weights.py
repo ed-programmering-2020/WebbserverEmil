@@ -22,10 +22,6 @@ class Weight(DynamicSpecification):
         if "," in value:
             value = value.replace(",", ".")
 
-        # Check if value is valid
-        if value is "":
-            return None
-
         # Convert number into the correct format
         number = float(value)
         if number >= 10:
