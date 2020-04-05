@@ -15,7 +15,7 @@ class BaseSpecification(models.Model):
     @classmethod
     def to_attribute_name(cls):
         attribute_like_name = ""
-        for i, letter in enumerate(cls.__class__.__name__):
+        for i, letter in enumerate(cls.__name__):
             if not letter.islower() and i != 0:
                 attribute_like_name += "_"
             attribute_like_name += letter
