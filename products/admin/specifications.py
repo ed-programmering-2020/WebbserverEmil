@@ -17,13 +17,8 @@ from django.contrib import admin
 
 
 class SpecificationAdmin(admin.ModelAdmin):
-    list_display = ["raw_value", "score"]
-
-    search_fields = ["raw_value"]
-
-
-class BenchmarkedSpecificationAdmin(SpecificationAdmin):
-    list_display = SpecificationAdmin.list_display + ["full_score"]
+    list_display = ["value", "score"]
+    search_fields = ["value"]
 
 
 @admin.register(BatteryTime)
@@ -72,10 +67,10 @@ class ScreenSizeAdmin(SpecificationAdmin):
 
 
 @admin.register(Processor)
-class ProcessorAdmin(BenchmarkedSpecificationAdmin):
+class ProcessorAdmin(SpecificationAdmin):
     pass
 
 
 @admin.register(GraphicsCard)
-class GraphicsCardAdmin(BenchmarkedSpecificationAdmin):
+class GraphicsCardAdmin(SpecificationAdmin):
     pass
