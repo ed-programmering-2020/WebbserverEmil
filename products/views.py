@@ -85,13 +85,15 @@ class ScrapingAPI(generics.GenericAPIView):
                 for key, value in specifications.items():
                     specification_model = import_model(key)
                     attribute_name = specification_model.to_attribute_name()
-                    existing = specification_model.find_existing(value)
-                    if existing is None:
+                    value = specification_model.process_value(value)
+                    try:
+                        existing = specification_model.objects.get(value=value)
+                        if eval("product_instance.{}.id is not {}".format(attribute_name, existing.id)):
+                            break
                         if issubclass(specification_model, DynamicSpecification):
                             existing = specification_model.objects.create(value=value)
                             existing.update_score()
-                        break
-                    elif eval("product_instance.{}.id is not {}".format(attribute_name, existing.id)):
+                    except specification_model.DoesNotExist:
                         break
                 else:
                     meta_product.is_active = False
@@ -125,6 +127,8 @@ class ScrapingAPI(generics.GenericAPIView):
                     product_data["category"],
                     product_data["specifications"]
                 )
+                meta_product.product = product
+                meta_product.save()
             else:
                 product = meta_product.product
 
@@ -132,7 +136,6 @@ class ScrapingAPI(generics.GenericAPIView):
             product.update_price()
             product.update_rating()
             product.save()
-            meta_product.product = product
             for image_url in product_data["image_urls"]:
                 Image.objects.create(url=image_url, host=host, product=product)
         return Response({})
