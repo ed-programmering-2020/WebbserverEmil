@@ -38,7 +38,7 @@ class BaseProductAdmin(admin.ModelAdmin):
     search_fields = ["name", "manufacturing_name"]
 
     def serve_image(self, obj):
-        images = obj.images
+        images = obj.images.filter(is_active=True)
         if images.count() == 0:
             return None
         return get_image_tag(images.first().url)

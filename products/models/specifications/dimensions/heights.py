@@ -27,6 +27,7 @@ class Height(DynamicSpecification):
         if number <= 5:
             number *= 10
 
+        print(number)
         return number
 
     def __str__(self):
