@@ -1,4 +1,4 @@
-from products.models import Laptop, BaseProduct, Image, MetaProduct
+from products.models import Laptop, Image, MetaProduct
 
 from django.contrib import admin
 from django.utils.safestring import mark_safe
@@ -46,7 +46,7 @@ class BaseProductAdmin(admin.ModelAdmin):
     serve_image.allow_tags = True
 
     def serve_url(self, obj):
-        return get_url_tag("/laptop/{obj.id}/{obj.slug}".format(obj=obj))
+        return get_url_tag("https://www.orpose.se/laptop/{obj.id}/{obj.slug}".format(obj=obj))
     serve_url.short_description = "Url"
     serve_url.allow_tags = True
 
@@ -67,7 +67,8 @@ class LaptopAdmin(BaseProductAdmin):
                 "panel_type",
                 "refresh_rate",
                 "resolution",
-                "screen_size"
+                "screen_size",
+                "height"
             ]
         })
     )
