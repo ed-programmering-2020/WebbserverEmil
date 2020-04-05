@@ -81,12 +81,14 @@ class SpecifiedSpecification(BaseSpecification):
                     self.save()
                     return
 
-    @staticmethod
-    def process_value(value):
-        for character in [",", "("]:
-            if character in value:
-                value = value.split(character)[0]
-        return value.lower()
+    @classmethod
+    def process_value(cls, value):
+        value = value.lower()
+        for specified_values in cls.specified_values:
+            for specified_value in specified_values:
+                if specified_value in value:
+                    return specified_value
+        return value
 
 
 class DynamicSpecification(BaseSpecification):
