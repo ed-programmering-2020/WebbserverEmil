@@ -84,7 +84,8 @@ class BaseProduct(models.Model):
                 total_review_count += meta_product.review_count
                 combined_ratings += meta_product.review_count * meta_product.rating
 
-        self.rating = combined_ratings / total_review_count
+        if total_review_count > 0:
+            self.rating = combined_ratings / total_review_count
 
     def __str__(self):
         return "<CategoryProduct %s>" % self.name
