@@ -29,6 +29,9 @@ class BaseProduct(models.Model):
     disclaimer = models.CharField("disclaimer", max_length=128, null=True, blank=True)
     is_active = models.BooleanField(default=False)
 
+    class Meta:
+        abstract = True
+
     @classmethod
     def match(cls, settings):
         model_instances = cls.objects.exclude(active_price=None).filter(is_active=True)
