@@ -54,8 +54,9 @@ class BaseProduct(models.Model):
     def update_price(self):
         prices = [(meta_product.active_price, meta_product.effective_price)
                   for meta_product in self.meta_products.all() if meta_product.is_servable is True]
-        sorted_prices = sorted(prices, key=lambda price_tuple: price_tuple[1])
-        self.active_price, self.effective_price = sorted_prices[0]
+        if len(prices) > 0:
+            sorted_prices = sorted(prices, key=lambda price_tuple: price_tuple[1])
+            self.active_price, self.effective_price = sorted_prices[0]
 
     def update_specifications(self, specifications):
         for key, value in specifications.items():
