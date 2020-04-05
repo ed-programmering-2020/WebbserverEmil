@@ -11,7 +11,7 @@ class Height(DynamicSpecification):
 
     @property
     def formatted_value(self):
-        return "%s mm" % self.formatted_value
+        return "%s mm" % self.value
 
     @staticmethod
     def process_value(value):

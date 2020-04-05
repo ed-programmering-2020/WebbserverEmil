@@ -9,6 +9,7 @@ class MetaProduct(models.Model):
     standard_price = models.PositiveIntegerField(null=True)
     campaign_price = models.PositiveIntegerField(null=True)
     shipping = models.PositiveSmallIntegerField(null=True)
+    used = models.BooleanField(default=False)
 
     rating = models.DecimalField(max_digits=2, decimal_places=1, null=True)
     review_count = models.PositiveSmallIntegerField(null=True)
@@ -37,7 +38,10 @@ class MetaProduct(models.Model):
 
     @property
     def is_servable(self):
-        return self.active_price is not None and self.is_active is True and self.availability > 0
+        return (self.active_price is not None
+                and self.is_active is True
+                and self.availability > 0
+                and self.used is False)
 
     def update_price(self, price, campaign):
         if campaign is True:

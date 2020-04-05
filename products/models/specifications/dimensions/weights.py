@@ -11,7 +11,7 @@ class Weight(DynamicSpecification):
 
     @property
     def formatted_value(self):
-        return "%s kg" % self.formatted_value
+        return "%s kg" % self.value
 
     @staticmethod
     def process_value(value):

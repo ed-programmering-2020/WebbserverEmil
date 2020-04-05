@@ -105,6 +105,8 @@ class ScrapingAPI(generics.GenericAPIView):
                 url=product_data["url"],
                 manufacturing_name=product_data.get("manufacturing_name", None),
             )
+            if "used" in product_data:
+                meta_product.used = product_data["used"]
             meta_product.update_price(product_data["price"], product_data.get("campaign", False))
             meta_product.availability = product_data.get("availability", 0)
             meta_product.shipping = product_data.get("shipping", 0)
