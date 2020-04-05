@@ -1,5 +1,5 @@
 from products.models.products.base import BaseProduct
-from products.models.specifications.screen import RefreshRate
+from products.models.specifications.screen.refresh_rates import RefreshRate
 from django.db import models
 
 from operator import itemgetter

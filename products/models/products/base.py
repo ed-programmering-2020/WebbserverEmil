@@ -58,7 +58,7 @@ class BaseProduct(models.Model):
         self.active_price, self.effective_price = sorted_prices[0]
 
     def update_specifications(self, specifications):
-        for key, value in specifications:
+        for key, value in specifications.items():
             mod = __import__("products")
             for component in ["models", key]:
                 mod = getattr(mod, component)
