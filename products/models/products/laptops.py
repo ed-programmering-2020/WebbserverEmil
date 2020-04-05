@@ -53,79 +53,42 @@ class Laptop(BaseCategoryProduct):
 
     def save(self, *args, **kwargs):
         if self.refresh_rate is None:  # When None set default refresh rate
-            self.refresh_rate = RefreshRate.objects.get(raw_value=60)
+            self.refresh_rate = RefreshRate.objects.get(value=60)
 
         super(Laptop, self).save(*args, **kwargs)
 
-    @staticmethod
-    def match(settings, **kwargs):
-        """Matches the user with products based on their preferences/settings
-        Args:
-            settings (dict): settings with matching preferences
-        Returns:
-            QuerySet: Matched laptops in ranked order
-        """
+    @classmethod
+    def match(cls, settings):
+        laptops = list(super(cls, cls).match(settings))
+        price_range, priorities = json.loads(settings["price"]), json.loads(settings["priorities"])
 
-        laptops = BaseCategoryProduct.match(settings, Laptop)
-        laptops = list(laptops)
-        price_range = json.loads(settings["price"])
-        priorities = json.loads(settings["priorities"])
+        if "size" in settings:
+            size_dict = json.loads(settings["size"])
+            min_size, max_size = size_dict["min"], size_dict["max"]
+            laptops = [laptop for laptop in laptops
+                       if laptop.screen_size and min_size <= int(laptop.screen_size.value) <= max_size]
 
-        # Filter with size range
-        size = settings.get("size", None)
-        if size is not None:
-            size_dict = json.loads(size)
-            min_price = size_dict["min"]
-            max_price = size_dict["max"]
-
-            filtered_laptops = []
-            for laptop in laptops:
-                if laptop.screen_size and min_price <= int(laptop.screen_size.raw_value) <= max_price:
-                    filtered_laptops.append(laptop)
-
-            laptops = filtered_laptops
-
-        # Score laptops
         sorted_laptops = {}
         for laptop in laptops:
             score = 0
-
             for specification in Laptop.specification_info:
                 name = specification["name"]
-                if eval("self.{0} is not None or self.{0}.score is not None".format(name)):
+                attribute = getattr(laptop, name)
+                if attribute is not None or attribute.score is not None:
                     continue
 
-                # Get usage multiplier
-                if settings["usage"] == "general":
-                    usage_mult = specification.get("general", 1)
+                if settings["usage"] in specification:
+                    usage_mult = specification[settings["usage"]]
                 else:
-                    usage_mult = specification.get("gaming", 1)
-
-                if usage_mult == 1:
                     usage_mult = specification.get("all", 1)
 
-                # Get priority multiplier
                 priority = priorities[specification["group"]]
-                priority_mult = priority / 2.5
+                score += attribute.score * Decimal(usage_mult + priority / 2.5)
 
-                # Add score to the total
-                temp_score = eval("laptop.{}.score ".format(name)) * Decimal(usage_mult + priority_mult)
-                score += temp_score
-
-                print(laptop.name, name, temp_score)
-
-            # Divide total score by price and save it to dict
             sorted_laptops[laptop] = laptop.calculate_score(score, price_range)
 
-        # sort laptops based on score
         laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
 
-        print("ranked laptops")
-        for name, score in laptops:
-            print(name, score)
-
-        # Return ten category products
         if len(laptops) >= 10:
             return laptops[:10]
-
         return laptops

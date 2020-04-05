@@ -36,5 +36,12 @@ class MetaProduct(models.Model):
     def is_servable(self):
         return self.active_price is not None and self.is_active is True and self.availability > 0
 
+    def update_price(self, price, campaign):
+        if campaign is True:
+            self.campaign_price = price
+        else:
+            self.standard_price = price
+            self.campaign_price = None
+
     def __str__(self):
         return "<Product {self.name} {self.host.name}>".format(self=self)

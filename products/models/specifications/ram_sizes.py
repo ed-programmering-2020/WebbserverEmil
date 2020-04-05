@@ -1,17 +1,19 @@
-from .base import BaseSpecification
+from products.models.specifications.base import DynamicSpecification
 from django.db import models
 
 
-class Ram(BaseSpecification):
+class Ram(DynamicSpecification):
     name = "Ram minne"
-    raw_value = models.PositiveSmallIntegerField()
+    baseline_value = 8
+
+    value = models.PositiveSmallIntegerField()
 
     class Meta:
         verbose_name_plural = "Ram storage"
 
-    @BaseSpecification.value.getter
-    def value(self):
-        return str(self.raw_value) + " GB"
+    @property
+    def formatted_value(self):
+        return "%s GB" % self.value
 
     def __str__(self):
-        return "<Ram %s>" % self.value
+        return "<Ram %s>" % self.formatted_value

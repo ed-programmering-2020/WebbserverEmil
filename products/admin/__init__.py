@@ -1,4 +1,4 @@
-from .category_products import *
+from .products import *
 from .specifications import *
 from .products import *
 from .websites import *

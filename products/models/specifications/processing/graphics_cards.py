@@ -32,4 +32,4 @@ class GraphicsCard(BenchmarkSpecification):
         return graphics_card_scores
 
     def __str__(self):
-        return "<GraphicsCard %s>" % self.value
+        return "<GraphicsCard %s>" % self.formatted_value

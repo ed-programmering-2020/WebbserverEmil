@@ -13,7 +13,7 @@ class MetaProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MetaProduct
-        fields = ["url", "host", "standard_price", "campaign_price"]
+        fields = ["url", "host", "standard_price", "campaign_price", "shipping", "availability"]
 
 
 class ImageSerializer(serializers.ModelSerializer):

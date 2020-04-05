@@ -5,8 +5,6 @@ from collections import defaultdict
 class Processor(BenchmarkSpecification):
     name = "Processor"
 
-
-
     @staticmethod
     def collect_benchmarks():
         url = "https://browser.geekbench.com/processor-benchmarks"
@@ -57,4 +55,4 @@ class Processor(BenchmarkSpecification):
         return processors
 
     def __str__(self):
-        return "<Processor %s>" % self.value
+        return "<Processor %s>" % self.formatted_value

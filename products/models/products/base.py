@@ -3,6 +3,7 @@ from django.utils.text import slugify
 from django.db.models import Q
 from django.db import models
 
+from ..specifications.base import DynamicSpecification
 from decimal import Decimal
 
 import json
@@ -24,9 +25,9 @@ class BaseProduct(models.Model):
     active_price = models.PositiveIntegerField()
     is_active = models.BooleanField(default=False)
 
-    @staticmethod
-    def match(settings, model):
-        model_instances = model.objects.exclude(active_price=None).filter(is_active=True)
+    @classmethod
+    def match(cls, settings):
+        model_instances = cls.objects.exclude(active_price=None).filter(is_active=True)
         price_range_dict = json.loads(settings["price"])
         model_instances = model_instances.filter(Q(effective_price__gte=price_range_dict["min"]),
                                                  Q(effective_price__lte=price_range_dict["max"]))
@@ -50,10 +51,16 @@ class BaseProduct(models.Model):
                 mod = getattr(mod, component)
 
             attribute_name = mod.to_attribute_name()
-            if eval("self.{} is None".format(attribute_name)):
-                existing_specification = mod.find_existing(value)
-                if existing_specification is not None:
-                    exec("self.{}.id = {}".format(attribute_name, existing_specification.id))
+            attribute = getattr(self, attribute_name)
+            if attribute is None:
+                value = mod.process_value(value)
+                try:
+                    existing = mod.objects.get(value=value)
+                    setattr(self, attribute_name, existing)
+                except mod.DoesNotExist:
+                    if issubclass(mod, DynamicSpecification):
+                        existing = mod.objects.create(value=value)
+                        setattr(self, attribute_name, existing)
 
     def calculate_score(self, score, price_range):
         absolute_delta = price_range["max"] - price_range["min"]

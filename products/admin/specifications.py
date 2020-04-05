@@ -1,4 +1,4 @@
-from ..models.specifications.battery_times import BatteryTime, Weight
+from products.models.specifications.battery_times import BatteryTime, Weight
 from products.models.specifications.storage.storage_sizes import Ram, StorageSize, StorageType
 from products.models.specifications.screen.panel_types import PanelType, RefreshRate, Resolution, ScreenSize
 from products.models.specifications.processing.graphics_cards import Processor, GraphicsCard

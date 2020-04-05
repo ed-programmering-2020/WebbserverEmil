@@ -1,14 +1,16 @@
-from products.models.specifications.base import BaseSpecification
+from products.models.specifications.base import DynamicSpecification
 from django.db import models
 
 
-class RefreshRate(BaseSpecification):
+class RefreshRate(DynamicSpecification):
     name = "Uppdateringsfrekvens"
-    raw_value = models.PositiveSmallIntegerField()
+    baseline_value = "60"
 
-    @BaseSpecification.value.getter
-    def value(self):
-        return str(self.raw_value) + " Hz"
+    value = models.PositiveSmallIntegerField()
+
+    @property
+    def formatted_value(self):
+        return "%s Hz" % self.value
 
     def __str__(self):
-        return "<RefreshRate %s>" % self.value
+        return "<RefreshRate %s>" % self.formatted_value

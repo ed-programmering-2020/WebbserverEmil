@@ -1,41 +1,32 @@
-from products.models.specifications.base import BaseSpecification
+from products.models.specifications.base import DynamicSpecification
 from django.db import models
 import re
 
 
-class Resolution(BaseSpecification):
+class Resolution(DynamicSpecification):
     name = "Upplösning"
-    raw_value = models.PositiveSmallIntegerField()
+    shortened_values = {2: 1080, 4: 2160, 5: 2880, 6: 3160, 8: 4320}
+    baseline_value = 1080
+
+    value = models.PositiveSmallIntegerField()
 
     @property
-    def value(self):
-        return str(self.raw_value) + "p"
+    def formatted_value(self):
+        return "%sp" % self.value
 
-    @value.setter
-    def value(self, value):
+    @staticmethod
+    def process_value(value):
         numbers = re.findall(r'\d+', value)
 
-        # Check formatting, for example 1080p vs 1920x1080
         if len(numbers) >= 2:
-            self.raw_value = self.format(numbers[1])
+            value = numbers[1]  # 1920x1080
         elif len(numbers) == 1:
-            self.raw_value = self.format(numbers[0])
+            value = numbers[0]  # 1080p
 
-    def format(self, value):
-        value = int(value)
-
-        if value == 2:
-            return 1080
-        elif value == 4:
-            return 2160
-        elif value == 5:
-            return 2880
-        elif value == 6:
-            return 3160
-        elif value == 8:
-            return 4320
-
-        return value
+        if value in Resolution.shortened_values:
+            return Resolution.shortened_values[value]
+        else:
+            return value
 
     def __str__(self):
-        return "<Resolution %s>" % self.value
+        return "<Resolution %s>" % self.formatted_value
