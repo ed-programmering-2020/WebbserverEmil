@@ -41,13 +41,12 @@ class UserChangeForm(forms.ModelForm):
 
 class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
-    add_form = UserCreationForm
-
     fieldsets = (
         (None, {'fields': ('username', 'email', 'password')}),
         ('Status', {'fields': ('is_active', 'is_staff',)}),
     )
 
+    add_form = UserCreationForm
     add_fieldsets = [
         (None, {
             'classes': ('wide',),

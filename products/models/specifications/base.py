@@ -56,7 +56,7 @@ class BenchmarkSpecification(BaseSpecification):
         benchmarks = sorted(cls.collect_benchmarks(), key=lambda tup: tup[1])
         min_score, max_score = benchmarks[0][1], benchmarks[-1][1]
         for name, score in benchmarks:
-            specification = cls.objects.get_or_create(value=name)
+            specification, __ = cls.objects.get_or_create(value=name)
             specification.score = (score - min_score) / max_score * 5
             specification.save()
 
