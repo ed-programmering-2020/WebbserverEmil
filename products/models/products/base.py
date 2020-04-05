@@ -68,7 +68,11 @@ class BaseProduct(models.Model):
             attribute_name = mod.to_attribute_name()
             attribute = getattr(self, attribute_name)
             if attribute is None:
-                print(self.url)
+                try:
+                    print(self.products.first().url)
+                except:
+                    pass
+
                 value = mod.process_value(value)
                 try:
                     existing = mod.objects.get(value=value)
