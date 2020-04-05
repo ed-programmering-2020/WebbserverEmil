@@ -20,9 +20,13 @@ class BaseProduct(models.Model):
     name = models.CharField('name', max_length=128, null=True)
     slug = models.SlugField(null=True, blank=True)
     manufacturing_name = models.CharField("manufacturing name", max_length=128, null=True, blank=True)
+
+    rating = models.DecimalField(max_digits=2, decimal_places=1, null=True)
+
+    effective_price = models.PositiveIntegerField(null=True)
+    active_price = models.PositiveIntegerField(null=True)
+
     disclaimer = models.CharField("disclaimer", max_length=128, null=True, blank=True)
-    effective_price = models.PositiveIntegerField()
-    active_price = models.PositiveIntegerField()
     is_active = models.BooleanField(default=False)
 
     @classmethod
@@ -32,6 +36,15 @@ class BaseProduct(models.Model):
         model_instances = model_instances.filter(Q(effective_price__gte=price_range_dict["min"]),
                                                  Q(effective_price__lte=price_range_dict["max"]))
         return model_instances
+
+    def calculate_score(self, score, price_range):
+        absolute_delta = price_range["max"] - price_range["min"]
+        mid = absolute_delta * 0.5 + price_range["min"]
+        delta_price = abs(self.active_price - mid)
+        relative_distance = (1 - (delta_price / absolute_delta))**2
+
+        score = score * Decimal(relative_distance)
+        return (score / self.active_price) * self.rating
 
     def save(self, *args, **kwargs):
         if self.name is not None:
@@ -62,14 +75,15 @@ class BaseProduct(models.Model):
                         existing = mod.objects.create(value=value)
                         setattr(self, attribute_name, existing)
 
-    def calculate_score(self, score, price_range):
-        absolute_delta = price_range["max"] - price_range["min"]
-        mid = absolute_delta * 0.5 + price_range["min"]
-        delta_price = abs(self.active_price - mid)
-        relative_distance = (1 - (delta_price / absolute_delta))**2
+    def update_rating(self):
+        total_review_count = 0
+        combined_ratings = 0
+        for meta_product in self.meta_products.all():
+            if meta_product.rating is not None and meta_product.review_count is not None:
+                total_review_count += meta_product.review_count
+                combined_ratings += meta_product.review_count * meta_product.rating
 
-        score = score * Decimal(relative_distance)
-        return score / self.active_price
+        self.rating = combined_ratings / total_review_count
 
     def __str__(self):
-        return "<CategoryProduct {self.name}>".format(self=self)
+        return "<CategoryProduct %s>" % self.name

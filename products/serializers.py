@@ -38,7 +38,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BaseProduct
-        fields = ["id", "slug", "name", "active_price", "images", "meta_products", "specifications", "disclaimer"]
+        fields = ["id", "slug", "name", "rating", "active_price", "images", "meta_products", "specifications", "disclaimer"]
 
     def get_images(self, instance):
         images = instance.images.all().order_by("placement")

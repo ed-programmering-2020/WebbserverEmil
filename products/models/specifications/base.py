@@ -12,12 +12,6 @@ class BaseSpecification(models.Model):
     class Meta:
         abstract = True
 
-    def is_better(self, raw_value):
-        return self.raw_value > raw_value
-
-    def is_equal(self, raw_value):
-        return self.raw_value == raw_value
-
     @classmethod
     def to_attribute_name(cls):
         attribute_like_name = ""

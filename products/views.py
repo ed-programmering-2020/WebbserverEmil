@@ -103,11 +103,13 @@ class ScrapingAPI(generics.GenericAPIView):
                 host=host,
                 name=product_data["name"],
                 url=product_data["url"],
-                shipping=product_data["shipping"],
                 manufacturing_name=product_data.get("manufacturing_name", None),
             )
-            meta_product.update_price(product_data["price"], product_data["campaign"])
-            meta_product.availability = product_data["availability"]
+            meta_product.update_price(product_data["price"], product_data.get("campaign", False))
+            meta_product.availability = product_data.get("availability", 0)
+            meta_product.shipping = product_data.get("shipping", 0)
+            meta_product.rating = product_data.get("rating", None)
+            meta_product.review_count = product_data.get("review_count", 0)
             meta_product.save()
 
             if meta_product.product is None:
@@ -121,6 +123,7 @@ class ScrapingAPI(generics.GenericAPIView):
 
             product.update_specifications(product_data["specifications"])
             product.update_price()
+            product.update_rating()
             product.save()
             meta_product.product = product
             for image_url in product_data["image_urls"]:

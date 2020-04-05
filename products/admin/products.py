@@ -33,7 +33,7 @@ class BaseProductAdmin(admin.ModelAdmin):
     ]
     inlines = [ImageInline, MetaProductInline]
 
-    list_display = ["name", "active_price", "serve_image", "serve_url", "is_active"]
+    list_display = ["name", "active_price", "rating", "serve_image", "serve_url", "is_active"]
     list_filter = ["is_active"]
     search_fields = ["name", "manufacturing_name"]
 

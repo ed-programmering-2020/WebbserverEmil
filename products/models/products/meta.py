@@ -5,10 +5,13 @@ class MetaProduct(models.Model):
     name = models.CharField('name', max_length=128)
     manufacturing_name = models.CharField("manufacturing_name", null=True, max_length=128)
 
-    availability = models.PositiveSmallIntegerField()
-    standard_price = models.PositiveIntegerField()
+    availability = models.PositiveSmallIntegerField(null=True)
+    standard_price = models.PositiveIntegerField(null=True)
     campaign_price = models.PositiveIntegerField(null=True)
-    shipping = models.PositiveSmallIntegerField()
+    shipping = models.PositiveSmallIntegerField(null=True)
+
+    rating = models.DecimalField(max_digits=2, decimal_places=1, null=True)
+    review_count = models.PositiveSmallIntegerField(null=True)
 
     url = models.CharField('url', max_length=128)
     host = models.ForeignKey("products.website", related_name="meta_products", on_delete=models.CASCADE, null=True)
