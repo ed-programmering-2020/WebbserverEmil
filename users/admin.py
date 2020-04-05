@@ -48,12 +48,12 @@ class UserAdmin(BaseUserAdmin):
         ('Status', {'fields': ('is_active', 'is_staff',)}),
     )
 
-    add_fieldsets = (
+    add_fieldsets = [
         (None, {
             'classes': ('wide',),
             'fields': ('username', 'email', 'password1', 'password2')}
         )
-    )
+    ]
 
     list_display = ["username", "email", "joined", "is_active", "is_staff"]
     list_filter = ["joined", "is_active", "is_staff"]

@@ -105,10 +105,8 @@ ADMIN_REORDER = (
         "label": "Products (Products)",
         "models": (
             "products.Laptop",
-            "products.Product",
-            "products.Price",
+            "products.MetaProduct",
             "products.Website",
-            "products.AlternativeName"
         ),
     }, {
         "app": "products",
