@@ -98,8 +98,7 @@ class ScrapingAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         products = json.loads(request.data.get("products"))
         print(len(products))
-        for product_data, i in enumerate(products):
-            print()
+        for product_data in products:
             host = Website.objects.get(name=product_data["host"])
             meta_product, __ = MetaProduct.objects.get_or_create(
                 host=host,
