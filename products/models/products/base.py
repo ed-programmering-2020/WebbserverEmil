@@ -3,6 +3,7 @@ from django.utils.text import slugify
 from django.db.models import Q
 from django.db import models
 
+from products.models.specifications.base import DynamicSpecification
 from decimal import Decimal
 
 import json
@@ -68,9 +69,15 @@ class BaseProduct(models.Model):
             attribute = getattr(self, attribute_name)
             if attribute is None:
                 value = mod.process_value(value)
-                existing = mod.find_existing(value)
-                if existing is not None:
-                    setattr(self, attribute_name, existing)
+                specification = mod.find_existing(value)
+                
+                if specification is None and issubclass(mod, DynamicSpecification):
+                    specification = mod.objects.create(value=value)
+                    specification.update_score()
+                    specification.save()
+
+                if specification is not None:
+                    setattr(self, attribute_name, specification)
 
     def update_rating(self):
         total_review_count = 0
