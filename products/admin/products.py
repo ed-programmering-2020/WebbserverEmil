@@ -17,7 +17,7 @@ def get_image_tag(image):
 class MetaProductInline(admin.TabularInline):
     model = MetaProduct
     extra = 0
-    exclude = ["manufacturing_name", "category"]
+    exclude = ["manufacturing_name", "category", "shipping", "rating", "review_count", "url"]
 
 
 class ImageInline(admin.TabularInline):

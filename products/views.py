@@ -83,11 +83,11 @@ class ScrapingAPI(generics.GenericAPIView):
                 for key, value in specifications.items():
                     specification_model = import_model(key)
                     attribute_name = specification_model.to_attribute_name()
+                    attribute = getattr(product_instance, attribute_name)
                     value = specification_model.process_value(value)
                     existing = specification_model.find_existing(value)
-                    if existing is not None:
-                        if eval("product_instance.{}.id is not {}".format(attribute_name, existing.id)):
-                            break
+                    if existing is not None and attribute is not existing:
+                        break
                 else:
                     meta_product.is_active = False
                     meta_product.save()

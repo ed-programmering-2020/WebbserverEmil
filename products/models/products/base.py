@@ -70,11 +70,13 @@ class BaseProduct(models.Model):
             if attribute is None:
                 value = mod.process_value(value)
                 specification = mod.find_existing(value)
-                
+                print(specification)
+
                 if specification is None and issubclass(mod, DynamicSpecification):
                     specification = mod.objects.create(value=value)
                     specification.update_score()
                     specification.save()
+                    print("created", specification)
 
                 if specification is not None:
                     setattr(self, attribute_name, specification)
