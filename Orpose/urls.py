@@ -15,21 +15,17 @@ def get_file_url_path(file, content_type):
 
 
 urlpatterns = [
+    path("clone-of-erik/", admin.site.urls),
     path("", include("products.urls")),
     path("api/", include("content.urls")),
     path("api/auth/", include("users.urls")),
-    path("clone-of-erik/", admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 files = [
     ("sitemap.xml", "application/xml"),
     ("robots.txt", "text/plain"),
 ]
-for file in os.listdir(settings.STATIC_ROOT):
-    if file.endswith(".js"):
-        files.append((file, "text/javascript"))
-for file, content_type in files:
-    urlpatterns.append(get_file_url_path(file, content_type))
+
 
 if not getattr(settings, "DEBUG", None):
     urlpatterns.append(re_path(r'.*', FrontendAppView.as_view()))
