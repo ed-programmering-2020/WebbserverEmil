@@ -68,7 +68,6 @@ class BenchmarkSpecification(BaseSpecification):
 
     @classmethod
     def rank(cls):
-        cls.objects.all().delete()
         benchmarks = sorted(cls.collect_benchmarks(), key=lambda tup: tup[1])
         min_score, max_score = benchmarks[0][1], benchmarks[-1][1]
         for name, score in benchmarks:

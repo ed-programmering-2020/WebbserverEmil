@@ -47,7 +47,11 @@ class BaseProduct(models.Model):
         relative_distance = (1 - (delta_price / absolute_delta))**2
 
         score = score * Decimal(relative_distance)
-        return (score / self.active_price) * self.rating
+        if self.rating is not None:
+            rating = self.rating
+        else:
+            rating = 1
+        return (score / self.active_price) * rating
 
     def save(self, *args, **kwargs):
         if self.name is not None:
@@ -93,4 +97,4 @@ class BaseProduct(models.Model):
             self.rating = combined_ratings / total_review_count
 
     def __str__(self):
-        return "<CategoryProduct %s>" % self.name
+        return "<Product %s>" % self.name

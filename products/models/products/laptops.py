@@ -94,3 +94,6 @@ class Laptop(BaseProduct):
         if len(laptops) >= 10:
             return laptops[:10]
         return laptops
+
+    def __str__(self):
+        return "<Laptop %s>" % self.name
