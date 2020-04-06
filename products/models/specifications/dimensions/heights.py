@@ -13,5 +13,13 @@ class Height(DynamicSpecification):
     def formatted_value(self):
         return "%s mm" % self.value
 
+    @staticmethod
+    def process_value(value):
+        value = super(Height, Height).process_value(value)
+
+        # Check for wrong formatting (Inet.se)
+        if value > 60:
+            value /= 10
+
     def __str__(self):
         return "<Height %s>" % self.formatted_value
