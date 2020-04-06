@@ -1,16 +1,12 @@
 from django.db import models
 from bs4 import BeautifulSoup
 import requests
-import re
 
 
 class BaseSpecification(models.Model):
     name = None
 
     score = models.DecimalField("score", max_digits=6, decimal_places=4, null=True)
-
-    class Meta:
-        abstract = True
 
     @property
     def formatted_value(self):
