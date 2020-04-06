@@ -17,6 +17,8 @@ class MetaProductSerializer(serializers.ModelSerializer):
 
 
 class ImageSerializer(serializers.ModelSerializer):
+    host = WebsiteSerializer(read_only=True)
+
     class Meta:
         model = Image
         fields = ["id", "url", "host"]
