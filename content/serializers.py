@@ -25,4 +25,4 @@ class NewsletterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Newsletter
-        fields = ["title", "author", "creation_date", "paragraphs"]
+        fields = ["id", "title", "author", "creation_date", "paragraphs"]
