@@ -16,6 +16,14 @@ STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
 
 INSTALLED_APPS = [
+    # Third Part apps
+    "corsheaders",
+    "rest_framework",
+    "knox",
+    "admin_reorder",
+    "dal",
+    "dal_select2"
+    
     # Django Apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -23,12 +31,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # Third-Party Apps
-    "corsheaders",
-    "rest_framework",
-    "knox",
-    "admin_reorder",
 
     # Local Apps
     "users",
