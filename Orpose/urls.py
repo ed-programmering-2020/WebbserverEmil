@@ -11,7 +11,7 @@ urlpatterns = [
     path("", include("products.urls")),
     path("api/", include("content.urls")),
     path("api/auth/", include("users.urls")),
-] + static("", document_root=os.path.join(settings.BASE_DIR, "static"))
+] + static("/", document_root=os.path.join(settings.BASE_DIR, "static"))
 
 if not getattr(settings, "DEBUG", None):
     urlpatterns.append(re_path(r'.*', FrontendAppView.as_view()))
