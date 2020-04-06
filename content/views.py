@@ -33,3 +33,11 @@ class NewslettersAPI(generics.GenericAPIView):
     def get(self, *args, **kwargs):
         newsletters = Newsletter.objects.all().order_by("creation_date")
         return Response({"newsletters": NewsletterSerializer(newsletters, many=True).data})
+
+
+class NewsletterAPI(generics.GenericAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = NewsletterSerializer
+
+    def get(self, newsletter_id, *args, **kwargs):
+        return Response({"newsletter": NewsletterSerializer(Newsletter.objects.get(id=newsletter_id)).data})
