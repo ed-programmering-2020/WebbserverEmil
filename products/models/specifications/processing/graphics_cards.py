@@ -14,20 +14,24 @@ class GraphicsCard(BenchmarkSpecification):
         elements = soup.find_all("tr")
         for element in elements:
             # Get name and score elements
-            score = element.find("span", {"class": "gg_pos"})
+            score = element.find("span", {"class": "bl_med_val_5_0"})
             name = element.find("td", {"class": "fullname"})
             if score is None or name is None:
                 continue
 
-            # Format values
-            score = int(score.get_text())
-            name = name.get_text().strip().lower()
-            if "1060-" in name:
-                name = name.replace("1060-", "1060 ")
-            if "(" in name:
-                name = name.split(" (")[0]
+            score = score.get_text().replace("~", "")
+            if score is not "":
+                if score[-1] is "%":
+                    score = score[:-3]
+                score = float(score)
 
-            graphics_card_scores.append((name, score))
+                name = name.get_text().strip().lower()
+                if "1060-" in name:
+                    name = name.replace("1060-", "1060 ")
+                if "(" in name:
+                    name = name.split(" (")[0]
+
+                graphics_card_scores.append((name, score))
 
         return graphics_card_scores
 
