@@ -72,7 +72,7 @@ class Laptop(BaseProduct):
             for specification in Laptop.specification_info:
                 name = specification["name"]
                 attribute = getattr(laptop, name)
-                if attribute is not None or attribute.score is not None:
+                if attribute is None or attribute.score is None:
                     continue
 
                 if settings["usage"] in specification:
