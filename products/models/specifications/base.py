@@ -126,6 +126,9 @@ class DynamicSpecification(BaseSpecification):
 
     @staticmethod
     def process_value(value):
-        first_value = value.split(" ")[0]
-        value = re.sub("[^0-9]", "", first_value).replace(" ", "")
+        print(value)
+        if "," in value:
+            value = value.replace(",", ".")
+        value = value.split(" ")[0].replace(" ", "")
+        print("p", value)
         return float(value)

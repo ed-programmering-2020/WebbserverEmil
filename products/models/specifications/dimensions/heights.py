@@ -13,19 +13,5 @@ class Height(DynamicSpecification):
     def formatted_value(self):
         return "%s mm" % self.value
 
-    @staticmethod
-    def process_value(value):
-        print(value)
-        value = value.split(" ")[0]
-        value = ''.join(i for i in value if not i.isalpha())
-
-        # Change commas to dots for later float parsing
-        if "," in value:
-            value = value.replace(",", ".")
-
-        # Convert number into the correct format
-        print("p", value)
-        return float(value)
-
     def __str__(self):
         return "<Height %s>" % self.formatted_value
