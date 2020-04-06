@@ -23,6 +23,7 @@ class Resolution(DynamicSpecification):
         elif len(numbers) == 1:
             value = numbers[0]  # 1080p
 
+        value = int(value)
         if value in Resolution.shortened_values:
             return Resolution.shortened_values[value]
         else:
