@@ -13,6 +13,7 @@ urlpatterns = [
     path("", include("products.urls")),
     path("api/", include("content.urls")),
     path("api/auth/", include("users.urls")),
+    path(r'^foreignkeysearch/', include('foreignkeysearch.urls')),
     re_path(r"^sitemap.xml$", TemplateView.as_view(template_name=os.path.join(settings.BASE_DIR, "static", "sitemap.xml"), content_type="application/xml")),
     re_path(r"^robots.txt$", TemplateView.as_view(template_name=os.path.join(settings.BASE_DIR, "static", "robots.txt"), content_type="text/plain")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

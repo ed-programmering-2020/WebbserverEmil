@@ -21,9 +21,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "knox",
     "admin_reorder",
-    "dal",
-    "dal_select2",
-    
+
     # Django Apps
     'django.contrib.admin',
     'django.contrib.auth',

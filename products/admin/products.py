@@ -1,5 +1,6 @@
-from products.models import Laptop, Image, MetaProduct
-
+from products.models import Laptop, Image, MetaProduct, BaseProduct
+from dal import autocomplete
+from django import forms
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
@@ -27,7 +28,8 @@ class ImageInline(admin.TabularInline):
 
 class BaseProductAdmin(admin.ModelAdmin):
     fields = ["name", "manufacturing_name", "active_price", "is_active"]
-    inlines = [ImageInline, MetaProductInline]
+    # inlines = [ImageInline, MetaProductInline]
+    autocomplete_fields = ["meta_product"]
 
     list_display = ["name", "active_price", "rating", "serve_image", "serve_url", "is_active"]
     list_filter = ["is_active"]
@@ -64,6 +66,7 @@ class LaptopAdmin(BaseProductAdmin):
         "height"
     ]
 
+
 @admin.register(MetaProduct)
 class MetaProductAdmin(admin.ModelAdmin):
     fields = [
@@ -80,4 +83,4 @@ class MetaProductAdmin(admin.ModelAdmin):
     list_display = ["name", "active_price", "url", "host"]
     list_filter = ["host"]
     search_fields = ["name", "manufacturing_name"]
-
+    ordering = ["name"]
