@@ -56,7 +56,7 @@ class LaptopAdmin(BaseProductAdmin):
     fieldsets = BaseProductAdmin.fieldsets
     fieldsets.append(
         ("Specifications", {
-            "fields": [
+            "autocomplete_fields": [
                 "battery_time",
                 "weight",
                 "processor",
