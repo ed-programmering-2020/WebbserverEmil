@@ -68,7 +68,10 @@ class BenchmarkSpecification(BaseSpecification):
 
     @classmethod
     def find_existing(cls, value):
-        return cls.objects.get(value__icontains=value)
+        try:
+            return cls.objects.get(value__icontains=value)
+        except cls.DoesNotExist:
+            return None
 
     @classmethod
     def rank(cls):
