@@ -1,5 +1,5 @@
-from products.models import Laptop, Image, MetaProduct, BaseProduct
-from dal import autocomplete
+from products.models import Laptop, Image, MetaProduct
+from django.contrib.admin.widgets import AutocompleteSelect
 from django import forms
 from django.contrib import admin
 from django.utils.safestring import mark_safe
@@ -28,8 +28,7 @@ class ImageInline(admin.TabularInline):
 
 class BaseProductAdmin(admin.ModelAdmin):
     fields = ["name", "manufacturing_name", "active_price", "is_active"]
-    # inlines = [ImageInline, MetaProductInline]
-    autocomplete_fields = ["meta_product"]
+    inlines = [ImageInline, MetaProductInline]
 
     list_display = ["name", "active_price", "rating", "serve_image", "serve_url", "is_active"]
     list_filter = ["is_active"]
@@ -49,22 +48,30 @@ class BaseProductAdmin(admin.ModelAdmin):
     serve_url.allow_tags = True
 
 
+class LaptopChangeForm(forms.ModelForm):
+    processor = forms.InlineForeignKeyField(widget=AutocompleteSelect)
+
+    class Meta:
+        model = Laptop
+        fields = [
+            # "battery_time",
+            # "weight",
+            "processor",
+            # "graphics_card",
+            # "storage_size",
+            # "storage_type",
+            # "ram",
+            # "panel_type",
+            # "refresh_rate",
+            # "resolution",
+            # "screen_size",
+            # "height"
+        ]
+
+
 @admin.register(Laptop)
 class LaptopAdmin(BaseProductAdmin):
-    autocomplete_fields = [
-        "battery_time",
-        "weight",
-        "processor",
-        "graphics_card",
-        "storage_size",
-        "storage_type",
-        "ram",
-        "panel_type",
-        "refresh_rate",
-        "resolution",
-        "screen_size",
-        "height"
-    ]
+    form = LaptopChangeForm
 
 
 @admin.register(MetaProduct)
