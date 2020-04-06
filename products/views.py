@@ -70,10 +70,7 @@ class ScrapingAPI(generics.GenericAPIView):
     permission_classes = [IsAdminUser]
     parser_classes = (MultiPartParser, FormParser)
 
-    def get_or_create_product(self, meta_product, category, specifications):
-        model_class = import_model(category)
-        print(model_class)
-
+    def get_or_create_product(self, meta_product, model_class, specifications):
         if meta_product.manufacturing_name is not None:
             try:
                 return model_class.objects.get(manufacturing_name=meta_product.manufacturing_name)
@@ -122,17 +119,18 @@ class ScrapingAPI(generics.GenericAPIView):
             meta_product.review_count = product_data.get("review_count", 0)
             meta_product.save()
 
+            model_class = import_model(product_data["category"])
             if meta_product.product is None:
                 product = self.get_or_create_product(
                     meta_product,
-                    product_data["category"],
+                    model_class,
                     product_data["specifications"]
                 )
                 meta_product.product = product
                 meta_product.save()
             else:
-                product = meta_product.product
-
+                product = model_class.objects.get(id=meta_product.product.id)
+                
             print(product, type(product))
             product.update_specifications(product_data["specifications"])
             product.update_price()
