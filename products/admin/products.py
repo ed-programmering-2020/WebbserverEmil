@@ -26,11 +26,7 @@ class ImageInline(admin.TabularInline):
 
 
 class BaseProductAdmin(admin.ModelAdmin):
-    fieldsets = [
-        ("Main info", {
-            "fields": ["name", "manufacturing_name", "active_price", "is_active"]
-        })
-    ]
+    fields = ["name", "manufacturing_name", "active_price", "is_active"]
     inlines = [ImageInline, MetaProductInline]
 
     list_display = ["name", "active_price", "rating", "serve_image", "serve_url", "is_active"]
