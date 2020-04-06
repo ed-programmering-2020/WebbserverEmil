@@ -7,10 +7,25 @@ import re
 class BaseSpecification(models.Model):
     name = None
 
-    score = models.DecimalField("score", max_digits=5, decimal_places=3, null=True)
+    score = models.DecimalField("score", max_digits=6, decimal_places=4, null=True)
 
     class Meta:
         abstract = True
+
+    @property
+    def formatted_value(self):
+        raise NotImplementedError
+
+    @staticmethod
+    def process_value(value):
+        raise NotImplementedError
+
+    @classmethod
+    def find_existing(cls, value):
+        try:
+            return cls.objects.get(value=value)
+        except cls.DoesNotExist:
+            return None
 
     @classmethod
     def to_attribute_name(cls):
@@ -37,8 +52,8 @@ class BenchmarkSpecification(BaseSpecification):
 
     @staticmethod
     def process_value(value):
-        for character in [",", "(", ")"]:
-            value = value.replace(character, "")
+        for s in [",", "(", ")", "quad-core"]:
+            value = value.replace(s, "")
         return value.lower()
 
     @staticmethod
@@ -50,6 +65,10 @@ class BenchmarkSpecification(BaseSpecification):
     @staticmethod
     def collect_benchmarks():
         raise NotImplementedError
+
+    @classmethod
+    def find_existing(cls, value):
+        return cls.objects.get(value__icontains=value)
 
     @classmethod
     def rank(cls):
