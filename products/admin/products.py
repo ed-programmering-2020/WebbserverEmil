@@ -53,26 +53,20 @@ class BaseProductAdmin(admin.ModelAdmin):
 
 @admin.register(Laptop)
 class LaptopAdmin(BaseProductAdmin):
-    fieldsets = BaseProductAdmin.fieldsets
-    fieldsets.append(
-        ("Specifications", {
-            "autocomplete_fields": [
-                "battery_time",
-                "weight",
-                "processor",
-                "graphics_card",
-                "storage_size",
-                "storage_type",
-                "ram",
-                "panel_type",
-                "refresh_rate",
-                "resolution",
-                "screen_size",
-                "height"
-            ]
-        })
-    )
-
+    autocomplete_fields = [
+        "battery_time",
+        "weight",
+        "processor",
+        "graphics_card",
+        "storage_size",
+        "storage_type",
+        "ram",
+        "panel_type",
+        "refresh_rate",
+        "resolution",
+        "screen_size",
+        "height"
+    ]
 
 @admin.register(MetaProduct)
 class MetaProductAdmin(admin.ModelAdmin):
