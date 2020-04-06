@@ -135,5 +135,5 @@ class ScrapingAPI(generics.GenericAPIView):
             product.update_rating()
             product.save()
             for image_url in product_data["image_urls"]:
-                Image.objects.create(url=image_url, host=host, product=product)
+                Image.objects.get_or_create(url=image_url, host=host, product=product)
         return Response({})
