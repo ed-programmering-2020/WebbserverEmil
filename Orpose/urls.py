@@ -25,7 +25,11 @@ files = [
     ("sitemap.xml", "application/xml"),
     ("robots.txt", "text/plain"),
 ]
-
+for file in os.listdir(settings.STATIC_ROOT):
+    if file.endswith(".js"):
+        files.append((file, "text/javascript"))
+for file, content_type in files:
+    urlpatterns.append(get_file_url_path(file, content_type))
 
 if not getattr(settings, "DEBUG", None):
     urlpatterns.append(re_path(r'.*', FrontendAppView.as_view()))
