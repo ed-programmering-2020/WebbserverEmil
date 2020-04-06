@@ -19,7 +19,7 @@ def import_model(name):
     return mod
 
 
-def products_sitemap():
+def products_sitemap(request):
     sitemap_xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
     for laptop in Laptop.objects.all():
         sitemap_xml += "<url><loc>https://www.orpose.se/laptop/{}/{}</loc></url>".format(laptop.id, laptop.slug)
@@ -97,7 +97,6 @@ class ScrapingAPI(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         products = json.loads(request.data.get("products"))
-        print(len(products))
         for product_data in products:
             host = Website.objects.get(name=product_data["host"])
             meta_product, __ = MetaProduct.objects.get_or_create(
