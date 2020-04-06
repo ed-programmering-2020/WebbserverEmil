@@ -68,8 +68,10 @@ class BaseProduct(models.Model):
             attribute = getattr(self, attribute_name)
             if attribute is None:
                 value = mod.process_value(value)
+                print(value)
                 try:
                     existing = mod.objects.get(value=value)
+                    print(existing)
                     setattr(self, attribute_name, existing)
                 except mod.DoesNotExist:
                     pass

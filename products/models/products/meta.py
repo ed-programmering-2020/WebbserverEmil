@@ -7,7 +7,7 @@ class MetaProduct(models.Model):
 
     availability = models.PositiveSmallIntegerField(null=True)
     standard_price = models.PositiveIntegerField(null=True)
-    campaign_price = models.PositiveIntegerField(null=True)
+    campaign_price = models.PositiveIntegerField(null=True, blank=True)
     shipping = models.PositiveSmallIntegerField(null=True)
     used = models.BooleanField(default=False)
 

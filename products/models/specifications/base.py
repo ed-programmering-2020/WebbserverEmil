@@ -109,6 +109,6 @@ class DynamicSpecification(BaseSpecification):
 
     @staticmethod
     def process_value(value):
-        first_value = value.split(" ")[0].split(",")[0]
+        first_value = value.split(" ")[0]
         value = re.sub("[^0-9]", "", first_value).replace(" ", "")
-        return int(value)
+        return float(value)

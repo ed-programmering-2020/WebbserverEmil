@@ -6,7 +6,7 @@ class BatteryTime(DynamicSpecification):
     name = "Batteritid"
     baseline_value = 8
 
-    value = models.PositiveSmallIntegerField()
+    value = models.DecimalField(max_digits=3, decimal_places=1)
 
     @property
     def formatted_value(self):
