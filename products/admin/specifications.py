@@ -9,7 +9,8 @@ from ..models import (
     Resolution,
     ScreenSize,
     Processor,
-    GraphicsCard
+    GraphicsCard,
+    Height
 )
 
 
@@ -73,4 +74,9 @@ class ProcessorAdmin(SpecificationAdmin):
 
 @admin.register(GraphicsCard)
 class GraphicsCardAdmin(SpecificationAdmin):
+    pass
+
+
+@admin.register(Height)
+class HeightAdmin(SpecificationAdmin):
     pass
