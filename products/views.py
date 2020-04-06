@@ -72,6 +72,7 @@ class ScrapingAPI(generics.GenericAPIView):
 
     def get_or_create_product(self, meta_product, category, specifications):
         model_class = import_model(category)
+        print(model_class)
 
         if meta_product.manufacturing_name is not None:
             try:
@@ -132,6 +133,7 @@ class ScrapingAPI(generics.GenericAPIView):
             else:
                 product = meta_product.product
 
+            print(product, type(product))
             product.update_specifications(product_data["specifications"])
             product.update_price()
             product.update_rating()
