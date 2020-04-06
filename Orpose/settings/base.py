@@ -22,7 +22,7 @@ INSTALLED_APPS = [
     "knox",
     "admin_reorder",
     "dal",
-    "dal_select2"
+    "dal_select2",
     
     # Django Apps
     'django.contrib.admin',
