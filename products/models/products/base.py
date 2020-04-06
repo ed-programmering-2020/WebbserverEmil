@@ -18,6 +18,8 @@ class Image(models.Model):
 
 
 class BaseProduct(models.Model):
+    specification_info = None
+
     name = models.CharField('name', max_length=128, null=True)
     slug = models.SlugField(null=True, blank=True)
     manufacturing_name = models.CharField("manufacturing name", max_length=128, null=True, blank=True)
@@ -70,13 +72,11 @@ class BaseProduct(models.Model):
             if attribute is None:
                 value = mod.process_value(value)
                 specification = mod.find_existing(value)
-                print(specification)
 
                 if specification is None and issubclass(mod, DynamicSpecification):
                     specification = mod.objects.create(value=value)
                     specification.update_score()
                     specification.save()
-                    print("created", specification)
 
                 if specification is not None:
                     setattr(self, attribute_name, specification)

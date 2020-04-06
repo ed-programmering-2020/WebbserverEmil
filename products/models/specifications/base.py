@@ -8,6 +8,9 @@ class BaseSpecification(models.Model):
 
     score = models.DecimalField("score", max_digits=6, decimal_places=4, null=True)
 
+    class Meta:
+        abstract = True
+
     @property
     def formatted_value(self):
         raise NotImplementedError

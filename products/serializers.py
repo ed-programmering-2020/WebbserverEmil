@@ -1,4 +1,4 @@
-from .models import BaseProduct, BaseSpecification, MetaProduct, Image, Website
+from .models import BaseProduct, MetaProduct, Image, Website
 from rest_framework import serializers
 
 
@@ -22,19 +22,10 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = ["id", "url", "host"]
 
 
-class SpecificationSerializer(serializers.ModelSerializer):
-    name = serializers.Field()
-    value = serializers.Field()
-
-    class Meta:
-        model = BaseSpecification
-        fields = ["name", "value"]
-
-
 class ProductSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
     meta_products = serializers.SerializerMethodField()
-    specifications = SpecificationSerializer(many=True, read_only=True)
+    specifications = serializers.SerializerMethodField()
 
     class Meta:
         model = BaseProduct
@@ -49,3 +40,10 @@ class ProductSerializer(serializers.ModelSerializer):
                                     for meta_product in instance.meta_products.all()
                                     if meta_product.is_servable is True]
         return serialized_meta_products
+
+    def get_specifications(self, instance):
+        serialized_specifications = {}
+        for specification in instance.specification_info:
+            attribute = getattr(instance, specification["name"])
+            serialized_specifications[attribute.name] = attribute.formatted_value
+        return serialized_specifications
