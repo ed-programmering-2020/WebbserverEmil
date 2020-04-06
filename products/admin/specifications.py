@@ -20,6 +20,7 @@ from django.contrib import admin
 class SpecificationAdmin(admin.ModelAdmin):
     list_display = ["value", "score"]
     search_fields = ["value"]
+    ordering = ["value"]
 
 
 @admin.register(BatteryTime)
