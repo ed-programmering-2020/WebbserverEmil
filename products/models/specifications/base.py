@@ -22,10 +22,7 @@ class BaseSpecification(models.Model):
 
     @classmethod
     def find_existing(cls, value):
-        try:
-            return cls.objects.get(value=value)
-        except cls.DoesNotExist:
-            return None
+        return cls.objects.filter(value=value).first()
 
     @classmethod
     def to_attribute_name(cls):
@@ -68,10 +65,7 @@ class BenchmarkSpecification(BaseSpecification):
 
     @classmethod
     def find_existing(cls, value):
-        try:
-            return cls.objects.get(value__icontains=value)
-        except cls.DoesNotExist:
-            return None
+        return cls.objects.filter(value__icontains=value).first()
 
     @classmethod
     def rank(cls):
