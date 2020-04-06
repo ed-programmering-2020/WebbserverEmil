@@ -27,11 +27,10 @@ class ImageSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
     meta_products = serializers.SerializerMethodField()
-    specifications = serializers.SerializerMethodField()
 
     class Meta:
         model = BaseProduct
-        fields = ["id", "slug", "name", "rating", "active_price", "images", "meta_products", "specifications", "disclaimer"]
+        fields = ["id", "slug", "name", "rating", "active_price", "images", "meta_products", "disclaimer"]
 
     def get_images(self, instance):
         images = instance.images.filter(is_active=True).order_by("placement")
@@ -42,10 +41,3 @@ class ProductSerializer(serializers.ModelSerializer):
                                     for meta_product in instance.meta_products.all()
                                     if meta_product.is_servable is True]
         return serialized_meta_products
-
-    def get_specifications(self, instance):
-        serialized_specifications = {}
-        for specification in instance.specification_info:
-            attribute = getattr(instance, specification["name"])
-            serialized_specifications[attribute.name] = attribute.formatted_value
-        return serialized_specifications
