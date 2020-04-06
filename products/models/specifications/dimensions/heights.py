@@ -7,11 +7,11 @@ class Height(DynamicSpecification):
     baseline_value = 15.0
     reverse = True
 
-    value = models.DecimalField(max_digits=4, decimal_places=1)
+    value = models.DecimalField(max_digits=4, decimal_places=2)
 
     @property
     def formatted_value(self):
-        return "%s mm" % self.value
+        return "%smm" % self.value
 
     @staticmethod
     def process_value(value):
