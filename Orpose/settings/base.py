@@ -132,11 +132,6 @@ ADMIN_REORDER = (
     "knox"
 )
 
-
-# Media
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
-MEDIA_URL = '/media/'
-
 # Localization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
