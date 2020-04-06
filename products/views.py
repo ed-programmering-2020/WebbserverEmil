@@ -86,14 +86,14 @@ class ScrapingAPI(generics.GenericAPIView):
                     specification_model = import_model(key)
                     attribute_name = specification_model.to_attribute_name()
                     value = specification_model.process_value(value)
-                    try:
-                        existing = specification_model.objects.get(value=value)
+                    existing = specification_model.find_existing(value)
+                    if existing is not None:
                         if eval("product_instance.{}.id is not {}".format(attribute_name, existing.id)):
                             break
                         if issubclass(specification_model, DynamicSpecification):
                             existing = specification_model.objects.create(value=value)
                             existing.update_score()
-                    except specification_model.DoesNotExist:
+                    else:
                         break
                 else:
                     meta_product.is_active = False
