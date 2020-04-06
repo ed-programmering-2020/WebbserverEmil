@@ -22,7 +22,8 @@ def import_model(name):
 def products_sitemap(request):
     sitemap_xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
     for laptop in Laptop.objects.all():
-        sitemap_xml += "<url><loc>https://www.orpose.se/laptop/{}/{}</loc></url>".format(laptop.id, laptop.slug)
+        if laptop.is_active is True:
+            sitemap_xml += "<url><loc>https://www.orpose.se/laptop/{}/{}</loc></url>".format(laptop.id, laptop.slug)
     sitemap_xml += "</urlset>"
     return HttpResponse(sitemap_xml, content_type="text/xml")
 
