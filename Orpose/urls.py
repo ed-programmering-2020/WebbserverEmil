@@ -15,7 +15,7 @@ def get_file_url_path(file, content_type):
 
 
 urlpatterns = [
-    path("clone-of-erik", admin.site.urls),
+    path("clone-of-erik/", admin.site.urls),
     path("", include("products.urls")),
     path("api/", include("content.urls")),
     path("api/auth/", include("users.urls")),
