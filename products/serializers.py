@@ -34,7 +34,7 @@ class SpecificationSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
     meta_products = serializers.SerializerMethodField()
-    specfications = SpecificationSerializer(many=True, read_only=True)
+    specifications = SpecificationSerializer(many=True, read_only=True)
 
     class Meta:
         model = BaseProduct
