@@ -25,8 +25,8 @@ class ImageInline(admin.TabularInline):
 
 
 class BaseProductAdmin(admin.ModelAdmin):
-    # fields = ["name", "manufacturing_name", "active_price", "is_active"]
-    # inlines = [ImageInline, MetaProductInline]
+    exclude = ["rating", "effecitive_price", "slug"]
+    inlines = [ImageInline, MetaProductInline]
 
     list_display = ["name", "active_price", "rating", "serve_image", "serve_url", "is_active"]
     list_filter = ["is_active"]
