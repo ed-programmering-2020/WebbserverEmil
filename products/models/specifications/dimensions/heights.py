@@ -15,6 +15,7 @@ class Height(DynamicSpecification):
 
     @staticmethod
     def process_value(value):
+        print(value)
         value = value.split(" ")[0]
         value = ''.join(i for i in value if not i.isalpha())
 
@@ -23,6 +24,7 @@ class Height(DynamicSpecification):
             value = value.replace(",", ".")
 
         # Convert number into the correct format
+        print("p", value)
         return float(value)
 
     def __str__(self):
