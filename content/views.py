@@ -39,5 +39,5 @@ class NewsletterAPI(generics.GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = NewsletterSerializer
 
-    def get(self, newsletter_id, *args, **kwargs):
-        return Response({"newsletter": NewsletterSerializer(Newsletter.objects.get(id=newsletter_id)).data})
+    def get(self, id, *args, **kwargs):
+        return Response({"newsletter": NewsletterSerializer(Newsletter.objects.get(id=id)).data})
