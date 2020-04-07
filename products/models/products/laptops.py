@@ -91,8 +91,8 @@ class Laptop(BaseProduct):
 
         laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
 
-        if len(laptops) >= 10:
-            return laptops[:10]
+        if len(laptops) >= 4:
+            return laptops[:4]
         return laptops
 
     def __str__(self):
