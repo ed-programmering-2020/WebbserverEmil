@@ -1,4 +1,4 @@
-from .models import Feedback, CategorySurveyAnswer, Newsletter, Paragraph
+from .models import Feedback, CategorySurveyAnswer, Newsletter, Paragraph, FrontendError
 
 from django.contrib import admin
 from django import forms
@@ -35,3 +35,8 @@ class NewsletterAdmin(admin.ModelAdmin):
     search_fields = ["title"]
     ordering = ["creation_date"]
     inlines = [ParagraphInline]
+
+
+@admin.register(FrontendError)
+class FrontendErrorAdmin(admin.ModelAdmin):
+    list_display = ["error", "info"]
