@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 BASE_DIR = "/home/Orpose/Orpose-Backend"
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
-    STATIC_ROOT,
     REACT_BUILD_DIR,
     os.path.join(REACT_BUILD_DIR, "static")
 ]
