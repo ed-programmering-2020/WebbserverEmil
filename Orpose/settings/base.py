@@ -12,7 +12,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
     STATIC_ROOT,
-    REACT_BUILD_DIR
+    REACT_BUILD_DIR,
+    os.path.join(REACT_BUILD_DIR, "static")
 ]
 
 INSTALLED_APPS = [
