@@ -32,3 +32,4 @@ class Newsletter(models.Model):
 class FrontendError(models.Model):
     error = models.CharField("error", max_length=512)
     info = models.CharField("info", max_length=512)
+    creation_date = models.DateField(auto_now=True)

@@ -39,4 +39,5 @@ class NewsletterAdmin(admin.ModelAdmin):
 
 @admin.register(FrontendError)
 class FrontendErrorAdmin(admin.ModelAdmin):
-    list_display = ["error", "info"]
+    list_display = ["error", "info", "creation_date"]
+    ordering = ["creation_date"]
