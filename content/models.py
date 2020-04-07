@@ -27,3 +27,8 @@ class Newsletter(models.Model):
     title = models.CharField("title", max_length=256)
     author = models.CharField("author", max_length=128)
     creation_date = models.DateField(auto_now=True)
+
+
+class FrontendError(models.Model):
+    error = models.CharField("error", max_length=512)
+    info = models.CharField("info", max_length=512)

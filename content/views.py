@@ -1,8 +1,8 @@
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import generics
-from .serializers import FeedbackSerializer, CategorySurveyAnswerSerializer, NewsletterSerializer
-from .models import Feedback, CategorySurveyAnswer, Newsletter
+from .serializers import FeedbackSerializer, CategorySurveyAnswerSerializer, NewsletterSerializer, FrontendErrorSerializer
+from .models import Feedback, CategorySurveyAnswer, Newsletter, FrontendError
 
 
 class FeedbackAPI(generics.GenericAPIView):
@@ -41,3 +41,11 @@ class NewsletterAPI(generics.GenericAPIView):
 
     def get(self, request, id, *args, **kwargs):
         return Response({"newsletter": NewsletterSerializer(Newsletter.objects.get(id=id)).data})
+
+
+class FrontendErrorAPI(generics.GenericAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = FrontendErrorSerializer
+
+    def post(self, request, *args, **kwargs):
+        FrontendError.objects.create(error=request.POST["error"], info=request.POST["info"])
