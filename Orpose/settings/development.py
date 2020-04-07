@@ -1,5 +1,9 @@
-from .base import *
 import os
+
+# Static files
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [STATIC_ROOT]
 
 # Debug tools
 DEBUG = True

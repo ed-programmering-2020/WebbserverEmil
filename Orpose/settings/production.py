@@ -2,6 +2,16 @@ from .base import *
 import os
 from dotenv import load_dotenv
 
+# Static files
+BASE_DIR = "/home/Orpose/Orpose-Backend"
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    STATIC_ROOT,
+    REACT_BUILD_DIR,
+    os.path.join(REACT_BUILD_DIR, "static")
+]
+
+# Environment variables
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 # Allowed hosts
