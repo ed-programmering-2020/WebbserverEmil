@@ -49,3 +49,4 @@ class FrontendErrorAPI(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         FrontendError.objects.create(error=request.POST["error"], info=request.POST["info"])
+        return Response({"message": "success"})
