@@ -61,6 +61,7 @@ class LaptopAPI(generics.GenericAPIView):
 class SearchAPI(generics.GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = ProductSerializer
+    queryset = BaseProduct.objects.all()
 
     def get(self, request, query, *args, **kwargs):
         products = BaseProduct.objects.filter(name__icontains=query)[:8]
