@@ -12,6 +12,7 @@ STATIC_URL = '/static/'
 
 INSTALLED_APPS = [
     # Third Part apps
+    "django_seo_js"
     "corsheaders",
     "rest_framework",
     "knox",

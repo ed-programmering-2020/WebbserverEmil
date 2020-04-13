@@ -36,7 +36,7 @@ class BaseProductAdmin(admin.ModelAdmin):
         images = obj.images.filter(is_active=True)
         if images.count() == 0:
             return None
-        return get_image_tag(images.get(placement=1).url)
+        return get_image_tag(images.filter(placement=1).first().url)
     serve_image.short_description = 'Image'
     serve_image.allow_tags = True
 
