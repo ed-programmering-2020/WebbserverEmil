@@ -8,7 +8,6 @@ django-autocomplete-light==3.5.1
 django-cors-headers==3.1.1
 django-modeladmin-reorder==0.3.1
 django-rest-knox==4.1.0
-django-seo-js==0.3.3
 django-stubs==1.2.0
 djangorestframework==3.10.3
 djangorestframework-stubs==1.0.0
@@ -31,3 +30,4 @@ sqlparse==0.3.0
 typed-ast==1.4.0
 typing-extensions==3.7.4
 urllib3==1.25.8
+python-dotenv==0.13.0

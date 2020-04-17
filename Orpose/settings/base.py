@@ -1,18 +1,32 @@
 import os
 
 SECRET_KEY = 'u2v4es^aj+c4d5g_@eh!!st@d8w6kpfz0^^evta15n@**lmc0r'
+ROOT_URLCONF = 'Orpose.urls'
+WSGI_APPLICATION = 'Orpose.wsgi.application'
 
-# React config
-REACT_APP_DIR = "/home/Orpose/Orpose-Frontend/"
-REACT_BUILD_DIR = os.path.join(REACT_APP_DIR, 'build')
-
-# Static config
+# Static
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 INSTALLED_APPS = [
     # Third Part apps
-    "django_seo_js"
     "corsheaders",
     "rest_framework",
     "knox",
@@ -43,11 +57,9 @@ MIDDLEWARE = [
     'admin_reorder.middleware.ModelAdminReorder',
 ]
 
-# Rest setup
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000",
 ]
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'knox.auth.TokenAuthentication',
@@ -57,14 +69,9 @@ REST_FRAMEWORK = {
     )
 }
 
-ROOT_URLCONF = 'Orpose.urls'
-
-WSGI_APPLICATION = 'Orpose.wsgi.application'
-
 # Authentication
 AUTH_USER_MODEL = "users.User"
 AUTHENTICATION_BACKENDS = ('users.backends.MyAuthBackend', 'django.contrib.auth.backends.ModelBackend',)
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -117,5 +124,3 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-
-
