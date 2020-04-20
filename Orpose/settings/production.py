@@ -11,9 +11,10 @@ ALLOWED_HOSTS = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'USER': 'OrposeDB',
-        'PASSWORD':  os.environ['DB_PASSWORD'],
-        'HOST': 'https://eu-north-1.console.aws.amazon.com/rds/home?region=eu-north-1#dbinstances:id=aar41h3vgnc3uz',
-        'OPTIONS': {'init_command": "SET foreign_key_checks = 0;'}
+        'NAME': os.environ['RDS_DB_NAME'],
+        'USER': os.environ['RDS_USERNAME'],
+        'PASSWORD': os.environ['RDS_PASSWORD'],
+        'HOST': os.environ['RDS_HOSTNAME'],
+        'PORT': os.environ['RDS_PORT'],
     }
 }
