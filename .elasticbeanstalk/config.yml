@@ -1,8 +1,11 @@
 branch-defaults:
   stable:
-    environment: CoreBackend-env
+    environment: CoreBackend-env-1
 environment-defaults:
   CoreBackend-env:
+    branch: null
+    repository: null
+  CoreBackend-env-1:
     branch: null
     repository: null
 global:
