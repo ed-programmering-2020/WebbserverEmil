@@ -12,7 +12,7 @@ urlpatterns = [
     path("api/auth/", include("users.urls")),
 
     # Website
-    path("", index),
+    path("/", index),
     path("clone-of-erik/", admin.site.urls),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
