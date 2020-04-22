@@ -7,6 +7,7 @@ WSGI_APPLICATION = 'Orpose.wsgi.application'
 # Static
 STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
+STATIC_FILES = []
 
 TEMPLATES = [
     {
