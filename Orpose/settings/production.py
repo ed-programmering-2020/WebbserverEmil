@@ -4,7 +4,7 @@ import os
 # Allowed hosts
 ALLOWED_HOSTS = [
     "www.orposegroup.com",
-    "elasticbeanstalk-eu-north-1-064640888666.s3.eu-north-1.amazonaws.com"
+    "corebackend-env.eba-bbnv5d9v.eu-north-1.elasticbeanstalk.com"
 ]
 
 # Database setup
