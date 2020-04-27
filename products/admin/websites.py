@@ -1,5 +1,11 @@
-from django.contrib import admin
 from products.models import Website
+from django.contrib import admin
+from django import forms
+
+
+class WebsiteForm(forms.ModelForm):
+    description = forms.CharField(widget=forms.Textarea)
+    model = Website
 
 
 @admin.register(Website)
