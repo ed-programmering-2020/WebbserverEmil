@@ -5,7 +5,7 @@ from rest_framework import serializers
 class WebsiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Website
-        fields = ["id", "name", "short_url", "url", "description"]
+        fields = ["id", "name", "short_url", "url"]
 
 
 class MetaProductSerializer(serializers.ModelSerializer):
