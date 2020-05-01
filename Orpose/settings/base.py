@@ -1,9 +1,12 @@
+import os
+
+
 SECRET_KEY = 'u2v4es^aj+c4d5g_@eh!!st@d8w6kpfz0^^evta15n@**lmc0r'
 ROOT_URLCONF = 'Orpose.urls'
 WSGI_APPLICATION = 'Orpose.wsgi.application'
 
 # Static
-STATIC_ROOT = 'static'
+STATIC_ROOT = os.path.join(os.path.dirname(__file__), 'static')
 STATIC_URL = '/static/'
 STATIC_FILES = []
 
