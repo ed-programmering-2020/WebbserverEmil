@@ -8,8 +8,8 @@ from .views import index
 urlpatterns = [
     # API
     path("", include("products.urls")),
-    path("api/", include("content.urls")),
-    path("api/auth/", include("users.urls")),
+    path("", include("content.urls")),
+    path("auth/", include("users.urls")),
 
     # Website
     path("", index),

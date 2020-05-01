@@ -70,7 +70,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000",
+    "https://www.orpose.se",
+    "https://orpose.se",
+    "http://localhost:3000"
 ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
