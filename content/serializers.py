@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Feedback, CategorySurveyAnswer, Paragraph, Newsletter, FrontendError
+from .models import Feedback, CategorySurveyAnswer
 
 
 class FeedbackSerializer(serializers.ModelSerializer):
@@ -12,23 +12,3 @@ class CategorySurveyAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = CategorySurveyAnswer
         fields = ('id', 'answer', "creation_date", "category")
-
-
-class ParagraphSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Paragraph
-        fields = "__all__"
-
-
-class NewsletterSerializer(serializers.ModelSerializer):
-    paragraphs = ParagraphSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Newsletter
-        fields = ["id", "title", "author", "creation_date", "paragraphs"]
-
-
-class FrontendErrorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FrontendError
-        fields = "__all__"

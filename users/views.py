@@ -62,5 +62,4 @@ class LogoutAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         user = User.objects.get(id=request.GET.get("user_id"))
         AuthToken.objects.filter(user=user).delete()
-
         return Response({})
