@@ -13,7 +13,7 @@ import json
 class Image(models.Model):
     url = models.CharField('url', max_length=256)
     host = models.ForeignKey("products.Website", on_delete=models.CASCADE)
-    placement = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(4)])
+    placement = models.PositiveSmallIntegerField(blank=True, validators=[MinValueValidator(1), MaxValueValidator(4)])
     product = models.ForeignKey("products.BaseProduct", on_delete=models.CASCADE, related_name="images")
     is_active = models.BooleanField(default=False)
 
