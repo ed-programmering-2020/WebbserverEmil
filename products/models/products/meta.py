@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.safestring import mark_safe
 
 
 class MetaProduct(models.Model):
@@ -49,6 +50,11 @@ class MetaProduct(models.Model):
         else:
             self.standard_price = price
             self.campaign_price = None
+
+    def url_tag(self):
+        return mark_safe('<a href="%s" target="_blank">go to</a>' % self.url)
+    url_tag.short_description = 'url'
+    url_tag.allow_tags = True
 
     def __str__(self):
         return "<Product {self.name} {self.host.name}>".format(self=self)

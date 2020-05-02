@@ -10,7 +10,8 @@ def get_url_tag(url):
 class MetaProductInline(admin.TabularInline):
     model = MetaProduct
     extra = 0
-    exclude = ["manufacturing_name", "category", "shipping", "rating", "review_count", "url"]
+    readonly_fields = ["url_tag", "host"]
+    exclude = ["manufacturing_name", "availability", "category", "shipping", "rating", "review_count", "url"]
     can_delete = False
 
 
@@ -24,6 +25,7 @@ class ImageInline(admin.TabularInline):
 
 class BaseProductAdmin(admin.ModelAdmin):
     exclude = ["rating", "effective_price", "slug"]
+    readonly_fields = ["rating"]
     inlines = [ImageInline, MetaProductInline]
 
     list_display = ["name", "active_price", "rating", "serve_image", "serve_url", "is_active"]
