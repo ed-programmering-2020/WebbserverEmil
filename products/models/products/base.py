@@ -1,4 +1,5 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.db.models import Q
 from django.db import models
@@ -15,6 +16,11 @@ class Image(models.Model):
     placement = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(4)])
     product = models.ForeignKey("products.BaseProduct", on_delete=models.CASCADE, related_name="images")
     is_active = models.BooleanField(default=False)
+
+    def thumbnail(self):
+        return mark_safe('<img src="%s" height="50" />' % self.url)
+    thumbnail.short_description = 'Image'
+    thumbnail.allow_tags = True
 
 
 class BaseProduct(models.Model):

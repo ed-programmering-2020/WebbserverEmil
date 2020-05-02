@@ -7,21 +7,19 @@ def get_url_tag(url):
     return mark_safe('<a href="%s" target="_blank">go to</a>' % url)
 
 
-def get_image_tag(image):
-    if type(image) != str:
-        image = "/media/%s" % image
-    return mark_safe('<img src="%s" height="50" />' % image)
-
-
 class MetaProductInline(admin.TabularInline):
     model = MetaProduct
     extra = 0
     exclude = ["manufacturing_name", "category", "shipping", "rating", "review_count", "url"]
+    can_delete = False
 
 
 class ImageInline(admin.TabularInline):
+    readonly_fields = ["thumbnail", "host"]
+    exclude = ["url"]
     model = Image
     extra = 0
+    can_delete = False
 
 
 class BaseProductAdmin(admin.ModelAdmin):
@@ -36,7 +34,7 @@ class BaseProductAdmin(admin.ModelAdmin):
         images = obj.images.filter(is_active=True)
         if images.count() == 0:
             return None
-        return get_image_tag(images.filter(placement=1).first().url)
+        return images.filter(placement=1).first().thumbnail()
     serve_image.short_description = 'Image'
     serve_image.allow_tags = True
 
