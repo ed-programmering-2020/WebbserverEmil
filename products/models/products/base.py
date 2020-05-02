@@ -16,11 +16,9 @@ class Image(models.Model):
     placement = models.PositiveSmallIntegerField(null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(4)])
     product = models.ForeignKey("products.BaseProduct", on_delete=models.CASCADE, related_name="images")
     is_active = models.BooleanField(default=False)
-    is_duplicate = models.BooleanField(default=False)
 
     def thumbnail(self):
-        return mark_safe('<img src="%s" height="50" style="%s"/>'
-                         % (self.url, "opacity: 0.5;" if self.is_duplicate else ""))
+        return mark_safe('<img src="%s" height="50" />' % self.url)
     thumbnail.short_description = 'Image'
     thumbnail.allow_tags = True
 
