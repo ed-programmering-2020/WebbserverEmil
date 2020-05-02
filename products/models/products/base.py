@@ -19,7 +19,8 @@ class Image(models.Model):
     is_duplicate = models.BooleanField(default=False)
 
     def thumbnail(self):
-        return mark_safe('<img src="%s" height="50" />' % self.url)
+        return mark_safe('<img src="%s" height="50" style="%s"/>'
+                         % (self.url, "opacity: 0.5;" if self.is_duplicate else ""))
     thumbnail.short_description = 'Image'
     thumbnail.allow_tags = True
 
