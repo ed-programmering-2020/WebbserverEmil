@@ -19,6 +19,7 @@ class MetaProductInline(admin.TabularInline):
 class ImageInline(admin.TabularInline):
     classes = ["collapse"]
     readonly_fields = ["thumbnail", "host"]
+    ordering = ["placement"]
     exclude = ["url"]
     model = Image
     extra = 0
