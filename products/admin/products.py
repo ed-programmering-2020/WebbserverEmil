@@ -13,7 +13,7 @@ class MetaProductInline(admin.TabularInline):
     model = MetaProduct
     extra = 0
     readonly_fields = ["url_tag", "host"]
-    exclude = ["manufacturing_name", "availability", "category", "shipping", "rating", "review_count", "url"]
+    exclude = ["manufacturing_name", "category", "shipping", "rating", "review_count", "url"]
     can_delete = False
 
 
