@@ -8,6 +8,7 @@ def get_url_tag(url):
 
 
 class MetaProductInline(admin.TabularInline):
+    classes = ["collapse"]
     model = MetaProduct
     extra = 0
     readonly_fields = ["url_tag", "host"]
@@ -16,6 +17,7 @@ class MetaProductInline(admin.TabularInline):
 
 
 class ImageInline(admin.TabularInline):
+    classes = ["collapse"]
     readonly_fields = ["thumbnail", "host"]
     exclude = ["url"]
     model = Image
