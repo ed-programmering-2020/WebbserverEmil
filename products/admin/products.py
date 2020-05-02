@@ -1,5 +1,6 @@
 from products.models import Laptop, Image, MetaProduct
 from django.contrib import admin
+from django.db.models import F
 from django.utils.safestring import mark_safe
 
 
@@ -18,12 +19,16 @@ class MetaProductInline(admin.TabularInline):
 
 class ImageInline(admin.TabularInline):
     classes = ["collapse"]
-    readonly_fields = ["thumbnail", "host"]
-    ordering = ["-is_active", "placement"]
-    exclude = ["url"]
     model = Image
     extra = 0
+
+    readonly_fields = ["thumbnail", "host"]
+    exclude = ["url"]
     can_delete = False
+
+    def get_queryset(self, request):
+        qs = super(ImageInline, self).get_queryset(request)
+        return qs.order_by("-is_active").order_by(F("placement").desc(nulls_last=True))
 
 
 class BaseProductAdmin(admin.ModelAdmin):
