@@ -28,7 +28,7 @@ class ImageInline(admin.TabularInline):
 
     def get_queryset(self, request):
         qs = super(ImageInline, self).get_queryset(request)
-        return qs.order_by("-is_active").order_by(F("placement").desc(nulls_last=True))
+        return qs.order_by("-is_active", "is_duplicate", F("placement").desc(nulls_last=True))
 
 
 class BaseProductAdmin(admin.ModelAdmin):
