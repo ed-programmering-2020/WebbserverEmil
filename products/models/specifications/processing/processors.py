@@ -53,6 +53,3 @@ class Processor(BenchmarkSpecification):
                         break
 
         return processors
-
-    def __str__(self):
-        return "<Processor %s>" % self.formatted_value

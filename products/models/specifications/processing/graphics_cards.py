@@ -34,6 +34,3 @@ class GraphicsCard(BenchmarkSpecification):
                 graphics_card_scores.append((name, score))
 
         return graphics_card_scores
-
-    def __str__(self):
-        return "<GraphicsCard %s>" % self.formatted_value

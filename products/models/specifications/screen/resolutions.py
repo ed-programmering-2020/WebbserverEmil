@@ -28,6 +28,3 @@ class Resolution(DynamicSpecification):
             return Resolution.shortened_values[value]
         else:
             return value
-
-    def __str__(self):
-        return "<Resolution %s>" % self.formatted_value

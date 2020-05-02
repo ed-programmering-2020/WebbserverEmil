@@ -28,6 +28,3 @@ class Weight(DynamicSpecification):
             number = number / 1000
 
         return number
-
-    def __str__(self):
-        return "<Weight %s>" % self.formatted_value

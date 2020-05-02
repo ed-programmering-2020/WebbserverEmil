@@ -17,6 +17,3 @@ class ScreenSize(DynamicSpecification):
         value = value.split(" ")[0].split('"')[0]
         value = ''.join(i for i in value if not i.isalpha())
         return float(value)
-
-    def __str__(self):
-        return "<ScreenSize %s>" % self.formatted_value

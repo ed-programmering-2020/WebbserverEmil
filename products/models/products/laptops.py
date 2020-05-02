@@ -96,4 +96,4 @@ class Laptop(BaseProduct):
         return laptops
 
     def __str__(self):
-        return "<Laptop %s>" % self.name
+        return self.name

@@ -9,4 +9,4 @@ class Website(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return "<Website {self.name}>".format(self=self)
+        return self.short_url

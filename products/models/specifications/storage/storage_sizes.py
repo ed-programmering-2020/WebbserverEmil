@@ -21,7 +21,4 @@ class StorageSize(DynamicSpecification):
             number *= 1000  # Not 1024 because a few websites formats it that way already
         return number
 
-    def __str__(self):
-        return "<StorageSize %s>" % self.formatted_value
-
 

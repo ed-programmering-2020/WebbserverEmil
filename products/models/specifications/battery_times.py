@@ -11,7 +11,3 @@ class BatteryTime(DynamicSpecification):
     @property
     def formatted_value(self):
         return "%s timmar" % self.value
-
-    def __str__(self):
-        return "<BatteryTime %s>" % self.formatted_value
-

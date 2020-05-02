@@ -33,7 +33,7 @@ class BaseSpecification(models.Model):
         return attribute_like_name.lower()
 
     def __str__(self):
-        return "<BaseSpecification>"
+        return self.formatted_value
 
 
 class BenchmarkSpecification(BaseSpecification):

@@ -14,6 +14,3 @@ class Ram(DynamicSpecification):
     @property
     def formatted_value(self):
         return "%s GB" % self.value
-
-    def __str__(self):
-        return "<Ram %s>" % self.formatted_value

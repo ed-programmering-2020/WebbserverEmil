@@ -103,4 +103,4 @@ class BaseProduct(models.Model):
             self.rating = combined_ratings / total_review_count
 
     def __str__(self):
-        return "<Product %s>" % self.name
+        return self.name

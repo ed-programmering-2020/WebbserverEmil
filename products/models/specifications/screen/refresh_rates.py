@@ -11,6 +11,3 @@ class RefreshRate(DynamicSpecification):
     @property
     def formatted_value(self):
         return "%s Hz" % self.value
-
-    def __str__(self):
-        return "<RefreshRate %s>" % self.formatted_value

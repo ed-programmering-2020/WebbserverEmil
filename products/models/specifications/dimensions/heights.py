@@ -22,6 +22,3 @@ class Height(DynamicSpecification):
             value /= 10
 
         return value
-
-    def __str__(self):
-        return "<Height %s>" % self.formatted_value
