@@ -1,8 +1,22 @@
-from products.models import Laptop, Image, MetaProduct
+from products.models import Laptop, Image, MetaProduct, Website
 from tabbed_admin import TabbedModelAdmin
 from django.contrib import admin
 from django.db.models import F
 from django.utils.safestring import mark_safe
+from django import forms
+
+
+class WebsiteForm(forms.ModelForm):
+    description = forms.CharField(widget=forms.Textarea)
+    model = Website
+
+
+@admin.register(Website)
+class WebsiteAdmin(admin.ModelAdmin):
+    form = WebsiteForm
+    list_display = ["id", "name", "url", "is_active"]
+    list_filter = ["is_active"]
+    search_fields = ["name", "url"]
 
 
 def get_url_tag(url):

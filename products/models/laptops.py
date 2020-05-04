@@ -1,22 +1,8 @@
-from products.models.products.base_products import BaseProduct
-from products.models.specifications.processing.processors import Processor
-from products.models.specifications.processing.graphics_cards import GraphicsCard
+from .processors import Processor, GraphicsCard
+from .products import BaseProduct
 from django.db import models
-
 from operator import itemgetter
-from decimal import Decimal
-
 import json
-
-
-def get_foreign_key(model_name):
-    return models.ForeignKey(
-        "products." + model_name,
-        related_name="laptops",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL
-    )
 
 
 class Laptop(BaseProduct):
@@ -63,14 +49,10 @@ class Laptop(BaseProduct):
     storage_size = models.PositiveSmallIntegerField(null=True, help_text="in gigabytes")
 
     # Processing
-    processor = models.ForeignKey(
-        "products.Processor", related_name="laptops",
-        null=True, blank=True, on_delete=models.SET_NULL
-    )
-    graphics_card = models.ForeignKey(
-        "products.GraphicsCard", related_name="laptops",
-        null=True, blank=True, on_delete=models.SET_NULL
-    )
+    processor = models.ForeignKey(Processor, related_name="laptops", null=True, blank=True,
+                                  on_delete=models.SET_NULL)
+    graphics_card = models.ForeignKey(GraphicsCard, related_name="laptops", null=True, blank=True,
+                                      on_delete=models.SET_NULL)
 
     # Other
     ram_capacity = models.PositiveSmallIntegerField(null=True, help_text="in gigabytes")
