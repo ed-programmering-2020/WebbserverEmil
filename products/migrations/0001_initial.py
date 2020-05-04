@@ -12,57 +12,16 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
+        migrations.DeleteModel(
             name='BaseProduct',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-            ],
         ),
-        migrations.CreateModel(
-            name='GraphicsCard',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('score', models.DecimalField(decimal_places=4, max_digits=6, null=True, verbose_name='score')),
-                ('value', models.CharField(max_length=128, null=True, verbose_name='value')),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='Image',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-            ],
-        ),
-        migrations.CreateModel(
-            name='MetaProduct',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Processor',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('score', models.DecimalField(decimal_places=4, max_digits=6, null=True, verbose_name='score')),
-                ('value', models.CharField(max_length=128, null=True, verbose_name='value')),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='Website',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-            ],
-        ),
-        migrations.CreateModel(
+        migrations.DeleteModel(
             name='Laptop',
-            fields=[
-                ('baseproduct_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='products.BaseProduct')),
-            ],
-            bases=('products.baseproduct',),
+        ),
+        migrations.DeleteModel(
+            name='Image',
+        ),
+        migrations.DeleteModel(
+            name='MetaProduct',
         ),
     ]
