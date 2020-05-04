@@ -1,4 +1,4 @@
-from models import GraphicsCard, Processor
+from products.models import GraphicsCard, Processor
 from django.contrib import admin
 
 

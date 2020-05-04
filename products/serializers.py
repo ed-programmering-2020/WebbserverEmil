@@ -1,5 +1,4 @@
-"""
-from models import BaseProduct, MetaProduct, Image, Website
+from products.models import BaseProduct, MetaProduct, Image, Website
 from rest_framework import serializers
 
 
@@ -42,4 +41,3 @@ class ProductSerializer(serializers.ModelSerializer):
                                     for meta_product in instance.meta_products.all()
                                     if meta_product.is_servable is True]
         return serialized_meta_products
-"""
