@@ -2,8 +2,8 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import generics
-
-from Orpose.models import Laptop, Website, MetaProduct, Image, BaseProduct
+"""
+from models import Laptop, Website, MetaProduct, Image, BaseProduct
 from products.serializers import ProductSerializer
 
 from django.http.response import HttpResponse
@@ -98,3 +98,4 @@ class ScrapingAPI(generics.GenericAPIView):
                 Image.objects.get_or_create(url=image_url, host=host, product=product)
 
         return Response({})
+        """

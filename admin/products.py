@@ -1,4 +1,4 @@
-from Orpose.models import Laptop, Image, MetaProduct, Website
+from models import Laptop, Image, MetaProduct, Website
 from tabbed_admin import TabbedModelAdmin
 from django.contrib import admin
 from django.db.models import F
