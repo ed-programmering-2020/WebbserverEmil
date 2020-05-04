@@ -1,4 +1,4 @@
-from .models import BaseProduct, MetaProduct, Image, Website
+from Orpose.models import BaseProduct, MetaProduct, Image, Website
 from rest_framework import serializers
 
 

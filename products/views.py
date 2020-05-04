@@ -3,7 +3,7 @@ from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import generics
 
-from products.models import Laptop, Website, MetaProduct, Image, BaseProduct
+from Orpose.models import Laptop, Website, MetaProduct, Image, BaseProduct
 from products.serializers import ProductSerializer
 
 from django.http.response import HttpResponse

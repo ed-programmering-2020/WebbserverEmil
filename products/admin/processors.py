@@ -1,4 +1,4 @@
-from products.models import GraphicsCard, Processor
+from Orpose.models import GraphicsCard, Processor
 from django.contrib import admin
 
 

@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from products.models import Laptop
+from Orpose.models import Laptop
 
 
 class Command(BaseCommand):
