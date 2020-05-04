@@ -24,11 +24,11 @@ TEMPLATES = [
 ]
 
 INSTALLED_APPS = [
-    # Third Part apps
+    # Third Party Apps
     "corsheaders",
     "rest_framework",
     "knox",
-    "admin_reorder",
+    "tabbed_admin",
 
     # Django Apps
     'django.contrib.admin',
@@ -52,7 +52,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'admin_reorder.middleware.ModelAdminReorder',
 ]
 
 # Authentication
@@ -84,38 +83,7 @@ REST_FRAMEWORK = {
 }
 
 # Administration
-ADMIN_REORDER = (
-    {
-        "app": "products",
-        "label": "Products (Products)",
-        "models": (
-            "products.Laptop",
-            "products.MetaProduct",
-            "products.Website",
-        ),
-    }, {
-        "app": "products",
-        "label": "Specifications (Products)",
-        "models": (
-            "products.Processor",
-            "products.GraphicsCard",
-            "products.PanelType",
-            "products.RefreshRate",
-            "products.Resolution",
-            "products.ScreenSize",
-            "products.Ram",
-            "products.StorageSize",
-            "products.StorageType",
-            "products.BatteryTime",
-            "products.Weight",
-            "products.Height"
-        )
-    },
-    "users",
-    "content",
-    "contenttypes",
-    "knox"
-)
+TABBED_ADMIN_USE_JQUERY_UI = True
 
 # Localization
 LANGUAGE_CODE = 'en-us'

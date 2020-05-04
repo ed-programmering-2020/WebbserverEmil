@@ -44,7 +44,14 @@ class MetaProduct(models.Model):
                 and self.availability > 0
                 and self.used is False)
 
-    def update_price(self, price, campaign):
+    def update(self, data, exclude=[]):
+        # General update
+        for key, value in data.items():
+            if key not in exclude and hasattr(self, key):
+                setattr(self, key, value)
+
+        # Update price information
+        price, campaign = data["price"], data["campaign"]
         if campaign is True:
             self.campaign_price = price
         else:

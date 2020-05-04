@@ -1,4 +1,5 @@
 from products.models import Laptop, Image, MetaProduct
+from tabbed_admin import TabbedModelAdmin
 from django.contrib import admin
 from django.db.models import F
 from django.utils.safestring import mark_safe
@@ -9,35 +10,54 @@ def get_url_tag(url):
 
 
 class MetaProductInline(admin.TabularInline):
-    classes = ["collapse"]
     model = MetaProduct
+
+    can_delete = False
     extra = 0
+
     readonly_fields = ["url_tag", "host"]
     exclude = ["manufacturing_name", "category", "shipping", "rating", "review_count", "url"]
-    can_delete = False
 
 
 class ImageInline(admin.TabularInline):
-    classes = ["collapse"]
     model = Image
+
+    can_delete = False
     extra = 0
 
     readonly_fields = ["thumbnail", "host"]
     exclude = ["url"]
-    can_delete = False
 
     def get_queryset(self, request):
         qs = super(ImageInline, self).get_queryset(request)
         return qs.order_by("-is_active", F("placement").desc(nulls_last=True))
 
 
-class BaseProductAdmin(admin.ModelAdmin):
-    exclude = ["rating", "effective_price", "slug"]
-    readonly_fields = ["rating"]
-    inlines = [ImageInline, MetaProductInline]
+class BaseProductAdmin(TabbedModelAdmin):
+    tab_overview = [
+        (None, {
+            "fields": ["name", "disclaimer", "is_active"]
+        }),
+        ("Measurements", {
+            "classes": ["collapse"],
+            "fields": ["weight", "height", "width", "depth"]
+        })
+    ]
+    tab_info = [
+        (None, {
+            "fields": ["manufacturing_name", "active_price", "effective_price", "slug", "rating", ]
+        }),
+    ]
+    tabs = [
+        ("Overview", tab_overview),
+        ("Images", [ImageInline]),
+        ("Meta products", [MetaProductInline]),
+        ("Info", tab_info)
+    ]
+    readonly_fields = ["slug", "manufacturing_name", "rating", "active_price", "effective_price"]
 
     list_display = ["name", "active_price", "rating", "serve_image", "serve_url", "is_active"]
-    list_filter = ["is_active"]
+    list_filter = ["is_active", "active_price"]
     search_fields = ["name", "manufacturing_name"]
 
     def serve_image(self, obj):
@@ -56,35 +76,31 @@ class BaseProductAdmin(admin.ModelAdmin):
 
 @admin.register(Laptop)
 class LaptopAdmin(BaseProductAdmin):
-    autocomplete_fields = [
-        "battery_time",
-        "weight",
-        "processor",
-        "graphics_card",
-        "storage_size",
-        "storage_type",
-        "ram",
-        "panel_type",
-        "refresh_rate",
-        "resolution",
-        "screen_size",
-        "height"
-    ]
+    tab_overview = BaseProductAdmin.tab_overview
+    tab_overview.extend([
+        ("Screen", {
+            "classes": ["collapse"],
+            "fields": ["screen_size", "resolution", "refresh_rate", "panel_type"]
+        }),
+        ("Storage", {
+            "classes": ["collapse"],
+            "fields": ["storage_size", "storage_type"]
+        }),
+        ("Processing", {
+            "classes": ["collapse"],
+            "fields": ["processor", "graphics_card"]
+        }),
+        ("Other", {
+            "classes": ["collapse"],
+            "fields": ["ram_capacity", "battery_time", "guarantee", "color", "operating_system"]
+        }),
+    ])
+
+    autocomplete_fields = ["processor", "graphics_card"]
 
 
 @admin.register(MetaProduct)
 class MetaProductAdmin(admin.ModelAdmin):
-    fields = [
-        "name",
-        "manufacturing_name",
-        "standard_price",
-        "campaign_price",
-        "shipping",
-        "availability",
-        "url",
-        "product",
-        "host"
-    ]
     list_display = ["name", "active_price", "url", "host"]
     list_filter = ["host"]
     search_fields = ["name", "manufacturing_name"]

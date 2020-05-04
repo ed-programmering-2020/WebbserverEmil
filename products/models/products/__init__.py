@@ -1,3 +1,3 @@
-from .base import *
+from .base_products import *
 from .laptops import *
-from .meta import *
+from .meta_products import *

@@ -1,5 +1,6 @@
-from products.models.products.base import BaseProduct
-from products.models.specifications.screen.refresh_rates import RefreshRate
+from products.models.products.base_products import BaseProduct
+from products.models.specifications.processing.processors import Processor
+from products.models.specifications.processing.graphics_cards import GraphicsCard
 from django.db import models
 
 from operator import itemgetter
@@ -19,77 +20,116 @@ def get_foreign_key(model_name):
 
 
 class Laptop(BaseProduct):
-    specification_info = [
-        {"name": "battery_time", "group": "battery", "general": 1.5, "gaming": 0.5},
-        {"name": "weight", "group": "weight", "general": 1.5, "gaming": 0.5},
-        {"name": "processor", "group": "performance", "general": 0.5, "gaming": 1.75},
-        {"name": "graphics_card", "group": "performance", "general": 0.5, "gaming": 1.75},
-        {"name": "refresh_rate", "group": "screen", "general": 0.25, "gaming": 0.5},
-        {"name": "ram", "group": "performance", "all": 0.25},
-        {"name": "storage_type", "group": "performance", "all": 1.5},
-        {"name": "storage_size", "group": "storage", "all": 1.5},
-        {"name": "resolution", "group": "screen", "all": 0.5},
-        {"name": "panel_type", "group": "screen", "all": 1.5},
-        {"name": "height", "all": 1}
-    ]
+    score_bias_table = {
+        # Performance group
+        "ram_capacity": {"general": 0.25, "gaming": 0.25},
+        "storage_type": {"general": 1.5, "gaming": 1.5},
+        "processor": {"general": 0.5, "gaming": 1.75},
+        "graphics_card": {"general": 0.5, "gaming": 1.75},
 
-    battery_time = get_foreign_key("BatteryTime")
-    height = get_foreign_key("Height")
-    weight = get_foreign_key("Weight")
+        # Screen group
+        "resolution": {"general": 0.5, "gaming": 0.5},
+        "panel_type": {"general": 1.5, "gaming": 1.5},
+        "refresh_rate": {"general": 0.25, "gaming": 0.5},
 
-    processor = get_foreign_key("Processor")
-    graphics_card = get_foreign_key("GraphicsCard")
+        # Others
+        "battery_time": {"general": 1.5, "gaming": 0.5},  # Battery time group
+        "storage_size": {"general": 1.5, "gaming": 1.5},  # Storage group
+        "weight": {"general": 1.5, "gaming": 0.5},  # Weight group
+        "height": {"general": 1, "gaming": 1}
+    }
 
-    storage_size = get_foreign_key("StorageSize")
-    storage_type = get_foreign_key("StorageType")
-    ram = get_foreign_key("Ram")
+    storage_type_choices = (
+        ("HDD", "hdd"),
+        ("SSD", "ssd")
+    )
 
-    panel_type = get_foreign_key("PanelType")
-    refresh_rate = get_foreign_key("RefreshRate")
-    resolution = get_foreign_key("Resolution")
-    screen_size = get_foreign_key("ScreenSize")
+    panel_type_choices = (
+        ("TN", "tn"),
+        ("VA", "va"),
+        ("IPS", "ips"),
+        ("RETINA", "retina"),
+        ("OLED", "oled")
+    )
 
-    def save(self, *args, **kwargs):
-        if self.refresh_rate is None:  # When None set default refresh rate
-            self.refresh_rate = RefreshRate.objects.get(value=60)
+    # Screen
+    screen_size = models.DecimalField(null=True, max_digits=3, decimal_places=1, help_text="in inches")
+    resolution = models.PositiveSmallIntegerField(null=True, help_text="in pixels")
+    refresh_rate = models.PositiveSmallIntegerField(null=True, help_text="in hertz")
+    panel_type = models.CharField(null=True, max_length=128, choices=panel_type_choices)
 
-        super(Laptop, self).save(*args, **kwargs)
+    # Storage
+    storage_type = models.CharField(null=True, max_length=128, choices=storage_type_choices)
+    storage_size = models.PositiveSmallIntegerField(null=True, help_text="in gigabytes")
+
+    # Processing
+    processor = models.ForeignKey(
+        "products.Processor", related_name="laptops",
+        null=True, blank=True, on_delete=models.SET_NULL
+    )
+    graphics_card = models.ForeignKey(
+        "products.GraphicsCard", related_name="laptops",
+        null=True, blank=True, on_delete=models.SET_NULL
+    )
+
+    # Other
+    ram_capacity = models.PositiveSmallIntegerField(null=True, help_text="in gigabytes")
+    battery_time = models.DecimalField(null=True, max_digits=3, decimal_places=1, help_text="in hours")
+    color = models.CharField(null=True, max_length=128, help_text="primary color")
+    operating_system = models.CharField(null=True, max_length=128)
+
+    def update(self, data, exclude=[]):
+        super(Laptop, self).update(data, exclude)
+
+        if "processor" in data:
+            self.processor = Processor.objects.filter(value__icontains=data["processor"]).first()
+        if "graphics_card" in data:
+            self.graphics_card = GraphicsCard.objects.filter(value__icontains=data["graphics_card"]).first()
 
     @classmethod
     def match(cls, settings):
         laptops = list(super(cls, cls).match(settings))
-        price_range, priorities = json.loads(settings["price"]), json.loads(settings["priorities"])
+        price_range = json.loads(settings["price"])
+        priorities = json.loads(settings["priorities"])
+        usage = settings["usage"]
 
+        # Filter with screen size
         if "size" in settings:
             size_dict = json.loads(settings["size"])
             min_size, max_size = size_dict["min"], size_dict["max"]
             laptops = [laptop for laptop in laptops
-                       if laptop.screen_size and min_size <= int(laptop.screen_size.value) <= max_size]
+                       if laptop.screen_size and min_size <= int(laptop.screen_size) <= max_size]
 
-        sorted_laptops = {}
+        # Score laptops
+        scored_laptops = {}
         for laptop in laptops:
+            args = (usage, priorities)
             score = 0
-            for specification in Laptop.specification_info:
-                name = specification["name"]
-                attribute = getattr(laptop, name)
-                if attribute is None or attribute.score is None:
-                    continue
 
-                if settings["usage"] in specification:
-                    usage_mult = specification[settings["usage"]]
-                else:
-                    usage_mult = specification.get("all", 1)
+            # Score performance group
+            group = "performance"
+            storage_types = [["hdd"], ["ssd"]]
+            score += cls.get_relative_score(laptop.ram_capacity, 8) * cls.get_bias("ram_capacity", *args, group)
+            score += cls.get_type_score(laptop.storage_type, storage_types) * cls.get_bias("storage_type", *args, group)
+            score += cls.get_benchmarked_score(laptop.processor) * cls.get_bias("processor", *args, group)
+            score += cls.get_benchmarked_score(laptop.graphics_card) * cls.get_bias("graphics_card", *args, group)
 
-                if "group" in specification:
-                    priority = priorities[specification["group"]]
-                else:
-                    priority = 0
+            # Score screen group
+            group = "screen"
+            panel_types = [["tn"], ["va"], ["ips", "retina"], ["oled"]]
+            score += cls.get_relative_score(laptop.resolution, 1080) * cls.get_bias("resolution", *args, group)
+            score += cls.get_type_score(laptop.panel_type, panel_types) * cls.get_bias("panel_type", *args, group)
+            score += cls.get_relative_score(laptop.refresh_rate, 60) * cls.get_bias("refresh_rate", *args, group)
 
-                score += attribute.score * Decimal(usage_mult + priority / 2.5)
+            # Score other groups
+            score += cls.get_relative_score(laptop.weight, 1.5) * cls.get_bias("weight", *args)
+            score += cls.get_relative_score(laptop.battery_time, 8) * cls.get_bias("battery_time", *args, "battery")
+            score += cls.get_relative_score(laptop.storage_size, 256) * cls.get_bias("storage_size", usage)
+            score += cls.get_relative_score(laptop.height, 15.0) * cls.get_bias("height", usage)
 
-            sorted_laptops[laptop] = laptop.calculate_score(score, price_range)
+            scored_laptops[laptop] = laptop.calculate_score(score, price_range)
 
-        laptops = sorted(sorted_laptops.items(), key=itemgetter(1), reverse=True)
+        laptops = sorted(scored_laptops.items(), key=itemgetter(1), reverse=True)
 
         if len(laptops) >= 4:
             return laptops[:4]
