@@ -19,9 +19,6 @@ class Migration(migrations.Migration):
             name='Laptop',
         ),
         migrations.DeleteModel(
-            name='Image',
-        ),
-        migrations.DeleteModel(
             name='MetaProduct',
         ),
         migrations.DeleteModel(
