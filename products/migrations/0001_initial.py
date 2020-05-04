@@ -24,4 +24,10 @@ class Migration(migrations.Migration):
         migrations.DeleteModel(
             name='MetaProduct',
         ),
+        migrations.DeleteModel(
+            name='Processor',
+        ),
+        migrations.DeleteModel(
+            name='GraphicsCard',
+        ),
     ]
