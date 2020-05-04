@@ -6,6 +6,9 @@ ALLOWED_HOSTS = [
     "orposegroup.com",
     "www.orposegroup.com",
     "corebackend-env.eba-h3im4jjp.eu-north-1.elasticbeanstalk.com"
+    "13.48.143.13",
+    "13.53.153.188",
+    "localhost"
 ]
 
 # Database setup
