@@ -55,8 +55,8 @@ class Laptop(BaseProduct):
                                       on_delete=models.SET_NULL)
 
     # Other
+    battery_time = models.DecimalField(blank=True, null=True, max_digits=3, decimal_places=1, help_text="in hours")
     ram_capacity = models.PositiveSmallIntegerField(null=True, help_text="in gigabytes")
-    battery_time = models.DecimalField(null=True, max_digits=3, decimal_places=1, help_text="in hours")
     color = models.CharField(null=True, max_length=128, help_text="primary color")
     operating_system = models.CharField(null=True, max_length=128)
 
