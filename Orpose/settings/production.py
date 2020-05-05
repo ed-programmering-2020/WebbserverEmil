@@ -5,7 +5,7 @@ import os
 ALLOWED_HOSTS = [
     "orposegroup.com",
     "www.orposegroup.com",
-    "corebackend-env.eba-h3im4jjp.eu-north-1.elasticbeanstalk.com"
+    "corebackend-env.eba-h3im4jjp.eu-north-1.elasticbeanstalk.com",
     "localhost",
     "13.48.169.201"
 ]
