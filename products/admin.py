@@ -3,7 +3,6 @@ from tabbed_admin import TabbedModelAdmin
 from django.contrib import admin
 from django.db.models import F
 from django.utils.safestring import mark_safe
-from django import forms
 
 
 @admin.register(GraphicsCard, Processor)
@@ -50,7 +49,7 @@ class ImageInline(admin.TabularInline):
 
 class BaseProductAdmin(TabbedModelAdmin):
     tab_overview = [
-        (None, {
+        ("General", {
             "fields": ["name", "disclaimer", "manufacturing_name", "active_price", "rating", "is_active"]
         }),
         ("Measurements", {
@@ -65,7 +64,7 @@ class BaseProductAdmin(TabbedModelAdmin):
     readonly_fields = ["manufacturing_name", "active_price", "rating"]
 
     list_display = ["name", "active_price", "rating", "serve_image", "serve_url", "is_active"]
-    list_filter = ["is_active", "active_price"]
+    list_filter = ["is_active"]
     search_fields = ["name", "manufacturing_name"]
 
     def serve_image(self, obj):
