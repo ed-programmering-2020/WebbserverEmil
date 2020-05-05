@@ -34,6 +34,9 @@ class BaseProcessor(models.Model):
             specification.score = (score - min_score) / max_score * 5
             specification.save()
 
+    def __str__(self):
+        return self.name
+
 
 class Processor(BaseProcessor):
     name = "Processor"
