@@ -26,16 +26,16 @@ class Laptop(BaseProduct):
     }
 
     storage_type_choices = (
-        ("HDD", "hdd"),
-        ("SSD", "ssd")
+        ("hdd", "HDD"),
+        ("ssd", "SSD")
     )
 
     panel_type_choices = (
-        ("TN", "tn"),
-        ("VA", "va"),
-        ("IPS", "ips"),
-        ("RETINA", "retina"),
-        ("OLED", "oled")
+        ("tn", "TN"),
+        ("va", "VA"),
+        ("ips", "IPS"),
+        ("retina", "Retina"),
+        ("oled", "OlED")
     )
 
     # Screen
