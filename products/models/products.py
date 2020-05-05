@@ -52,7 +52,7 @@ class BaseProduct(models.Model):
     disclaimer = models.CharField("disclaimer", max_length=128, null=True, blank=True)
     is_active = models.BooleanField(default=False)
     rating = models.DecimalField(max_digits=2, decimal_places=1, null=True)
-    guarantee = models.PositiveSmallIntegerField(null=True, help_text="in years")
+    guarantee = models.DecimalField(max_digits=2, decimal_places=1, null=True, help_text="in years")
 
     @classmethod
     def match(cls, settings):

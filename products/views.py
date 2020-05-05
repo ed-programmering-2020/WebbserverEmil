@@ -74,8 +74,7 @@ class ScrapingAPI(generics.GenericAPIView):
         products = json.loads(request.data.get("products"))
         for product_data in products:
             host = Website.objects.get(name=product_data["host"])
-            meta_product, __ = MetaProduct.objects.get_or_create(url=product_data["url"])
-            meta_product.host = host
+            meta_product, __ = MetaProduct.objects.get_or_create(url=product_data["url"], host=host)
             meta_product.update(product_data, exclude=["url", "host"])
             meta_product.save()
 
