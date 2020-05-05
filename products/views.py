@@ -82,7 +82,13 @@ class ScrapingAPI(generics.GenericAPIView):
             # Get parent product
             model_class = import_model(product_data["category"])
             if meta_product.product is None:
-                product, __ = model_class.objects.get_or_create(manufacturing_name=meta_product.manufacturing_name)
+                product = model_class.objects.filter(manufacturing_name=meta_product.manufacturing_name).first()
+                if product is None:
+                    product = model_class.objects.create(
+                        name=meta_product.name,  # Temporary name
+                        manufacturing_name=meta_product.manufacturing_name
+                    )
+
                 meta_product.product = product
                 meta_product.save()
             else:
