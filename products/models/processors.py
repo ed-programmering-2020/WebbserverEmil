@@ -35,12 +35,10 @@ class BaseProcessor(models.Model):
             specification.save()
 
     def __str__(self):
-        return self.name
+        return self.value
 
 
 class Processor(BaseProcessor):
-    name = "Processor"
-
     @staticmethod
     def collect_benchmarks():
         url = "https://browser.geekbench.com/processor-benchmarks"
@@ -92,8 +90,6 @@ class Processor(BaseProcessor):
 
 
 class GraphicsCard(BaseProcessor):
-    name = "Grafikkort"
-
     @staticmethod
     def collect_benchmarks():
         url = "https://www.notebookcheck.net/Mobile-Graphics-Cards-Benchmark-List.844.0.html?type=&sort=&showClassDescription=1&deskornote=2&archive=1&perfrating=1&or=0&showBars=1&3dmark13_ice_gpu=1&3dmark13_cloud_gpu=1&3dmark13_fire_gpu=1&3dmark11_gpu=1&gpu_fullname=1&architecture=1&pixelshaders=1&vertexshaders=1&corespeed=1&boostspeed=1&memoryspeed=1&memorybus=1&memorytype=1"
