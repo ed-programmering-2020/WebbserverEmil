@@ -43,7 +43,7 @@ class BaseProduct(models.Model):
     active_price = models.PositiveIntegerField(null=True)
 
     # Measurements
-    height = models.PositiveSmallIntegerField(null=True, help_text="in millimeters")
+    height = models.DecimalField(null=True, max_digits=3, decimal_places=1, help_text="in millimeters")
     width = models.PositiveSmallIntegerField(null=True, help_text="in millimeters")
     depth = models.PositiveSmallIntegerField(null=True, help_text="in millimeters")
     weight = models.DecimalField(null=True, max_digits=3, decimal_places=2, help_text="in kilograms")
