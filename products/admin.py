@@ -51,24 +51,18 @@ class ImageInline(admin.TabularInline):
 class BaseProductAdmin(TabbedModelAdmin):
     tab_overview = [
         (None, {
-            "fields": ["name", "disclaimer", "is_active"]
+            "fields": ["name", "disclaimer", "manufacturing_name", "is_active"]
         }),
         ("Measurements", {
             "fields": ["weight", "height", "width", "depth"]
         })
     ]
-    tab_info = [
-        (None, {
-            "fields": ["manufacturing_name", "active_price", "effective_price", "slug", "rating", ]
-        }),
-    ]
     tabs = [
         ("Overview", tab_overview),
         ("Images", [ImageInline]),
         ("Meta products", [MetaProductInline]),
-        ("Info", tab_info)
     ]
-    readonly_fields = ["slug", "manufacturing_name", "rating", "active_price", "effective_price"]
+    readonly_fields = ["manufacturing_name", "active_price", "effective_price"]
 
     list_display = ["name", "active_price", "rating", "serve_image", "serve_url", "is_active"]
     list_filter = ["is_active", "active_price"]

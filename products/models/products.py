@@ -120,7 +120,7 @@ class BaseProduct(models.Model):
     def update(self, data, exclude=[]):
         # General update
         for key, value in data.items():
-            if key not in exclude and hasattr(self, key):
+            if key not in exclude and hasattr(self, key) and getattr(self, key) is None:
                 setattr(self, key, value)
 
         # Get price and ratings from meta product children
