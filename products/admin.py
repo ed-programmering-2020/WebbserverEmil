@@ -54,7 +54,6 @@ class BaseProductAdmin(TabbedModelAdmin):
             "fields": ["name", "disclaimer", "is_active"]
         }),
         ("Measurements", {
-            "classes": ["collapse"],
             "fields": ["weight", "height", "width", "depth"]
         })
     ]
@@ -94,19 +93,15 @@ class LaptopAdmin(BaseProductAdmin):
     tab_overview = BaseProductAdmin.tab_overview
     tab_overview.extend([
         ("Screen", {
-            "classes": ["collapse"],
             "fields": ["screen_size", "resolution", "refresh_rate", "panel_type"]
         }),
         ("Storage", {
-            "classes": ["collapse"],
             "fields": ["storage_size", "storage_type"]
         }),
         ("Processing", {
-            "classes": ["collapse"],
             "fields": ["processor", "graphics_card"]
         }),
         ("Other", {
-            "classes": ["collapse"],
             "fields": ["ram_capacity", "battery_time", "guarantee", "color", "operating_system"]
         }),
     ])
