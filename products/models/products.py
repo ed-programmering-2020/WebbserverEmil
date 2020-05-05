@@ -119,7 +119,7 @@ class BaseProduct(models.Model):
 
     def update(self, data, exclude=[]):
         exclude.extend(["price", "rating"])
-        
+
         # General update
         for key, value in data.items():
             if key not in exclude and hasattr(self, key) and getattr(self, key) is None:

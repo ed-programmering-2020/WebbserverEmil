@@ -41,7 +41,7 @@ class Laptop(BaseProduct):
     # Screen
     screen_size = models.DecimalField(null=True, max_digits=3, decimal_places=1, help_text="in inches")
     resolution = models.PositiveSmallIntegerField(null=True, help_text="in pixels")
-    refresh_rate = models.PositiveSmallIntegerField(null=True, help_text="in hertz")
+    refresh_rate = models.DecimalField(null=True, max_digits=3, decimal_places=1, help_text="in hertz")
     panel_type = models.CharField(null=True, max_length=128, choices=panel_type_choices)
 
     # Storage
