@@ -110,7 +110,7 @@ class BaseProduct(models.Model):
             rating = self.rating
         else:
             rating = 1
-        return (score / self.active_price) * rating
+        return (score / self.active_price) * float(rating)
 
     def save(self, *args, **kwargs):
         if self.name is not None:
