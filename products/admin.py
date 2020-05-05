@@ -49,7 +49,7 @@ class ImageInline(admin.TabularInline):
 
 class BaseProductAdmin(TabbedModelAdmin):
     tab_overview = [
-        ("General", {
+        (None, {
             "fields": ["name", "disclaimer", "manufacturing_name", "active_price", "rating", "is_active"]
         }),
         ("Measurements", {
