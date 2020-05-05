@@ -118,6 +118,8 @@ class BaseProduct(models.Model):
         super(BaseProduct, self).save(*args, **kwargs)
 
     def update(self, data, exclude=[]):
+        exclude.extend(["price", "rating"])
+        
         # General update
         for key, value in data.items():
             if key not in exclude and hasattr(self, key) and getattr(self, key) is None:
