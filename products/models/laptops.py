@@ -35,7 +35,7 @@ class Laptop(BaseProduct):
         ("va", "VA"),
         ("ips", "IPS"),
         ("retina", "Retina"),
-        ("oled", "OlED")
+        ("oled", "OLED")
     )
 
     # Screen
