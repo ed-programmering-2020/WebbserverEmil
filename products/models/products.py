@@ -1,4 +1,5 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.db.models import Q
@@ -54,50 +55,22 @@ class BaseProduct(models.Model):
     rating = models.DecimalField(max_digits=2, decimal_places=1, null=True)
     guarantee = models.DecimalField(max_digits=2, decimal_places=1, null=True, help_text="in years")
 
-    @classmethod
-    def match(cls, settings):
-        model_instances = cls.objects.exclude(active_price=None).filter(is_active=True)
-        price_range_dict = json.loads(settings["price"])
-        model_instances = model_instances.filter(Q(effective_price__gte=price_range_dict["min"]),
-                                                 Q(effective_price__lte=price_range_dict["max"]))
-        return model_instances
+    def clean(self):
+        # Check if there are active images
+        if self.is_active is True:
+            for image in self.images.all():
+                if image.is_active is True:
+                    break
+            else:
+                raise ValidationError("There needs to be at least one active image")
 
-    @staticmethod
-    def get_relative_score(spec, baseline):
-        if spec is None:
-            return 0
+    def save(self, **kwargs):
+        # Update slug
+        if self.name is not None:
+            self.slug = slugify(self.name)
 
-        return float(spec) / baseline
-
-    @staticmethod
-    def get_type_score(spec, types):
-        if spec is None:
-            return 0
-
-        spec = spec.lower()
-        for i, spec_types in enumerate(types):
-            for spec_type in spec_types:
-                if spec_type in spec:
-                    return i
-
-        return 0
-
-    @staticmethod
-    def get_benchmarked_score(spec):
-        if spec is None:
-            return 0
-
-        return float(spec.score)
-
-    @classmethod
-    def get_bias(cls, spec_name, usage, priorities=None, group=None):
-        bias = cls.score_bias_table[spec_name][usage]
-
-        if priorities is not None:
-            identifier = spec_name if group is None else group
-            bias += priorities[identifier]
-
-        return bias
+        # Save model
+        return super(BaseProduct, self).save(**kwargs)
 
     def calculate_score(self, score, price_range):
         absolute_delta = price_range["max"] - price_range["min"]
@@ -111,11 +84,6 @@ class BaseProduct(models.Model):
         else:
             rating = 1
         return (score / self.active_price) * float(rating)
-
-    def save(self, *args, **kwargs):
-        if self.name is not None:
-            self.slug = slugify(self.name)
-        super(BaseProduct, self).save(*args, **kwargs)
 
     def update(self, data, exclude=[]):
         exclude.extend(["price", "rating"])
@@ -143,6 +111,51 @@ class BaseProduct(models.Model):
         # Update rating
         if total_review_count > 0:
             self.rating = combined_ratings / total_review_count
+
+    @classmethod
+    def match(cls, settings):
+        model_instances = cls.objects.exclude(active_price=None).filter(is_active=True)
+        price_range_dict = json.loads(settings["price"])
+        model_instances = model_instances.filter(Q(effective_price__gte=price_range_dict["min"]),
+                                                 Q(effective_price__lte=price_range_dict["max"]))
+        return model_instances
+
+    @classmethod
+    def get_bias(cls, spec_name, usage, priorities=None, group=None):
+        bias = cls.score_bias_table[spec_name][usage]
+
+        if priorities is not None:
+            identifier = spec_name if group is None else group
+            bias += priorities[identifier]
+
+        return bias
+
+    @staticmethod
+    def get_relative_score(spec, baseline):
+        if spec is None:
+            return 0
+
+        return float(spec) / baseline
+
+    @staticmethod
+    def get_type_score(spec, types):
+        if spec is None:
+            return 0
+
+        spec = spec.lower()
+        for i, spec_types in enumerate(types):
+            for spec_type in spec_types:
+                if spec_type in spec:
+                    return i
+
+        return 0
+
+    @staticmethod
+    def get_benchmarked_score(spec):
+        if spec is None:
+            return 0
+
+        return float(spec.score)
 
     def __str__(self):
         return "<Product %s>" % self.name

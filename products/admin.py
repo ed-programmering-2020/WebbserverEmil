@@ -1,8 +1,9 @@
-from products.models import Laptop, Image, MetaProduct, Website, GraphicsCard, Processor
+from products.models import Laptop, Image, MetaProduct, Website, GraphicsCard, Processor, BaseProduct
 from tabbed_admin import TabbedModelAdmin
 from django.contrib import admin
 from django.db.models import F
 from django.utils.safestring import mark_safe
+from django import forms
 
 
 @admin.register(GraphicsCard, Processor)
