@@ -55,15 +55,6 @@ class BaseProduct(models.Model):
     rating = models.DecimalField(max_digits=2, decimal_places=1, null=True)
     guarantee = models.DecimalField(max_digits=2, decimal_places=1, null=True, help_text="in years")
 
-    def clean(self):
-        # Check if there are active images
-        if self.is_active is True:
-            for image in self.images.all():
-                if image.is_active is True:
-                    break
-            else:
-                raise ValidationError("There needs to be at least one active image")
-
     def save(self, **kwargs):
         # Update slug
         if self.name is not None:
