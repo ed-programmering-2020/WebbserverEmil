@@ -62,7 +62,7 @@ class SearchAPI(generics.GenericAPIView):
     queryset = BaseProduct.objects.all()
 
     def get(self, request, query, *args, **kwargs):
-        products = BaseProduct.objects.filter(name__icontains=query)[:8]
+        products = BaseProduct.objects.filter(name__icontains=query, is_active=True)[:8]
         return Response(ProductSerializer(products, many=True).data)
 
 
