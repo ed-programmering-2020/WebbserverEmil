@@ -3,8 +3,8 @@
 *Alla kommandon behövs köras inuti projektets mapp*
 
 ### Innehåll
-* <a href="#user-content-setup">Setup</a>
-* <a href="#user-content-start">Start</a>
+* Setup
+* Start
 
 
 ## Setup
