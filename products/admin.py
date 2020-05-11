@@ -31,7 +31,7 @@ class MetaProductInline(admin.TabularInline):
     extra = 0
 
     readonly_fields = ["url_tag", "host"]
-    exclude = ["manufacturing_name", "category", "shipping", "rating", "review_count", "url"]
+    exclude = ["model_number", "category", "shipping", "rating", "review_count", "url"]
 
 
 class ImageInline(admin.TabularInline):
