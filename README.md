@@ -12,7 +12,7 @@ Vid installation välj **Add Python3.x to Path**.
 
 För att installera alla nödvändiga bibliotek:
 ```
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 <br/>
