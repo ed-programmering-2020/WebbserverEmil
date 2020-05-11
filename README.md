@@ -24,7 +24,7 @@ Välj **Add Python3.x to Path**.
 
 ### 2. Installera alla nödvändiga bibliotek
 
-Använd detta kommandot:
+*Använd detta kommandot:*
 ```
 pip install -r requirements.txt
 ```
@@ -32,7 +32,7 @@ pip install -r requirements.txt
 
 ### 3. Sätta upp databasen
 
-Använd dessa kommandon:
+*Använd dessa kommandon:*
 ```
 python manage.py init
 python manage.py makemigrations
@@ -42,7 +42,7 @@ python manage.py migrate
 
 ### 4. Skapa admin användare
 
-Använd detta kommandot:
+*Använd detta kommandot:*
 ```
 python manage.py createsuperuser
 ```
