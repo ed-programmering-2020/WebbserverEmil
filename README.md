@@ -18,7 +18,7 @@ pip install -r requirements.txt
 ```
 
 
-### Initialisera databas
+### Skapa lokal databas
 ```
 python manage.py init
 python manage.py makemigrations
