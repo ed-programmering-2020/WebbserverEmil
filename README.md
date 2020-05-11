@@ -3,8 +3,6 @@
 *Alla kommandon behövs köras inuti projektets mapp*
 
 
-## Setup
-
 ### Python installation
 
 Den senaste versionen av programmeringsspråket kan laddas ner från <a href="https://www.python.org/downloads/">www.python.org</a>
@@ -30,9 +28,8 @@ För att skapa en admin användare:
 python manage.py createsuperuser
 ```
 
-## Start
+### Starta webbserver
 
-Starta webbservern med kommandot:
 ```
 python manage.py runserver
 ```
