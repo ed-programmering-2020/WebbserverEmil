@@ -19,8 +19,8 @@ python -m pip install -r requirements.txt
 
 ### Skapa lokal databas
 ```
-manage.py init
-manage.py makemigrations
+manage.py makemigrations users
+manage.py makemigrations products
 manage.py migrate
 ```
 
