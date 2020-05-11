@@ -9,6 +9,7 @@
 Den senaste versionen av programmeringsspråket kan laddas ner från https://www.python.org/downloads/
 
 Välj **Add Python3.x to Path**.
+
 <br/>
 
 ### 2. Installera alla nödvändiga bibliotek
@@ -17,6 +18,7 @@ Använd detta kommandot:
 ```
 pip install -r requirements.txt
 ```
+
 <br/>
 
 ### 3. Sätta upp databasen
@@ -27,6 +29,7 @@ python manage.py init
 python manage.py makemigrations
 python manage.py migrate
 ```
+
 <br/>
 
 ### 4. Skapa admin användare
