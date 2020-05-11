@@ -8,6 +8,8 @@
 
 Programmeringsspråket kan laddas ner från https://www.python.org/downloads/ (välj senaste version).
 
+Under installationen måste ** väljas
+
 
 ### 2. Installera bibliotek
 
