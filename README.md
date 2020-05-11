@@ -8,8 +8,7 @@
 
 Den senaste versionen av programmeringsspråket kan laddas ner från <a href="https://www.python.org/downloads/">www.python.org</a>
 
-Vid installation:
-Välj **Add Python3.x to Path**.
+Vid installation välj **Add Python3.x to Path**.
 
 För att installera alla nödvändiga bibliotek:
 ```
