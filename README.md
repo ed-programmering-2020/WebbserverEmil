@@ -7,7 +7,7 @@ Admin konsolen finns på http://127.0.0.1:8000/admin/
 
 ## Setup
 
-### Python
+### Python installation
 
 Den senaste versionen av programmeringsspråket kan laddas ner från <a href="https://www.python.org/downloads/">www.python.org</a>
 
@@ -20,7 +20,7 @@ pip install -r requirements.txt
 ```
 
 
-### Databasen
+### Initialisera databas
 ```
 python manage.py init
 python manage.py makemigrations
