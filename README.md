@@ -2,6 +2,7 @@
 
 *Alla kommandon behövs köras inuti projektets mapp*
 
+*Admin konsolen finns på http://127.0.0.1:8000/admin/*
 
 ## Start
 
@@ -9,8 +10,6 @@ Starta webbservern med kommandot:
 ```
 python manage.py runserver
 ```
-
-*Admin konsolen finns på http://127.0.0.1:8000/admin/*
 
 
 ## Setup
