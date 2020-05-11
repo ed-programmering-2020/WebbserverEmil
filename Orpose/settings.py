@@ -1,11 +1,5 @@
 SECRET_KEY = 'u2v4es^aj+c4d5g_@eh!!st@d8w6kpfz0^^evta15n@**lmc0r'
 ROOT_URLCONF = 'Orpose.urls'
-WSGI_APPLICATION = 'Orpose.wsgi.application'
-
-# Static
-STATIC_ROOT = 'static'
-STATIC_URL = '/static/'
-STATIC_FILES = []
 
 TEMPLATES = [
     {
@@ -33,7 +27,6 @@ INSTALLED_APPS = [
     # Django Apps
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -41,7 +34,6 @@ INSTALLED_APPS = [
     # Local Apps
     "users",
     "products",
-    "content",
 ]
 
 MIDDLEWARE = [
@@ -56,7 +48,7 @@ MIDDLEWARE = [
 
 # Authentication
 AUTH_USER_MODEL = "users.User"
-AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -69,8 +61,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 CORS_ORIGIN_WHITELIST = [
-    "https://www.orpose.se",
-    "https://orpose.se",
     "http://localhost:3000"
 ]
 REST_FRAMEWORK = {
@@ -91,3 +81,15 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+
+# Debug tools
+DEBUG = True
+TEMPLATE_DEBUG = True
+
+# Database setup
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': "db",
+    }
+}

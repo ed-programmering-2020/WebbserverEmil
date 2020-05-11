@@ -1,10 +1,15 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.db.models import Q
 from django.db import models
 import json
+
+
+class ImageInfo(models.Model):
+    image = models.ForeignKey("products.Image", on_delete=models.CASCADE, related_name="image_infos")
+    text = models.CharField(max_length=256)
+    secondary_text = models.CharField(max_length=512)
 
 
 class Image(models.Model):
@@ -36,7 +41,7 @@ class BaseProduct(models.Model):
 
     # Identification
     name = models.CharField('name', max_length=128, null=True)
-    manufacturing_name = models.CharField("manufacturing name", max_length=128, unique=True, null=True, blank=True)
+    model_number = models.CharField("model number", max_length=128, unique=True, null=True, blank=True)
     slug = models.SlugField(null=True, blank=True)
 
     # Pricing
@@ -154,7 +159,7 @@ class BaseProduct(models.Model):
 
 class MetaProduct(models.Model):
     name = models.CharField('name', max_length=128)
-    manufacturing_name = models.CharField("manufacturing_name", null=True, max_length=128)
+    model_number = models.CharField("model number", null=True, max_length=128)
 
     availability = models.PositiveSmallIntegerField(null=True)
     standard_price = models.PositiveIntegerField(null=True)

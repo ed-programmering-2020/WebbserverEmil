@@ -1,28 +1,43 @@
-# Orpose-Backend
+# Webbserver - slutprojekt
 
-This is the backend section of the service Orpose which is a website that matches users with products based on their preferences.
-
-
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
-### Prerequisites
-
-Python3 is required as that is the language used. The requirements.txt lists all requirements relating to python. 
+Alla kommandon behövs köras i projektetsmapp
 
 
-### Installing
+## Setup
 
-To get the project up and running on a local system, you need prepare the database.
+Programmeringsspråket som används är Python3 vilket kan laddas ner från https://www.python.org/downloads/
 
-Initialize the database with
+För att sedan installera alla bibliotek som används i projektet behövs detta kommmandot köras:
+```
+pip install -r requirements.txt
+```
+
+För att sätta upp den lokala databasen behövs dessa kommandon köras:
 ```
 python manage.py init
-```
-
-And then to set up all models in the project use
-```
 python manage.py makemigrations
 python manage.py migrate
 ```
+
+För att skapa en användare som har tillgång till admin konsolen (databas gränssnittet) behövs detta kommandot köras:
+```
+python manage.py createsuperuser
+```
+
+## Start
+
+Starta webbservern med kommandot:
+```
+python manage.py runserver
+```
+
+Om admin konsolen (databas gränssnittet) är av intresse finns den på http://127.0.0.1:8000/admin/
+
+
+
+
+
+
+
+
+

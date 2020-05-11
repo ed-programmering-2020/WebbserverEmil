@@ -62,7 +62,7 @@ class BaseProductAdmin(TabbedModelAdmin):
         ("Images", [ImageInline]),
         ("Meta products", [MetaProductInline]),
     ]
-    readonly_fields = ["manufacturing_name", "active_price", "rating"]
+    readonly_fields = ["model_number", "active_price", "rating"]
 
     list_display = ["name", "active_price", "rating", "serve_image", "serve_url", "is_active"]
     list_filter = ["is_active"]
