@@ -8,7 +8,7 @@
 
 Programmeringsspråket kan laddas ner från https://www.python.org/downloads/ (välj senaste version).
 
-Under installationen måste **Add Python3.x to Path** fyllas i.
+Välj **Add Python3.x to Path**.
 
 
 ### 2. Installera alla nödvändiga bibliotek
