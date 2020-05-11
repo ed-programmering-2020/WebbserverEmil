@@ -41,7 +41,6 @@ class ImageInline(admin.TabularInline):
     extra = 0
 
     readonly_fields = ["thumbnail", "host"]
-    exclude = ["url"]
 
     def get_queryset(self, request):
         qs = super(ImageInline, self).get_queryset(request)
@@ -51,7 +50,7 @@ class ImageInline(admin.TabularInline):
 class BaseProductAdmin(TabbedModelAdmin):
     tab_overview = [
         (None, {
-            "fields": ["name", "disclaimer", "manufacturing_name", "active_price", "rating", "is_active"]
+            "fields": ["name", "disclaimer", "model_number", "active_price", "rating", "is_active"]
         }),
         ("Measurements", {
             "fields": ["weight", "height", "width", "depth"]
