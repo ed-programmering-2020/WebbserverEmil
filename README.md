@@ -2,6 +2,8 @@
 
 *Alla kommandon behövs köras inuti projektets mapp*
 
+<br/>
+
 ## Setup
 
 ### 1. Ladda ner Python
@@ -37,6 +39,8 @@ För att skapa en användare som har tillgång till admin konsolen (databas grä
 ```
 python manage.py createsuperuser
 ```
+
+<br/>
 
 ## Start
 
