@@ -15,6 +15,7 @@ För att installera alla nödvändiga bibliotek:
 pip install -r requirements.txt
 ```
 
+<br/>
 
 ### Skapa lokal databas
 ```
@@ -27,6 +28,8 @@ För att skapa en admin användare:
 ```
 python manage.py createsuperuser
 ```
+
+<br/>
 
 ### Starta webbserver
 
