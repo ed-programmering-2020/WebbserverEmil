@@ -1,4 +1,4 @@
-# Webbserver - slutprojekt
+# Webbserver
 
 *Alla kommandon behövs köras inuti projektets mapp*
 
@@ -6,7 +6,7 @@
 
 ### 1. Ladda ner Python
 
-Den senaste versionen av programmeringsspråket kan laddas ner från https://www.python.org/downloads/
+Den senaste versionen kan laddas ner från <a href="https://www.python.org/downloads/">www.python.org</a>
 
 Välj **Add Python3.x to Path**.
 
