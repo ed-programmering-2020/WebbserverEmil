@@ -1,6 +1,6 @@
 # Webbserver
 
-*Alla kommandon behöver köras inuti projekt mappen*
+*Alla kommandon behöver köras inuti projektmappen*
 
 <br/>
 
