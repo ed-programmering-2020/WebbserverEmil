@@ -6,15 +6,16 @@
 
 ### 1. Ladda ner Python
 
-Programmeringsspråket som används är Python3 vilket kan laddas ner från https://www.python.org/downloads/
+Programmeringsspråket kan laddas ner från https://www.python.org/downloads/ (välj senaste version).
 
 
 ### 2. Installera bibliotek
 
-För att sedan installera alla bibliotek som används i projektet behövs detta kommmandot köras:
+Använd detta kommandot:
 ```
 pip install -r requirements.txt
 ```
+För att installera alla nödvändiga bilbiotek som används i projektet.
 
 ### 3. Sätta upp databasen
 
