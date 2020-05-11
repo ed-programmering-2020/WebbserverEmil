@@ -2,6 +2,7 @@
 
 *Alla kommandon behövs köras inuti projektets mapp*
 
+<br/>
 
 ### Python installation
 
