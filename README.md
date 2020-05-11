@@ -1,6 +1,6 @@
 # Webbserver - slutprojekt
 
-*Alla kommandon behövs köras i projektets mapp*
+*Alla kommandon behövs köras inuti projektets mapp*
 
 ## Setup
 
@@ -8,20 +8,20 @@
 
 Programmeringsspråket kan laddas ner från https://www.python.org/downloads/ (välj senaste version).
 
-Under installationen måste ** väljas
+Under installationen måste **Add Python3.x to Path** fyllas i.
 
 
-### 2. Installera bibliotek
+### 2. Installera alla nödvändiga bibliotek
 
 Använd detta kommandot:
 ```
 pip install -r requirements.txt
 ```
-För att installera alla nödvändiga bilbiotek som används i projektet.
+
 
 ### 3. Sätta upp databasen
 
-För att sätta upp den lokala databasen behövs dessa kommandon köras:
+Använd detta kommandot:
 ```
 python manage.py init
 python manage.py makemigrations
