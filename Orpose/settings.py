@@ -1,6 +1,10 @@
 SECRET_KEY = 'u2v4es^aj+c4d5g_@eh!!st@d8w6kpfz0^^evta15n@**lmc0r'
 ROOT_URLCONF = 'Orpose.urls'
 
+STATIC_ROOT = 'static'
+STATIC_URL = '/static/'
+STATIC_FILES = []
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -31,7 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    
     # Local Apps
     "users",
     "products",
