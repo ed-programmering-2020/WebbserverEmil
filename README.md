@@ -6,9 +6,10 @@
 
 ### 1. Ladda ner Python
 
-Programmeringsspråket kan laddas ner från https://www.python.org/downloads/ (välj senaste version).
+Den senaste versionen av programmeringsspråket kan laddas ner från https://www.python.org/downloads/
 
 Välj **Add Python3.x to Path**.
+
 
 
 ### 2. Installera alla nödvändiga bibliotek
@@ -19,6 +20,7 @@ pip install -r requirements.txt
 ```
 
 
+
 ### 3. Sätta upp databasen
 
 Använd detta kommandot:
@@ -27,6 +29,8 @@ python manage.py init
 python manage.py makemigrations
 python manage.py migrate
 ```
+
+
 
 ### 4. Skapa admin användare
 För att skapa en användare som har tillgång till admin konsolen (databas gränssnittet) behövs detta kommandot köras:
