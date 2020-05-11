@@ -19,14 +19,14 @@ python -m pip install -r requirements.txt
 
 ### Skapa lokal databas
 ```
-python manage.py init
-python manage.py makemigrations
-python manage.py migrate
+manage.py init
+manage.py makemigrations
+manage.py migrate
 ```
 
 För att skapa en admin användare:
 ```
-python manage.py createsuperuser
+manage.py createsuperuser
 ```
 
 <br/>
@@ -34,7 +34,7 @@ python manage.py createsuperuser
 ### Starta webbserver
 
 ```
-python manage.py runserver
+manage.py runserver
 ```
 
 Admin konsolen finns på http://127.0.0.1:8000/admin/
