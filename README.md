@@ -2,7 +2,10 @@
 
 *Alla kommandon behövs köras inuti projektets mapp*
 
-<br/>
+### Innehåll
+* <a href="#user-content-setup">Setup</a>
+* <a href="#user-content-start">Start</a>
+
 
 ## Setup
 
@@ -23,7 +26,7 @@ pip install -r requirements.txt
 
 ### 3. Sätta upp databasen
 
-Använd detta kommandot:
+Använd dessa kommandon:
 ```
 python manage.py init
 python manage.py makemigrations
