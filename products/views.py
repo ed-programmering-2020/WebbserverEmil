@@ -1,9 +1,10 @@
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
-from rest_framework import generics
+from rest_framework import generics, status
 from products.models import Laptop, Website, MetaProduct, Image
 from products.serializers import ProductSerializer
+from django.db import connection
 import json
 
 
@@ -18,12 +19,34 @@ class LaptopAPI(generics.GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = ProductSerializer
 
-    def get(self, request, laptop_id, slug, *args, **kwargs):
-        try:
-            laptop = Laptop.objects.get(id=laptop_id)
-            return Response(ProductSerializer(laptop).data)
-        except Laptop.DoesNotExist:
-            return Response({})
+    def get(self, request):  # READ
+        laptop_id = request.GET["id"]
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * from products_laptop WHERE id = %s", [laptop_id])
+            laptop = cursor.fetchone()
+            if laptop is not None:
+                return Response(laptop)
+            else:
+                return Response({"FAIL": "laptop not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    def post(self, request):  # UPDATE
+        title = request.GET["title"]
+        laptop_id = request.GET["id"]
+        with connection.cursor() as cursor:
+            cursor.execute("UPDATE products_laptop SET title = %s WHERE id = %s", [laptop_id, title])
+            return Response({"SUCCESS": "updated a existing laptop"})
+
+    def put(self, request):  # CREATE
+        title = request.GET["title"]
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO products_laptop (title, is_active) VALUES (%s, false)", [title])
+            return Response({"SUCCESS": "created a new laptop"})
+
+    def delete(self, request):  # DELETE
+        laptop_id = request.GET["id"]
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM products_laptop WHERE id = %s", [laptop_id])
+            return Response({"SUCCESS": "deleted a existing laptop"})
 
 
 class ScrapingAPI(generics.GenericAPIView):
